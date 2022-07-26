@@ -1,0 +1,962 @@
+[
+  {
+    "ts": "2022-07-26T19:42:20.006Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.5px5IkrCpxR0w5_w_hCMJY"
+          },
+          "fields": {
+            "title": {
+              "es": "ABECEDARIO ¡A leer con alegría!"
+            },
+            "contenido": {
+              "es": "Serie de separadores realizados por LUZ NEGRA junto a PEQUEÑO EDITOR para PAKA PAKA. Ver serie completa"
+            },
+            "excerpt": {
+              "es": "Serie de separadores realizados por LUZ NEGRA junto a PEQUEÑO EDITOR para PAKA PAKA."
+            },
+            "video": {
+              "es": "https://vimeo.com/261569244"
+            },
+            "cliente": {
+              "es": "Paka Paka"
+            },
+            "slug": {
+              "es": "abecedario-a-leer-con-alegria"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.5px5IkrCpxR0w5_w_hCMJY"
+          },
+          "fields": {
+            "title": {
+              "es": "ABECEDARIO ¡A leer con alegría!"
+            },
+            "contenido": {
+              "es": "Serie de separadores realizados por LUZ NEGRA junto a PEQUEÑO EDITOR para PAKA PAKA. Ver serie completa"
+            },
+            "excerpt": {
+              "es": "Serie de separadores realizados por LUZ NEGRA junto a PEQUEÑO EDITOR para PAKA PAKA."
+            },
+            "video": {
+              "es": "https://vimeo.com/261569244"
+            },
+            "cliente": {
+              "es": "Paka Paka"
+            },
+            "slug": {
+              "es": "abecedario-a-leer-con-alegria"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://vimeo.com/261569244",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.5px5IkrCpxR0w5_w_hCMJY",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 437
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"ABECEDARIO ¡A leer con alegría!\"},\"contenido\":{\"es\":\"Serie de separadores realizados por LUZ NEGRA junto a PEQUEÑO EDITOR para PAKA PAKA. Ver serie completa\"},\"excerpt\":{\"es\":\"Serie de separadores realizados por LUZ NEGRA junto a PEQUEÑO EDITOR para PAKA PAKA.\"},\"video\":{\"es\":\"https://vimeo.com/261569244\"},\"cliente\":{\"es\":\"Paka Paka\"},\"slug\":{\"es\":\"abecedario-a-leer-con-alegria\"}}}"
+        },
+        "requestId": "29fbd6b0-7c97-4f00-bd23-1dc5780190e8"
+      }
+    }
+  },
+  {
+    "ts": "2022-07-26T19:42:21.013Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.AdnNsj_m8R9umGIuL5Jt6W"
+          },
+          "fields": {
+            "title": {
+              "es": "3D"
+            },
+            "contenido": {
+              "es": "Ilustraciones 3d por Santiago Toyos (LUZ NEGRA)"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://skfb.ly/QFGA|https://skfb.ly/TuQ9|https://skfb.ly/QpW6"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "3d"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.AdnNsj_m8R9umGIuL5Jt6W"
+          },
+          "fields": {
+            "title": {
+              "es": "3D"
+            },
+            "contenido": {
+              "es": "Ilustraciones 3d por Santiago Toyos (LUZ NEGRA)"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://skfb.ly/QFGA|https://skfb.ly/TuQ9|https://skfb.ly/QpW6"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "3d"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://skfb.ly/QFGA|https://skfb.ly/TuQ9|https://skfb.ly/QpW6",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.AdnNsj_m8R9umGIuL5Jt6W",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 267
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"3D\"},\"contenido\":{\"es\":\"Ilustraciones 3d por Santiago Toyos (LUZ NEGRA)\"},\"excerpt\":{\"es\":null},\"video\":{\"es\":\"https://skfb.ly/QFGA|https://skfb.ly/TuQ9|https://skfb.ly/QpW6\"},\"cliente\":{\"es\":null},\"slug\":{\"es\":\"3d\"}}}"
+        },
+        "requestId": "3d194dba-8215-41ef-87be-7056f7f5beb6"
+      }
+    }
+  },
+  {
+    "ts": "2022-07-26T19:42:21.038Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.NFDBmTxotTqYsFBCTqPjpw"
+          },
+          "fields": {
+            "title": {
+              "es": "Captain Drakins' Bitcoin Show"
+            },
+            "contenido": {
+              "es": "Animaciones 2D a cargo de LUZ NEGRA, para la serie producida por BITFILM."
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://www.youtube.com/watch?v=OGrs2QfY7KY|https://www.youtube.com/watch?v=yItQ9L4GUeg"
+            },
+            "cliente": {
+              "es": "Bitfilm Production"
+            },
+            "slug": {
+              "es": "captain-drakinsbitcoin-show"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.NFDBmTxotTqYsFBCTqPjpw"
+          },
+          "fields": {
+            "title": {
+              "es": "Captain Drakins' Bitcoin Show"
+            },
+            "contenido": {
+              "es": "Animaciones 2D a cargo de LUZ NEGRA, para la serie producida por BITFILM."
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://www.youtube.com/watch?v=OGrs2QfY7KY|https://www.youtube.com/watch?v=yItQ9L4GUeg"
+            },
+            "cliente": {
+              "es": "Bitfilm Production"
+            },
+            "slug": {
+              "es": "captain-drakinsbitcoin-show"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://www.youtube.com/watch?v=OGrs2QfY7KY|https://www.youtube.com/watch?v=yItQ9L4GUeg",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.NFDBmTxotTqYsFBCTqPjpw",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 386
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"Captain Drakins' Bitcoin Show\"},\"contenido\":{\"es\":\"Animaciones 2D a cargo de LUZ NEGRA, para la serie producida por BITFILM.\"},\"excerpt\":{\"es\":null},\"video\":{\"es\":\"https://www.youtube.com/watch?v=OGrs2QfY7KY|https://www.youtube.com/watch?v=yItQ9L4GUeg\"},\"cliente\":{\"es\":\"Bitfilm Production\"},\"slug\":{\"es\":\"captain-drakinsbitcoin-show\"}}}"
+        },
+        "requestId": "14cc12c4-c845-4ed6-8ee6-9a601366fb5e"
+      }
+    }
+  },
+  {
+    "ts": "2022-07-26T19:42:25.026Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.jrbJdQhcmxTt6UbZJnAUrp"
+          },
+          "fields": {
+            "title": {
+              "es": "Usá tu Net"
+            },
+            "contenido": {
+              "es": "Gráfica de la serie ¨Usá tu net¨de CANAL ENCUENTRO, producida por LUMA DOC"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/64218633|http://youtu.be/pKFxrQaeuuA"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "usa-tu-net"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.jrbJdQhcmxTt6UbZJnAUrp"
+          },
+          "fields": {
+            "title": {
+              "es": "Usá tu Net"
+            },
+            "contenido": {
+              "es": "Gráfica de la serie ¨Usá tu net¨de CANAL ENCUENTRO, producida por LUMA DOC"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/64218633|http://youtu.be/pKFxrQaeuuA"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "usa-tu-net"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://vimeo.com/64218633|http://youtu.be/pKFxrQaeuuA",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.jrbJdQhcmxTt6UbZJnAUrp",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 307
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"Usá tu Net\"},\"contenido\":{\"es\":\"Gráfica de la serie ¨Usá tu net¨de CANAL ENCUENTRO, producida por LUMA DOC\"},\"excerpt\":{\"es\":null},\"video\":{\"es\":\"https://vimeo.com/64218633|http://youtu.be/pKFxrQaeuuA\"},\"cliente\":{\"es\":null},\"slug\":{\"es\":\"usa-tu-net\"}}}"
+        },
+        "requestId": "35049735-abc9-4a34-abb9-06c1177ba9bb"
+      }
+    }
+  },
+  {
+    "ts": "2022-07-26T19:42:25.027Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.lx4-Zyp5-8j3m2bpB-Ihqg"
+          },
+          "fields": {
+            "title": {
+              "es": "Sintonía Fina"
+            },
+            "contenido": {
+              "es": "Logo animado para el programa de TV \"Sintonía Fina\" Año: 2012"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/64065954|https://vimeo.com/63758891"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "sintonia-fina"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.lx4-Zyp5-8j3m2bpB-Ihqg"
+          },
+          "fields": {
+            "title": {
+              "es": "Sintonía Fina"
+            },
+            "contenido": {
+              "es": "Logo animado para el programa de TV \"Sintonía Fina\" Año: 2012"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/64065954|https://vimeo.com/63758891"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "sintonia-fina"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://vimeo.com/64065954|https://vimeo.com/63758891",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.lx4-Zyp5-8j3m2bpB-Ihqg",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 299
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"Sintonía Fina\"},\"contenido\":{\"es\":\"Logo animado para el programa de TV \\\"Sintonía Fina\\\" Año: 2012\"},\"excerpt\":{\"es\":null},\"video\":{\"es\":\"https://vimeo.com/64065954|https://vimeo.com/63758891\"},\"cliente\":{\"es\":null},\"slug\":{\"es\":\"sintonia-fina\"}}}"
+        },
+        "requestId": "83204ab2-27ad-4c9b-913f-b9b079184b51"
+      }
+    }
+  },
+  {
+    "ts": "2022-07-26T19:42:25.061Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.WBcfDWGZXQQW7PrEgZTl3w"
+          },
+          "fields": {
+            "title": {
+              "es": "Ciudadanos en Internet"
+            },
+            "contenido": {
+              "es": "Gráfica de la serie ¨Ciudadanos en Internet¨de CANAL ENCUENTRO, producida por LUMA DOC"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/64218632|https://vimeo.com/64218630|https://vimeo.com/64221978"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "ciudadanos-en-internet"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.WBcfDWGZXQQW7PrEgZTl3w"
+          },
+          "fields": {
+            "title": {
+              "es": "Ciudadanos en Internet"
+            },
+            "contenido": {
+              "es": "Gráfica de la serie ¨Ciudadanos en Internet¨de CANAL ENCUENTRO, producida por LUMA DOC"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/64218632|https://vimeo.com/64218630|https://vimeo.com/64221978"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "ciudadanos-en-internet"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://vimeo.com/64218632|https://vimeo.com/64218630|https://vimeo.com/64221978",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.WBcfDWGZXQQW7PrEgZTl3w",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 367
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"Ciudadanos en Internet\"},\"contenido\":{\"es\":\"Gráfica de la serie ¨Ciudadanos en Internet¨de CANAL ENCUENTRO, producida por LUMA DOC\"},\"excerpt\":{\"es\":null},\"video\":{\"es\":\"https://vimeo.com/64218632|https://vimeo.com/64218630|https://vimeo.com/64221978\"},\"cliente\":{\"es\":null},\"slug\":{\"es\":\"ciudadanos-en-internet\"}}}"
+        },
+        "requestId": "5154937f-7e52-4eae-92be-b0fdf04c82d0"
+      }
+    }
+  },
+  {
+    "ts": "2022-07-26T19:42:26.057Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.FqyNISq_SyWuyir62kUKds"
+          },
+          "fields": {
+            "title": {
+              "es": "IDs PakaPaka"
+            },
+            "contenido": {
+              "es": "Serie de IDs para el canal PAKA PAKA Campaña: \"Los ilustradores también queremos ver Paka Paka\" Año: 2012"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/107137257|https://vimeo.com/107137253|https://vimeo.com/107137256|https://vimeo.com/107163529|https://vimeo.com/107163531|https://vimeo.com/107382355|https://vimeo.com/107163527|https://vimeo.com/107137259|https://vimeo.com/107163534|https://vimeo.com/107137254"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "paka-paka"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.FqyNISq_SyWuyir62kUKds"
+          },
+          "fields": {
+            "title": {
+              "es": "IDs PakaPaka"
+            },
+            "contenido": {
+              "es": "Serie de IDs para el canal PAKA PAKA Campaña: \"Los ilustradores también queremos ver Paka Paka\" Año: 2012"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/107137257|https://vimeo.com/107137253|https://vimeo.com/107137256|https://vimeo.com/107163529|https://vimeo.com/107163531|https://vimeo.com/107382355|https://vimeo.com/107163527|https://vimeo.com/107137259|https://vimeo.com/107163534|https://vimeo.com/107137254"
+            },
+            "cliente": {
+              "es": null
+            },
+            "slug": {
+              "es": "paka-paka"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://vimeo.com/107137257|https://vimeo.com/107137253|https://vimeo.com/107137256|https://vimeo.com/107163529|https://vimeo.com/107163531|https://vimeo.com/107382355|https://vimeo.com/107163527|https://vimeo.com/107137259|https://vimeo.com/107163534|https://vimeo.com/107137254",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.FqyNISq_SyWuyir62kUKds",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 564
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"IDs PakaPaka\"},\"contenido\":{\"es\":\"Serie de IDs para el canal PAKA PAKA Campaña: \\\"Los ilustradores también queremos ver Paka Paka\\\" Año: 2012\"},\"excerpt\":{\"es\":null},\"video\":{\"es\":\"https://vimeo.com/107137257|https://vimeo.com/107137253|https://vimeo.com/107137256|https://vimeo.com/107163529|https://vimeo.com/107163531|https://vimeo.com/107382355|https://vimeo.com/107163527|https://vimeo.com/107137259|https://vimeo.com/107163534|https://vimeo.com/107137254\"},\"cliente\":{\"es\":null},\"slug\":{\"es\":\"paka-paka\"}}}"
+        },
+        "requestId": "1bd0e355-0d73-486d-a358-aaddb2663978"
+      }
+    }
+  },
+  {
+    "ts": "2022-07-26T19:42:27.075Z",
+    "level": "error",
+    "error": {
+      "name": "InvalidEntry",
+      "entity": {
+        "original": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.WblVQog60unwnEaCbPsBWk"
+          },
+          "fields": {
+            "title": {
+              "es": "ID Bicentenario"
+            },
+            "contenido": {
+              "es": "CANAL ENCUENTRO 2010 Diseño : Gabriela Salem"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/110006252|https://vimeo.com/110006253"
+            },
+            "cliente": {
+              "es": "Canal Encuentro"
+            },
+            "slug": {
+              "es": "id-bicentenario"
+            }
+          }
+        },
+        "transformed": {
+          "metadata": {
+            "tags": [
+            ]
+          },
+          "sys": {
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "entradas"
+              }
+            },
+            "publishedVersion": 1,
+            "id": "cfimp.WblVQog60unwnEaCbPsBWk"
+          },
+          "fields": {
+            "title": {
+              "es": "ID Bicentenario"
+            },
+            "contenido": {
+              "es": "CANAL ENCUENTRO 2010 Diseño : Gabriela Salem"
+            },
+            "excerpt": {
+              "es": null
+            },
+            "video": {
+              "es": "https://vimeo.com/110006252|https://vimeo.com/110006253"
+            },
+            "cliente": {
+              "es": "Canal Encuentro"
+            },
+            "slug": {
+              "es": "id-bicentenario"
+            }
+          }
+        }
+      },
+      "data": {
+        "status": 422,
+        "statusText": "Unprocessable Entity",
+        "message": "Validation error",
+        "details": {
+          "errors": [
+            {
+              "name": "type",
+              "value": "https://vimeo.com/110006252|https://vimeo.com/110006253",
+              "type": "Array",
+              "details": "The type of \"value\" is incorrect, expected type: Array",
+              "path": [
+                "fields",
+                "video",
+                "en-US"
+              ]
+            }
+          ]
+        },
+        "request": {
+          "url": "/spaces/jwdsialp51tb/environments/master/entries/cfimp.WblVQog60unwnEaCbPsBWk",
+          "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/vnd.contentful.management.v1+json",
+            "X-Contentful-User-Agent": "app contentful.cli/1.14.24; feature space-import; sdk contentful-management.js/7.54.2; platform node.js/v16.15.0; os macOS/v16.15.0;",
+            "CF-Sequence": "28bb5453-547a-41d7-ba0d-3d98a63e9798",
+            "Authorization": "Bearer ...w5WEo",
+            "user-agent": "node.js/v16.15.0",
+            "Accept-Encoding": "gzip",
+            "X-Contentful-Content-Type": "entradas",
+            "Content-Length": 297
+          },
+          "method": "put",
+          "payloadData": "{\"metadata\":{\"tags\":[]},\"fields\":{\"title\":{\"es\":\"ID Bicentenario\"},\"contenido\":{\"es\":\"CANAL ENCUENTRO 2010 Diseño : Gabriela Salem\"},\"excerpt\":{\"es\":null},\"video\":{\"es\":\"https://vimeo.com/110006252|https://vimeo.com/110006253\"},\"cliente\":{\"es\":\"Canal Encuentro\"},\"slug\":{\"es\":\"id-bicentenario\"}}}"
+        },
+        "requestId": "006e3725-cd11-4516-8aa9-5caf0e2787d4"
+      }
+    }
+  }
+]
