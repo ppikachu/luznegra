@@ -6,12 +6,12 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview"
   },
+  "dependencies": {
+    "contentful": "^10.0.0-beta-v10.8"
+  },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.3.1",
     "daisyui": "^2.20.0",
     "nuxt": "3.0.0-rc.6"
-  },
-  "dependencies": {
-    "contentful": "^10.0.0-beta-v10.8"
   }
 }
