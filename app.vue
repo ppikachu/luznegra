@@ -8,8 +8,8 @@
               :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp`"
               :alt="post.fields.imageFeatured.fields.title"
               class="max-w-full border-round"
-              :loading="i > 0 ? 'lazy' : undefined"
             />
+              <!-- :loading="i > 0 ? 'lazy' : undefined" -->
           </figure>
           <div class="card-body">
             <h2 class="card-title">{{ post.fields.title }}</h2>
