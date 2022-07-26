@@ -12,6 +12,6 @@
     "nuxt": "3.0.0-rc.6"
   },
   "dependencies": {
-    "contentful": "^9.1.33"
+    "contentful": "^10.0.0-beta-v10.8"
   }
 }
