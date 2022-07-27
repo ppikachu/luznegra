@@ -25,15 +25,8 @@
 </template>
 
 <script setup>
-  import * as contentful from "contentful"
-  const config = useRuntimeConfig()
-  const client = contentful.createClient({
-    space: config.private.SPACE_ID,
-    accessToken: config.private.ACCESS_TOKEN
-  })
-
   const { $contentfulClient } = useNuxtApp()
-  const posts = await client.getEntries({
+  const posts = await $contentfulClient.getEntries({
     content_type: 'entradas'
   })
   console.log(posts)
