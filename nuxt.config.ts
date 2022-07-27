@@ -4,7 +4,9 @@ import { defineNuxtConfig } from 'nuxt'
 export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   runtimeConfig: {
-    SPACE_ID: process.env.SPACE_ID,
-    ACCESS_TOKEN: process.env.ACCESS_TOKEN,
+    env: {
+      SPACE_ID: process.env.SPACE_ID,
+      ACCESS_TOKEN: process.env.ACCESS_TOKEN,
+    }
   },
 })

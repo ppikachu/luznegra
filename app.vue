@@ -28,8 +28,8 @@
   import {createClient} from "contentful"
   const config = useRuntimeConfig()
   const client = createClient({
-    space: config.SPACE_ID,
-    accessToken: config.ACCESS_TOKEN
+    space: config.env.SPACE_ID,
+    accessToken: config.env.ACCESS_TOKEN
   })
 
   const { $contentfulClient } = useNuxtApp()
