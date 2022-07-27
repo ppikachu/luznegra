@@ -71,8 +71,9 @@ typings/
 # Nuxt generate
 dist
 
-# vuepress build output
+# build output
 .vuepress/dist
+.output
 
 # Serverless directories
 .serverless

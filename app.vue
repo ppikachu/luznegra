@@ -25,11 +25,11 @@
 </template>
 
 <script setup>
-  import {createClient} from "contentful"
+  import * as contentful from "contentful"
   const config = useRuntimeConfig()
-  const client = createClient({
-    space: config.env.SPACE_ID,
-    accessToken: config.env.ACCESS_TOKEN
+  const client = contentful.createClient({
+    space: config.private.SPACE_ID,
+    accessToken: config.private.ACCESS_TOKEN
   })
 
   const { $contentfulClient } = useNuxtApp()
