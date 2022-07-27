@@ -1,8 +1,8 @@
 <template>
-  <div class="container mx-auto my-8">
+  <div class="container mx-auto my-8 grid grid-flow-row grid-cols-3 gap-4">
 
-      <div v-for="post in posts.items" class="grid grid-flow-row grid-cols-3">
-        <div class="card w-96x bg-base-100 shadow-xl">
+      <div v-for="post in posts.items" class="">
+        <div class="card bg-base-100 shadow-xl">
           <figure v-if="post.fields.imageFeatured">
             <img
               :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp`"
@@ -14,8 +14,8 @@
           <div class="card-body">
             <h2 class="card-title">{{ post.fields.title }}</h2>
             <p>{{ post.fields.excerpt }}</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Ver</button>
+            <div class="card-actions">
+              <button class="btn btn-secondary">Ver</button>
             </div>
           </div>
         </div>
@@ -25,8 +25,15 @@
 </template>
 
 <script setup>
+  import {createClient} from "contentful"
+  const config = useRuntimeConfig()
+  const client = createClient({
+    space: config.SPACE_ID,
+    accessToken: config.ACCESS_TOKEN
+  })
+
   const { $contentfulClient } = useNuxtApp()
-  const posts = await $contentfulClient.getEntries({
+  const posts = await client.getEntries({
     content_type: 'entradas'
   })
   console.log(posts)
