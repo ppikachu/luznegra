@@ -1,0 +1,93 @@
+<script lang="ts" setup>
+/**
+ * Define props
+ */
+interface Props {
+  articleId: string
+}
+const props = defineProps<Props>()
+
+// ----------------------------------------------------------------------------
+const config = useRuntimeConfig()
+
+const { data } = await useAsyncData('entradas', async (nuxtApp) => {
+  const { $contentfulClient } = nuxtApp
+  return $contentfulClient.getEntries({
+    // content_type: config.private.CONTENTFUL_CONTENT_KEY,
+    'fields.slug[in]': props.articleId,
+    limit: 1,
+  })
+})
+
+console.log(props.articleId,data)
+// const entry = data.value.items[0]
+
+// const articleBody = entry.fields.contenido
+// const entryHTML = useNuxtApp().$mdit.render(articleBody) || articleBody
+// const metaDescription = articleBody.substring(0, 100).replace(/\r?\n/g, '').replace(/#/g, '') + '...'
+// const uri = useRoute().path
+
+// useHead({
+//   title: entry.fields.title,
+//   meta: [
+//     {
+//       hid: 'description',
+//       name: 'description',
+//       content: metaDescription,
+//     },
+//     { hid: 'og:type', property: 'og:type', content: 'article' },
+//     { hid: 'og:title', property: 'og:title', content: entry.fields.title },
+//     { hid: 'og:description', property: 'og:description', content: metaDescription },
+//     { hid: 'og:url', property: 'og:url', content: `${config.public.HOST}${uri}` },
+//     { hid: 'og:image', property: 'og:image', content: `https:${entry.fields.coverArt.fields.file.url}` },
+//     { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+//   ],
+// })
+</script>
+
+<template>
+  <div>
+
+  </div>
+</template>
+
+<style lang="scss">
+.article__main {
+  background-color: var(--surface-0);
+
+  header {
+    margin-bottom: 3rem;
+  }
+}
+
+.article__body {
+  h2 {
+    margin: 1.5rem 0;
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    border-color: var(--bluegray-100);
+    font-size: 1.5rem; /* primeflex text-2xl */
+  }
+
+  img {
+    max-width: 100%;
+    width: 100%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.03), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 2px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  blockquote {
+    border-left: 5px solid #ddd;
+    padding: 0.5em;
+  }
+
+  pre {
+    white-space: pre;
+    overflow: scroll;
+    display: block;
+
+    code {
+      width: calc(100% - 50px);
+    }
+  }
+}
+</style>
