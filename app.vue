@@ -25,9 +25,12 @@
 </template>
 
 <script setup>
-  const { $contentfulClient } = useNuxtApp()
-  const posts = await $contentfulClient.getEntries({
-    content_type: 'entradas'
+  const { data } = await useAsyncData('entradas', async (nuxtApp) => {
+    const { $contentfulClient } = nuxtApp
+    return $contentfulClient.getEntries({
+      order: '-sys.createdAt',
+      // limit: 10,
+    })
   })
-  console.log(posts)
+  const posts = data
 </script>

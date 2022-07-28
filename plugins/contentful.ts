@@ -8,8 +8,8 @@ import contentful from 'contentful'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
-  // const createClientFunc = process.env.NODE_ENV === 'development' ? createClient : contentful.createClient
-  const createClientFunc = createClient
+  const createClientFunc = process.env.NODE_ENV === 'development' ? createClient : contentful.createClient
+  // const createClientFunc = createClient
   // const createClientFunc = contentful.createClient
   const client = createClientFunc({
     space: config.private.SPACE_ID,
