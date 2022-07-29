@@ -80,9 +80,3 @@ useHead({
     </article>
   </main>
 </template>
-
-<style scoped lang="scss">
-.category-articles {
-  background-color: var(--surface-0);
-}
-</style>

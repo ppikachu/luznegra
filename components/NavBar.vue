@@ -21,21 +21,3 @@ const tags = data.value.items
     </div>
   </nav>
 </template>
-
-<style scoped lang="scss">
-.nav__categories {
-  font-size: 1.2rem;
-
-  a {
-    color: var(--text-color);
-  }
-
-  a:hover {
-    color: var(--text-color);
-  }
-
-  a.ghicon:hover {
-    transform: rotate(-15deg);
-  }
-}
-</style>

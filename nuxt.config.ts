@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   runtimeConfig: {
     private: {
-      // CONTENT_KEY: process.env.CONTENT_KEY,
+      CONTENT_KEY: process.env.CONTENT_KEY,
       SPACE_ID: process.env.SPACE_ID,
       ACCESS_TOKEN: process.env.ACCESS_TOKEN,
     },

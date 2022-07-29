@@ -7,7 +7,8 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
-    "contentful": "^10.0.0-beta-v10.8"
+    "contentful": "^10.0.0-beta-v10.8",
+    "vue-plyr": "^7.0.0"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.3.1",

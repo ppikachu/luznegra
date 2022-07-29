@@ -1,13 +1,10 @@
 <script lang="ts" setup>
 /**
  * Define props
- */
-
+*/
 interface Props {
   tags: object[]
 }
-
-// TODO
 const props = defineProps({
   tags: {
     type: Array,

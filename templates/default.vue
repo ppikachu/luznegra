@@ -2,7 +2,7 @@
   <div>
     <SiteHeader />
     <NavBar />
-    <div class="container mx-auto" style="max-width: 1200px">
+    <div class="container mx-auto">
       <NuxtPage />
     </div>
     <SiteFooter />
