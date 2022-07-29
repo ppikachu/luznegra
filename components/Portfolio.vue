@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
@@ -7,13 +7,20 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   })
 })
 const posts = data
+
+/*function filterProjects(tags: string[]) {
+  return posts.items.filter(post => {
+    return post.fields.tags.some(tag => tags.includes(tag))
+  })
+}*/
 </script>
 
 <template>
   <section id="portfolio">
     <div class="container mx-auto px-4 md:px-8 my-10 columns-2 md:columns-4 space-y-4">
+
       <div v-for="(post, i) in posts.items" class="card card-compact bg-base-300 shadow-xl">
-        <NuxtLink :to="`/proyecto/${post.fields.slug}`">
+        <a :href="`/proyecto/${post.fields.slug}`">
         <figure v-if="post.fields.imageFeatured">
           <img
             :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=400&h=300`"
@@ -40,7 +47,7 @@ const posts = data
             <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
           </div>
         </div>
-        </NuxtLink>
+        </a>
       </div>
     </div>
   </section>

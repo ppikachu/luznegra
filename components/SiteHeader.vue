@@ -6,9 +6,9 @@ const config = useRuntimeConfig()
   <div class="bg-base-100">
     <div class="navbar container mx-auto px-4 md:px-8">
       <div class="flex-1">
-        <NuxtLink :to="'/'">
+        <a href="/">
           <img class="w-32" src="/images/tuboluz.png" :alt="config.public.TEAM_NAME" />
-        </NuxtLink>
+        </a>
       </div>
       <div class="flex-none">
         <ul class="menu menu-horizontal p-0">
