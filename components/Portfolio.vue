@@ -38,10 +38,9 @@ const posts = data
         </figure>
         
         <div class="card-body">
-          <h2 class="card-title">{{ post.fields.title }}</h2>
+          <h2 class="card-title">{{ post.fields.title }}<span v-if="!post.fields.content" class="badge">⚠️</span></h2>
           <p class="text-sm">{{ post.fields.excerpt }}</p>
-          <p v-if="post.fields.content" class="text-sm">{{ post.fields.content.content[0].content[0].value }}</p>
-          <p class="text-sm">{{ post.fields.contenido }}</p>
+          
           <PortfolioVideos v-if="post.fields.video" :videos="post.fields.video" />
           <div class="card-actions justify-end">
             <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />

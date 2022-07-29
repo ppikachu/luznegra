@@ -13,17 +13,22 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   })
 })
 const project = data
-console.log(documentToHtmlString(project.value.items[0].fields.content))
 
 const articleBody = project.value.items[0].fields.content ? documentToHtmlString(project.value.items[0].fields.content) : ''
 const articleTitle = project.value.items[0].fields.title
 const articleVideos = project.value.items[0].fields.video
+const img = project.value.items[0].fields.imageFeatured ? project.value.items[0].fields.imageFeatured.fields.file.url : '/images/no-image.png'
 </script>
 
 <template>
   <div class="container mx-auto px-4 md:px-8">
-    <h1 class="text-3xl">{{ articleTitle }}</h1>
-    <p class="my-4" v-html="articleBody"></p>
+    <h1 class="text-3xl my-4">{{ articleTitle }}</h1>
+    <figure><img
+        :src="`${img}?fm=webp`"
+        :alt="articleTitle"
+        class="max-w-full border-round"
+    /></figure>
+    <div class="my-4" id="content" v-html="articleBody"></div>
     <PortfolioVideos :videos="articleVideos" />
   </div>
 </template>
