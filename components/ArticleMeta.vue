@@ -15,6 +15,6 @@ const props = defineProps({
 
 <template>
   <aside class="space-x-2">
-    <div v-for="tag in props.tags" class="badge badge-info">{{ tag.sys.id }}</div>
+    <div v-for="tag in props.tags" class="badge badge-accent">{{ tag.sys.id }}</div>
   </aside>
 </template>
