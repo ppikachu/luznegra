@@ -7,20 +7,27 @@ const props = defineProps({
     required: true,
   },
 })
+
+let videos = []
+if (props.videos) {
+  props.videos.forEach(video => { videos.push(video.split('/').pop()) })
+  console.log(videos)
+}
+console.log(videos)
 </script>
 
 <template>
-  <aside class="flex flex-col space-y-2 my-4">
+  <aside v-if="videos.length>0" class="flex flex-col space-y-2 my-4">
     <ClientOnly>
-      <div v-for="video in props.videos" class="">
+      <div v-for="video in videos">
         <VuePlyr>
-          <div class="plyr__video-embed">
-            <iframe :src="`${video}?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media`"
-              allowfullscreen
-              allowtransparency
-              allow="autoplay"
-            />
-          </div>
+          <iframe :src="`https://player.vimeo.com/video/${video}?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media`"
+            allowfullscreen
+            allowtransparency
+            allow="autoplay"
+            class="w-full aspect-video rounded-lg"
+          />
+          <!--<div data-plyr-provider="vimeo" :data-plyr-embed-id="video"></div>-->
         </VuePlyr>
       </div>
     </ClientOnly>

@@ -3,7 +3,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 /* Define props */
 interface Props { articleId: string }
 const props = defineProps<Props>()
-
+/* Get contentful data */
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
@@ -12,8 +12,8 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
     limit: 1,
   })
 })
+/* Define article data */
 const project = data
-
 const articleBody = project.value.items[0].fields.content ? documentToHtmlString(project.value.items[0].fields.content) : ''
 const articleTitle = project.value.items[0].fields.title
 const articleVideos = project.value.items[0].fields.video
@@ -21,14 +21,10 @@ const img = project.value.items[0].fields.imageFeatured ? project.value.items[0]
 </script>
 
 <template>
-  <div class="container mx-auto px-4 md:px-8">
-    <h1 class="text-3xl my-4">{{ articleTitle }}</h1>
-    <figure><img
-        :src="`${img}?fm=webp`"
-        :alt="articleTitle"
-        class="max-w-full border-round"
-    /></figure>
-    <div class="my-4" id="content" v-html="articleBody"></div>
+  <div class="container mx-auto px-4 md:px-8 pb-16">
+    <!--<figure><img :src="`${img}?fm=webp`" :alt="articleTitle" class="max-w-full border-round" /></figure>-->
     <PortfolioVideos :videos="articleVideos" />
+    <h1 class="text-5xl my-4">{{ articleTitle }}</h1>
+    <div class="my-4" id="content" v-html="articleBody"></div>
   </div>
 </template>

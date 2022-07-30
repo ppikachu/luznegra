@@ -3,10 +3,10 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
     order: '-sys.createdAt',
-    // limit: 10,
   })
 })
 const posts = data
+console.log(posts)
 
 /*function filterProjects(tags: string[]) {
   return posts.items.filter(post => {
@@ -16,9 +16,9 @@ const posts = data
 </script>
 
 <template>
-  <section id="portfolio">
-    <div class="container mx-auto px-4 md:px-8 my-10 columns-2 md:columns-4 space-y-4">
-
+  <section id="portfolio" class="container mx-auto px-4 md:px-8 my-10">
+    <ProjectTags />
+    <div class="columns-2 md:columns-4 space-y-4">
       <div v-for="(post, i) in posts.items" class="card card-compact bg-base-300 shadow-xl">
         <a :href="`/proyecto/${post.fields.slug}`">
         <figure v-if="post.fields.imageFeatured">
@@ -38,9 +38,10 @@ const posts = data
         </figure>
         
         <div class="card-body">
-          <h2 class="card-title">{{ post.fields.title }}<span v-if="!post.fields.content" class="badge">⚠️</span><span v-if="post.fields.video" class="badge badge-outline">video</span></h2>
+          <h2 class="card-title">{{ post.fields.title }}</h2>
+          <div class="space-x-2"><span v-if="!post.fields.content" class="badge badge-outline">⚠️</span><span v-if="post.fields.video" class="badge badge-outline">video</span></div>
           <p class="text-sm">{{ post.fields.excerpt }}</p>
-          <div class="card-actions justify-end">
+          <div class="card-actions">
             <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
           </div>
         </div>
