@@ -30,6 +30,10 @@ onMounted(() => {
 
   const controls = new OrbitControls( camera, renderer.domElement )
   controls.target.set( -0.1, 0.25, 0 )
+  controls.minAzimuthAngle = Math.PI*2
+  controls.maxAzimuthAngle = Math.PI*0.25
+  controls.minPolarAngle = Math.PI*0.25
+  controls.maxPolarAngle = Math.PI*0.55
   controls.update()
   controls.enablePan = false
   controls.enableDamping = true
