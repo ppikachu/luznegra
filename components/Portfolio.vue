@@ -2,7 +2,7 @@
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
-    order: '-sys.createdAt',
+    order: 'sys.createdAt',
   })
 })
 const posts = data
