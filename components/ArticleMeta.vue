@@ -1,10 +1,5 @@
-<script lang="ts" setup>
-/**
- * Define props
-*/
-interface Props {
-  tags: object[]
-}
+<script setup>
+/* Define props */
 const props = defineProps({
   tags: {
     type: Array,
@@ -14,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <aside class="space-x-2">
-    <div v-for="tag in props.tags" class="badge badge-accent">{{ tag.sys.id }}</div>
-  </aside>
+  <ul class="space-x-2">
+    <li v-for="tag in props.tags" class="badge badge-accent uppercase">{{ tag.sys.id }}</li>
+  </ul>
 </template>

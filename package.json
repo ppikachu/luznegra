@@ -10,7 +10,7 @@
     "@contentful/rich-text-html-renderer": "^15.13.1",
     "@troisjs/components": "^0.0.4",
     "contentful": "^10.0.0-beta-v10.8",
-    "three": "^0.134.0",
+    "three": "^0.143.0",
     "troisjs": "^0.3.4",
     "vue-plyr": "^7.0.0"
   },
