@@ -6,10 +6,15 @@ const props = defineProps({
     required: true,
   },
 })
+
+/*const { data } = await useAsyncData('tags', async (nuxtApp) => {
+  const { $contentfulClient } = nuxtApp
+  return $contentfulClient.getTag()
+})*/
 </script>
 
 <template>
-  <ul class="space-x-2">
-    <li v-for="tag in props.tags" class="badge badge-accent uppercase">{{ tag.sys.id }}</li>
+  <ul class="space-x-2 uppercase font-semibold">
+    <li v-for="tag in props.tags" class="badge badge-sm drop-shadow-sm">{{ tag.sys.id }}</li>
   </ul>
 </template>

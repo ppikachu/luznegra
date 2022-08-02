@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { symlinkSync } from 'fs';
-
 /* Fetch projects */
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
@@ -18,11 +16,9 @@ function onTag(tag) {
 
 const filtered = computed(() => {
  return currentTag.value
-  //? posts.value.items.filter(project => project.metadata.tags.every(tag => tag.sys.id.includes(currentTag.value)))
   ? posts.value.items.filter(r => r.metadata.tags.some(i => i.sys.id === currentTag.value))
   : posts.value.items
 })
-
 </script>
 
 <template>
@@ -42,17 +38,20 @@ const filtered = computed(() => {
               alt="no hay imagen"
               class="w-full"
             />
+          <ArticleMeta v-if="post.metadata.tags[0]"
+            :tags="post.metadata.tags"
+            class="absolute self-end justify-self-start p-2"
+          />
           </figure>
           <div class="card-body">
-            <a :href="`/proyecto/${post.fields.slug}`">
               <h2 class="card-title">{{ post.fields.title }}</h2>
               <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
-              <div class="card-actions mt-3">
-                <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
-                <span v-if="!post.fields.content" class="badge badge-outline">⚠️content</span>
-                <span v-if="post.fields.video" class="badge badge-outline">video</span>
+              <div class="card-actions mt-1">
+                <span v-if="!post.fields.content" class="badge badge-error">⚠️ content</span>
+                <span v-if="!post.fields.video" class="badge badge-error">no video</span>
+                <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0">
+                </a>
               </div>
-            </a>
           </div>
       </li>
     </TransitionGroup>

@@ -27,4 +27,8 @@ export default defineNuxtConfig({
       //GA_APP_NAME: 'LongRun Blog',
     },
   },
+  css: [
+    // https://github.com/sampotts/plyr#options
+    'vue-plyr/dist/vue-plyr.css',
+  ]
 })
