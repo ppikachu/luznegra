@@ -8,7 +8,7 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
 })
 const posts = data
 /* Default tags */
-const currentTag = ref('tv')
+const currentTag = ref('motionGraphics')
 
 function onTag(tag) {
   currentTag.value = tag != '' ? tag.sys.id : null

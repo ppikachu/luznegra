@@ -7,7 +7,7 @@ const config = useRuntimeConfig()
     <div class="navbar container mx-auto px-4 md:px-8">
       <div class="flex-1">
         <a href="/">
-          <img class="w-32" src="/images/tuboluz.png" :alt="config.public.TEAM_NAME" />
+          <img class="w-48" src="/images/tuboluz.png" :alt="config.public.TEAM_NAME" />
         </a>
       </div>
       <div class="flex-none">

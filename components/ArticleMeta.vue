@@ -1,4 +1,7 @@
 <script setup>
+import upperFirst from 'lodash.upperfirst'
+import camelCase from 'lodash.camelcase'
+import startCase from 'lodash.startcase'
 /* Define props */
 const props = defineProps({
   tags: {
@@ -7,14 +10,16 @@ const props = defineProps({
   },
 })
 
-/*const { data } = await useAsyncData('tags', async (nuxtApp) => {
-  const { $contentfulClient } = nuxtApp
-  return $contentfulClient.getTag()
-})*/
+//const categoryTitle = props.category && props.category !== '__hide__' ? upperFirst(camelCase(props.category)) : null
+function categoryTitle(tagId) {
+  console.log(upperFirst(camelCase(tagId)))
+  return tagId && tagId !== '__hide__' ? upperFirst(startCase(tagId)) : null
+}
+
 </script>
 
 <template>
   <ul class="space-x-2 uppercase font-semibold">
-    <li v-for="tag in props.tags" class="badge badge-sm drop-shadow-sm">{{ tag.sys.id }}</li>
+    <li v-for="tag in props.tags" class="badge badge-sm drop-shadow-sm">{{ categoryTitle(tag.sys.id) }}</li>
   </ul>
 </template>
