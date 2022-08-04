@@ -2,8 +2,12 @@ import { defineNuxtConfig } from 'nuxt'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  telemetry: false,
   target: 'static',
   modules: ['@nuxtjs/tailwindcss'],
+  buildModules: [
+    '@nuxtjs/google-fonts'
+  ],
   runtimeConfig: {
     private: {
       CONTENT_KEY: process.env.CONTENT_KEY,
@@ -30,5 +34,10 @@ export default defineNuxtConfig({
   css: [
     // https://github.com/sampotts/plyr#options
     'vue-plyr/dist/vue-plyr.css',
-  ]
+  ],
+  googleFonts: {
+    families: {
+      'Varela Round': true,
+    }
+  }
 })

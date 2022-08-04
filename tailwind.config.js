@@ -3,6 +3,10 @@ module.exports = {
   content: [],
   theme: {
     extend: {},
+    fontFamily: {
+      sans: ['Varela Round', 'sans-serif'],
+      //serif: ['Merriweather', 'serif'],
+    },
   },
   plugins: [require('daisyui')],
   daisyui: {

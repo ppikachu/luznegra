@@ -29,7 +29,7 @@ function buttonClick(tag) {
         v-for="tag in data.items"
         :key="tag"
         @click="buttonClick(tag)"
-        class="btn btn-sm"
+        class="btn btn-sm lg:btn-md"
         :class="{ 'btn-active': tag.sys.id == currentTag }"
       >
         {{ tag.name }}

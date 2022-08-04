@@ -4,11 +4,13 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
     order: 'sys.createdAt',
+    //order: 'fields.order',
+
   })
 })
 const posts = data
 /* Default tags */
-const currentTag = ref('motionGraphics')
+const currentTag = ref()
 
 function onTag(tag) {
   currentTag.value = tag != '' ? tag.sys.id : null
