@@ -68,6 +68,6 @@ const filtered = computed(() => {
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
-  /*transform: translateX(30px);*/
+  transform: scale(0.1);
 }
 </style>
