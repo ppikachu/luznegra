@@ -52,7 +52,7 @@ function animate() {
 
 <template>
   <div class="h-96" >
-    <ClientOnly>
+    <!--<ClientOnly>-->
       <Renderer ref="rendererRef" shadow :shadow-map-size="{ width: 2048, height: 2048 }" antialias :orbit-ctrl="{ enableDamping: true }" resize>
         <Camera :position="{ x:0.6, y:0.3, z: 1.5 }" />
         <Scene background="#044">
@@ -70,6 +70,6 @@ function animate() {
           <UnrealBloomPass :strength="0.25" />
         </EffectComposer>
       </Renderer>
-    </ClientOnly>
+    <!--</ClientOnly>-->
   </div>
 </template>

@@ -47,11 +47,12 @@ onMounted(() => {
   //sky.scale.setScalar( 450000 )
   //scene.add( sky )
 
-  const light = new THREE.PointLight( 0xffffff, 1 )
-  light.position.set( -1, 1, 1 )
+  const light = new THREE.PointLight( 0xffffff, 0.5, 100 )
+  light.position.set( 1,2, 1 )
   light.castShadow = true
   scene.add( light )
-  console.log(light)
+  const ambientlight = new THREE.AmbientLight()
+  scene.add( ambientlight )
 
   const pointLightHelper = new THREE.PointLightHelper( light, 0.1 );
   scene.add( pointLightHelper )
@@ -81,7 +82,7 @@ onMounted(() => {
     const modelPantalla = gltf.scene.children[0].children[0].children[0]
     //model.position.set( 1, 1, 0 )
     modelPantalla.scale.set( 10, 10, 10)
-    modelPantalla.receiveShadow = true
+    //modelPantalla.receiveShadow = true
     modelPantalla.castShadow = true
     //modelPantalla.material.envMap = envMap
     modelPantalla.material.needsUpdate = true

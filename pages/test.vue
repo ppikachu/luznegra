@@ -4,6 +4,7 @@
 
 <template>
   <main class="block">
-    <HeroScene />
+    <ClientOnly><HeroScene /></ClientOnly>
+    
   </main>
 </template>
