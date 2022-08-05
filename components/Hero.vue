@@ -11,7 +11,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 onMounted(() => {
   let mixer
-  const SHADOW_MAP_WIDTH = 2048, SHADOW_MAP_HEIGHT = 1024
+  const SHADOW_SIZE = 2048
   const clock = new THREE.Clock()
   const container = document.getElementById( 'container' )
   const scene = new THREE.Scene()
@@ -25,6 +25,7 @@ onMounted(() => {
   // turn on the physically correct lighting model
   renderer.physicallyCorrectLights = true
   renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.PCFShadowMap
   container.appendChild( renderer.domElement )
 
   const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 )
@@ -50,22 +51,25 @@ onMounted(() => {
   const ambientlight = new THREE.AmbientLight(0x404040)
   //scene.add( ambientlight )
 
-  const lightSun = new THREE.PointLight( 0xffffff, 5, 100 )
-  lightSun.position.set( 1, 2, 1 )
+  const lightSun = new THREE.SpotLight( 0xffffff, 5, 100 )
+  lightSun.position.set( 0, 5, 0 )
+  lightSun.target.position.set( 0, 0, 0 )
   lightSun.castShadow = true
-  lightSun.shadow.bias = 0.0001
-  lightSun.shadow.mapSize.width = SHADOW_MAP_WIDTH;
-  const lightMoon = new THREE.PointLight( 0x0011ff, 2, 100 )
-  lightMoon.position.set( -1, -2, 1 )
+  //lightSun.shadow.bias = 0.0001
+  lightSun.shadow.mapSize.width = lightSun.shadow.mapSize.height = SHADOW_SIZE
+  const lightMoon = new THREE.SpotLight( 0x0011ff, 2, 100 )
+  lightMoon.position.set( 0, -5, 0 )
+  lightMoon.target.position.set( 0, 0, 0 )
   lightMoon.castShadow = true
-  lightMoon.shadow.bias = 0.0001
-  lightMoon.shadow.mapSize.height = SHADOW_MAP_HEIGHT
+  //lightMoon.shadow.bias = 0.0001
+  lightMoon.shadow.mapSize.width = lightMoon.shadow.mapSize.height = SHADOW_SIZE
 
-  const pointLightHelperSun = new THREE.PointLightHelper( lightSun, 0.1 );
-  const pointLightHelperMoon = new THREE.PointLightHelper( lightMoon, 0.1 );
+  const pointLightHelperSun = new THREE.PointLightHelper( lightSun, 0.3 );
+  const pointLightHelperMoon = new THREE.PointLightHelper( lightMoon, 0.2 );
   scene.add( pointLightHelperSun, pointLightHelperMoon )
 
   const lightGroup = new THREE.Group()
+  lightGroup.rotation.x = .1
   lightGroup.add( lightSun, lightMoon )
   scene.add( lightGroup )
   //modelos
@@ -79,13 +83,14 @@ onMounted(() => {
   //  modelPiso.castShadow = true
   //  scene.add( modelPiso )
   //}, undefined, function ( e ) { console.error( e ) })
-
-  const groundGeo = new THREE.PlaneGeometry( 10000, 10000 )
-  const groundMat = new THREE.MeshPhongMaterial( { color: 0xffffff } )
+  const shadowPlaneSize = 5
+  const groundGeo = new THREE.PlaneGeometry( shadowPlaneSize, shadowPlaneSize )
+  const groundMat = new THREE.ShadowMaterial()
   const ground = new THREE.Mesh( groundGeo, groundMat )
+  const groundHelper = new THREE.GridHelper( shadowPlaneSize, 10 )
   ground.rotation.x = - Math.PI / 2
   ground.receiveShadow = true
-  scene.add( ground )
+  scene.add( ground, groundHelper )
 
   loader.load( '/gltf/pantalla.gltf', function ( gltf ) {
     const modelPantalla = gltf.scene.children[0].children[0].children[0]
