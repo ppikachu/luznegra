@@ -4,6 +4,6 @@
 
 <template>
   <main class="block">
-    <HeroScene />
+    <Hero />
   </main>
 </template>
