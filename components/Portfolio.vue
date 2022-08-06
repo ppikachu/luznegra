@@ -40,17 +40,17 @@ const filtered = computed(() => {
               alt="no hay imagen"
               class="w-full"
             />
-          <ArticleMeta v-if="post.metadata.tags[0]"
-            :tags="post.metadata.tags"
-            class="absolute self-end justify-self-start p-2"
-          />
           </figure>
           <div class="card-body">
               <h2 class="card-title">{{ post.fields.title }}</h2>
               <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
               <div class="card-actions mt-1">
+                <ArticleMeta v-if="post.metadata.tags[0]"
+                  :tags="post.metadata.tags"
+                  class="pt-2"
+                />
                 <span v-if="!post.fields.content" class="badge badge-error">⚠️ content</span>
-                <span v-if="!post.fields.video" class="badge badge-error">no video</span>
+                <!--<span v-if="!post.fields.video" class="badge badge-error">no video</span>-->
                 <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0">
                 </a>
               </div>
