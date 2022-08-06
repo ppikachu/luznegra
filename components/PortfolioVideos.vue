@@ -22,7 +22,7 @@ if (props.videos) {
               allowfullscreen
               allowtransparency
               allow="autoplay"
-              class="rounded-lg aspect-video"
+              class="rounded-lg aspect-video w-full"
             ></iframe>
             <iframe v-if="provider[i] == 'vimeo'"
               :src="`https://player.vimeo.com/video/${video}?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media`"
