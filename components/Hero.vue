@@ -54,7 +54,7 @@ onMounted(() => {
   camera.updateProjectionMatrix()
 
   controls = new OrbitControls( camera, renderer.domElement )
-  controls.target.set( -1, 0.5, 0 )
+  controls.target.set( 0, 0.5, 0 )
   //controls.minAzimuthAngle = Math.PI*2
   //controls.maxAzimuthAngle = Math.PI*0.25
   //controls.minPolarAngle = Math.PI*0.25
