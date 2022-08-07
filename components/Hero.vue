@@ -4,22 +4,25 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-//import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 //import { Sky } from 'three/examples/jsm/objects/Sky.js'
 //import { EquirectangularReflectionMapping } from 'three/constants.js'
 
 import chroma from "chroma-js"
 
-const day = new THREE.Color(0xB8F4FF)
-const duskdawn = new THREE.Color(0xFF571F)
+const day = 0xB8F4FF
+const duskdawn = 0x001F57
 const GROUND_SIZE = 100
 const SHADOW_SIZE = 2048
-const SHADOW_PLANE_SIZE = 5
+const DAYNIGHT_CYCLE_SPEED = 16
+const WAKE_UP_TIME = 5
 const lightPower = 5
 const hdrimgUrl = '/images/Studio_80s.hdr'
 const clock = new THREE.Clock()
-let mixer, time = 0, container, loader,
-scene,sceneBg, camera, renderer, controls,
+const loader = new GLTFLoader()
+let sceneBg = ref()
+let mixer, time = 0, container,
+scene, camera, renderer, controls,
 lightSun, lightMoon, ambientLight, lightHelperSun, lightHelperMoon, lightGroup,
 groundGeometry, groundMaterial, ground
 
@@ -46,12 +49,12 @@ onMounted(() => {
 
   camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 )
   camera.near = 0.1
-  camera.position.set( 0.5, 0.2, 2 )
+  camera.position.set( 2, 0.5, 2.5 )
   camera.aspect = container.clientWidth / container.clientHeight
   camera.updateProjectionMatrix()
 
   controls = new OrbitControls( camera, renderer.domElement )
-  controls.target.set( -0.1, 0.25, 0 )
+  controls.target.set( -1, 0.5, 0 )
   //controls.minAzimuthAngle = Math.PI*2
   //controls.maxAzimuthAngle = Math.PI*0.25
   //controls.minPolarAngle = Math.PI*0.25
@@ -61,23 +64,22 @@ onMounted(() => {
   controls.enableDamping = true
 
   // environment
-  //scene.background = sceneBg
   //const pmremGenerator = new THREE.PMREMGenerator( renderer )
   //scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture
-  //scene.fog = new THREE.FogExp2( sceneBg, 0.25 )
-  //const loadedTexture = new RGBELoader().load(hdrimgUrl, () => {
-    //const envMap = loadedTexture
-    //scene.environment = envMap
-    //scene.environment.mapping = THREE.EquirectangularReflectionMapping
-    //scene.environment.needsUpdate = true
-  //})
+
+  /*const loadedTexture = new RGBELoader().load(hdrimgUrl, () => {
+    const envMap = loadedTexture
+    scene.environment = envMap
+    scene.environment.mapping = THREE.EquirectangularReflectionMapping
+    scene.environment.needsUpdate = true
+  })*/
 
   // Add Sky
   //let sky = new Sky()
   //sky.scale.setScalar( 450000 )
   //scene.add( sky )
   ambientLight = new THREE.AmbientLight(0x404040)
-  //scene.add( ambientLight )
+  scene.add( ambientLight )
 
   lightSun = new THREE.DirectionalLight( 0xffaaaa, lightPower, 100 )
   lightSun.position.set( 0, 5, 2 )
@@ -97,27 +99,16 @@ onMounted(() => {
   //lightMoon.shadow.bias = 0.0001
   lightMoon.shadow.mapSize.width = lightMoon.shadow.mapSize.height = SHADOW_SIZE
   lightHelperMoon = new THREE.DirectionalLightHelper( lightMoon )
-  scene.add( lightHelperSun, lightHelperMoon )
+  //scene.add( lightHelperSun, lightHelperMoon )
 
   lightGroup = new THREE.Group()
   lightGroup.rotation.x = .1
   lightGroup.add( lightSun, lightMoon )
   scene.add( lightGroup )
 
-  //LA ESCENA
-  loader = new GLTFLoader()
-
   // GROUND
-  //loader.load( '/gltf/piso.gltf', function ( gltf ) {
-  //  const modelPiso = gltf.scene.children[1]
-  //  modelPiso.scale.set( 10, 10, 10)
-  //  modelPiso.receiveShadow = true
-  //  modelPiso.castShadow = true
-  //  scene.add( modelPiso )
-  //}, undefined, function ( e ) { console.error( e ) })
-
   groundGeometry = new THREE.PlaneGeometry( GROUND_SIZE, GROUND_SIZE )
-  groundMaterial = new THREE.MeshStandardMaterial( { color: 0x005533, side: THREE.DoubleSide } )
+  groundMaterial = new THREE.MeshStandardMaterial( { color: 0x888888, side: THREE.DoubleSide } )
   ground = new THREE.Mesh( groundGeometry, groundMaterial )
   ground.receiveShadow = true
   //ground.castShadow = true
@@ -150,30 +141,35 @@ onMounted(() => {
 
   animate()
 
+  function animate() {
+    requestAnimationFrame( animate )
+    time = clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME
+    // opciones: rgb, hsl, lab, lch, lrgb
+    sceneBg.value = chroma.mix( day, duskdawn, ((Math.sin(time)+1)/2), 'hsl' ).gl()
+    const color = new THREE.Color( sceneBg.value[0], sceneBg.value[1], sceneBg.value[2])
+    
+    scene.fog = new THREE.FogExp2( color, 0.2 )
+    scene.background = color
+    ambientLight.color = color
+    ambientLight.intensity = smoothstep(0,2,Math.sin(time+Math.PI))
+    lightSun.intensity = smoothstep(0,0.9,Math.sin(time+Math.PI))
+    lightMoon.intensity = smoothstep(0,1.5,Math.sin(time))
+
+    lightGroup.rotation.z = time+Math.PI/2
+    controls.update()
+    //mixer.update( delta )
+    renderer.render( scene, camera )
+  }
+
+  function smoothstep (min, max, value) {
+    var x = Math.max(0, Math.min(1, (value-min)/(max-min)))
+    return x*x*(3 - 2*x)
+  }
+
   window.onresize = function () {
     camera.aspect = container.clientWidth / container.clientHeight
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight )
-  }
-
-  function animate() {
-    requestAnimationFrame( animate )
-    time = clock.getElapsedTime()/8
-    // opciones: rgb, hsl, lab, lch, lrgb
-    sceneBg = chroma.mix('#222', '#002', (Math.cos(time)), 'rgb') //#TODO
-    const color = new THREE.Color(sceneBg._rgb[0], sceneBg._rgb[1], sceneBg._rgb[2])
-    //console.log(color.r, color.g, color.b)
-    
-    scene.fog = new THREE.FogExp2( color, 0.01 )
-    scene.background = color
-    //scene.background.copy(day).lerp(duskdawn, 0.5 * (Math.sin(t) + 1))
-    //ambientLight.color = color
-
-    lightGroup.rotation.z = time
-    lightSun.intensity = (Math.cos(time)+1)/2
-    controls.update()
-    //mixer.update( delta )
-    renderer.render( scene, camera )
   }
 })
 
@@ -190,7 +186,6 @@ onUnmounted(() => {
   lightHelperSun.dispose()
   lightHelperMoon.dispose()
   //lightGroup.dispose()
-  //loader.dispose()
 })
 </script>
 

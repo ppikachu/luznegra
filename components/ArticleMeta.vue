@@ -10,9 +10,7 @@ const props = defineProps({
   },
 })
 
-//const categoryTitle = props.category && props.category !== '__hide__' ? upperFirst(camelCase(props.category)) : null
 function categoryTitle(tagId) {
-  //console.log(upperFirst(camelCase(tagId)))
   return tagId && tagId !== '__hide__' ? upperFirst(startCase(tagId)) : null
 }
 
