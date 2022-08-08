@@ -1,5 +1,7 @@
 <script setup>
-
+definePageMeta({
+  layout: 'with-sidebar',
+})
 </script>
 
 <template>

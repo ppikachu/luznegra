@@ -10,7 +10,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 
 import chroma from "chroma-js"
 
-const day = 0xB8F4FF
+const day = 0xffffff
 const duskdawn = 0x001F57
 const GROUND_SIZE = 100
 const SHADOW_SIZE = 2048
@@ -47,14 +47,16 @@ onMounted(() => {
   renderer.shadowMap.type = THREE.PCFShadowMap
   container.appendChild( renderer.domElement )
 
-  camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 )
-  camera.near = 0.1
-  camera.position.set( 2, 0.5, 2.5 )
+  camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 )
+  //camera = new THREE.OrthographicCamera( window.innerWidth/ -10, window.innerWidth/10, window.innerHeight /10, window.innerHeight / -10, 1, 1000 )
   camera.aspect = container.clientWidth / container.clientHeight
+  camera.position.set( 1.8, 0.5, 2.2 )
+  //camera.position.set( 1, 1, 1 )
   camera.updateProjectionMatrix()
-
   controls = new OrbitControls( camera, renderer.domElement )
-  controls.target.set( 0, 0.5, 0 )
+  controls.target.set( -0.5, 0.5, 0 )
+  //controls.target.set( 0, 0, 0 )
+
   //controls.minAzimuthAngle = Math.PI*2
   //controls.maxAzimuthAngle = Math.PI*0.25
   //controls.minPolarAngle = Math.PI*0.25
@@ -108,7 +110,7 @@ onMounted(() => {
 
   // GROUND
   groundGeometry = new THREE.PlaneGeometry( GROUND_SIZE, GROUND_SIZE )
-  groundMaterial = new THREE.MeshStandardMaterial( { color: 0x888888, side: THREE.DoubleSide } )
+  groundMaterial = new THREE.MeshStandardMaterial( { color: 0xffffff, side: THREE.DoubleSide } )
   ground = new THREE.Mesh( groundGeometry, groundMaterial )
   ground.receiveShadow = true
   //ground.castShadow = true
@@ -118,7 +120,7 @@ onMounted(() => {
   loader.load( '/gltf/pantalla.gltf', function ( gltf ) {
     const modelPantalla = gltf.scene.children[0].children[0].children[0]
     //model.position.set( 1, 1, 0 )
-    modelPantalla.scale.set( 10, 10, 10)
+    modelPantalla.scale.set( 15, 15, 15)
     //modelPantalla.receiveShadow = true
     modelPantalla.castShadow = true
     //modelPantalla.material.envMap = envMap
@@ -130,7 +132,7 @@ onMounted(() => {
 
   loader.load( '/gltf/panchera.gltf', function ( gltf ) {
     const modelPanchera = gltf.scene.children[0].children[0].children[0]
-    modelPanchera.position.set( 0, 0, 1 )
+    modelPanchera.position.set( 0, 0, 1.7 )
     modelPanchera.scale.set( 10, 10, 10)
     modelPanchera.castShadow = true
     //modelPanchera.material.envMap = envMap

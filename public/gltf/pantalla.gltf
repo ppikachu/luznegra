@@ -3,21 +3,21 @@
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 990,
+      "count": 1062,
       "type": "SCALAR"
     },
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 522,
+      "count": 532,
       "max": [
         0.0900000035762787,
         0.120000004768372,
-        0.0199999995529652
+        0.0
       ],
       "min": [
         -0.0900000035762787,
-        -0.00499999523162842,
+        -0.0199999958276749,
         -0.0199999995529652
       ],
       "type": "VEC3"
@@ -25,19 +25,19 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 522,
+      "count": 532,
       "type": "VEC3"
     },
     {
       "bufferView": 3,
       "componentType": 5126,
-      "count": 522,
+      "count": 532,
       "type": "VEC4"
     },
     {
       "bufferView": 4,
       "componentType": 5126,
-      "count": 522,
+      "count": 532,
       "type": "VEC2"
     }
   ],
@@ -48,37 +48,37 @@
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 3960,
+      "byteLength": 4248,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 6264,
-      "byteOffset": 3960,
+      "byteLength": 6384,
+      "byteOffset": 4248,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 6264,
-      "byteOffset": 10224,
+      "byteLength": 6384,
+      "byteOffset": 10632,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 8352,
-      "byteOffset": 16488,
+      "byteLength": 8512,
+      "byteOffset": 17016,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 4176,
-      "byteOffset": 24840,
+      "byteLength": 4256,
+      "byteOffset": 25528,
       "target": 34962
     }
   ],
   "buffers": [
     {
-      "byteLength": 29016,
+      "byteLength": 29784,
       "uri": "pantalla.bin"
     }
   ],
@@ -148,7 +148,7 @@
       "children": [
         1
       ],
-      "name": "pantalla.obj"
+      "name": "pantalla2.obj"
     },
     {
       "children": [

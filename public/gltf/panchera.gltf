@@ -3,41 +3,41 @@
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 2100,
+      "count": 2388,
       "type": "SCALAR"
     },
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 754,
+      "count": 864,
       "max": [
-        0.00842310115695,
-        0.0186866000294685,
-        0.0124476011842489
+        0.0205945018678904,
+        0.0456887036561966,
+        0.0304344017058611
       ],
       "min": [
-        -0.00842310115695,
-        -6.83097168803215e-05,
-        -0.0124476011842489
+        -0.0205945018678904,
+        -0.000167017802596092,
+        -0.0304344017058611
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 754,
+      "count": 864,
       "type": "VEC3"
     },
     {
       "bufferView": 3,
       "componentType": 5126,
-      "count": 754,
+      "count": 864,
       "type": "VEC4"
     },
     {
       "bufferView": 4,
       "componentType": 5126,
-      "count": 754,
+      "count": 864,
       "type": "VEC2"
     }
   ],
@@ -48,37 +48,37 @@
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 8400,
+      "byteLength": 9552,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 9048,
-      "byteOffset": 8400,
+      "byteLength": 10368,
+      "byteOffset": 9552,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 9048,
-      "byteOffset": 17448,
+      "byteLength": 10368,
+      "byteOffset": 19920,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 12064,
-      "byteOffset": 26496,
+      "byteLength": 13824,
+      "byteOffset": 30288,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 6032,
-      "byteOffset": 38560,
+      "byteLength": 6912,
+      "byteOffset": 44112,
       "target": 34962
     }
   ],
   "buffers": [
     {
-      "byteLength": 44592,
+      "byteLength": 51024,
       "uri": "panchera.bin"
     }
   ],
@@ -147,7 +147,7 @@
       "children": [
         1
       ],
-      "name": "panchera2.obj"
+      "name": "panchera4.obj"
     },
     {
       "children": [
