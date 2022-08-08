@@ -24,7 +24,8 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <section id="portfolio" class="container mx-auto px-4 md:px-8 my-10">
+  <section id="portfolio" class="container mx-auto md:px-8 my-10">
+     <h1 class="text-5xl font-bold text-center my-8">Portfolio</h1>
     <ProjectTags @tag="onTag" :initTag="currentTag" />
     <TransitionGroup name="list" tag="ul" class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
       <li v-for="(post, i) in filtered" :key="post" class="card card-compact bg-base-300 shadow-xl">
