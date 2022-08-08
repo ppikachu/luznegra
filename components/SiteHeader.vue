@@ -22,9 +22,9 @@ const config = useRuntimeConfig()
       </div>
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal p-0">
-          <li><a>Quienes somos</a></li>
-          <li><a>Portfolio</a></li>
-          <li><a>Micromerciales</a></li>
+          <li><a href="#quienes_somos">Quienes somos</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <!--<li><a>Micromerciales</a></li>-->
         </ul>
       </div>
     </div>
