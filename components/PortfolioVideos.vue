@@ -36,7 +36,7 @@ if (props.videos) {
       </div>
     </aside>
     <div v-if="props.videos.length>1" class="justify-center py-2 btn-group">
-      <a v-for="(video, i) in videoId" :href="`#${i}`" class="btn">{{ video }}</a> 
+      <a v-for="(video, i) in videoId" :href="`#${i}`" class="btn">{{ i+1 }}</a>
     </div>
   </ClientOnly>
 </template>

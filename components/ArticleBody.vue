@@ -25,11 +25,15 @@ const imgGallery = project.value.items[0].fields.imgGallery
 
 <template>
   <div class="container mx-auto px-4 md:px-8 pb-16">
-    <!--<figure><img :src="`${img}?fm=webp`" :alt="articleTitle" class="max-w-full border-round" /></figure>-->
     <PortfolioVideos :videos="articleVideos" />
     <PortfolioGallery :gallery="imgGallery" />
-    <h1 class="text-5xl my-4">{{ articleTitle }}</h1>
-    <div class="my-4" id="content" v-html="articleBody"></div>
-    <ArticleMeta :tags="articleTags" />
+    <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
+      <h1 class="text-4xl">{{ articleTitle }}</h1>
+      <ArticleMeta :tags="articleTags" />
+    </div>
+    <div class="prose my-4">
+      <div class="mb-4" id="content" v-html="articleBody"></div>
+    </div>
+    
   </div>
 </template>

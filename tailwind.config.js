@@ -8,7 +8,10 @@ module.exports = {
       //serif: ['Merriweather', 'serif'],
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('daisyui')
+  ],
   daisyui: {
     themes: ["halloween", "dark", "night", "halloween"],
     darkTheme: "halloween",
