@@ -1,39 +1,52 @@
 <script setup>
 import * as THREE from 'three'
-
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 //import { Sky } from 'three/examples/jsm/objects/Sky.js'
 //import { EquirectangularReflectionMapping } from 'three/constants.js'
-import chroma from "chroma-js"
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import chroma from 'chroma-js'
 
 const day = 0xffffff
-const duskdawn = 0xff1F57
-const night = 0x0000ff
+const duskdawn = 0xB20001
+const night = 0x031837
 const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
 const GROUND_SIZE = 100
 const SHADOW_SIZE = 2048
 const DAYNIGHT_CYCLE_SPEED = 16
-const WAKE_UP_TIME = 0
+const WAKE_UP_TIME = 2
 const lightPower = 5
 const hdrimgUrl = '/images/Studio_80s.hdr'
 const clock = new THREE.Clock()
 const loader = new GLTFLoader()
 let sceneBg = ref()
+let mouseX = 0
+let mouseY = 0
+const frustumSize = 3
+const cameraPerspPos = {
+  x: 0,
+  y: 0.8,
+  z: 3.2
+}
+const params = {
+  exposure: 1,
+  bloomStrength: 0.5,
+  bloomThreshold: 0.9,
+  bloomRadius: 0.1
+}
 let mixer, time = 0, container,
-scene, camera, renderer, controls,
+scene, camera, renderer, composer,
 lightSun, lightMoon, ambientLight, lightHelperSun, lightHelperMoon, lightGroup,
 groundGeometry, groundMaterial, ground,
 telonMaterial
 
 onMounted(() => {
-  const startButton = document.getElementById( 'startButton' )
-  startButton.addEventListener( 'click', function () { initProjector() })
+  let windowHalfX = window.innerWidth / 2
+  let windowHalfY = window.innerHeight / 2
 
   function initProjector() {
-    const overlay = document.getElementById( 'overlay' );
-		overlay.remove()
     const video = document.getElementById( 'video' )
     video.play()
 
@@ -46,15 +59,18 @@ onMounted(() => {
       {
         color: 0x000000,
         emissive: 0xffffff,
+        //transparent: true,
         emissiveMap: telonTexture,
-        //alphaMap: telonTexture,
+        alphaMap: telonTexture,
       }
     )
+    //telonMaterial.needsUpdate = true
 
     const telon = new THREE.Mesh( telonGeometry, telonMaterial )
     telon.position.set( 0, 0.9, 0.02 )
     scene.add( telon )
   }
+
   //#region sceneSetup
   container = document.getElementById( 'container' )
   scene = new THREE.Scene()
@@ -70,21 +86,21 @@ onMounted(() => {
   renderer.shadowMap.type = THREE.PCFShadowMap
   container.appendChild( renderer.domElement )
 
+  //perspectiveCamera( fov, aspect, near, far )
   camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 )
-  //camera = new THREE.OrthographicCamera( window.innerWidth/ -10, window.innerWidth/10, window.innerHeight /10, window.innerHeight / -10, 1, 1000 )
   camera.aspect = container.clientWidth / container.clientHeight
-  camera.position.set( 1.8, 0.5, 2.2 )
-  //camera.position.set( 1, 1, 1 )
+  camera.position.set( cameraPerspPos.x, cameraPerspPos.y, cameraPerspPos.z )
+  camera.lookAt( 0, 0.5, 0 )
+
+  //orthographicCamera( left, right, top, bottom, near, far )
+  //const aspect = container.clientWidth / container.clientHeight
+  //camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 50 )
+  //camera.position.set( 0, 0.5, 3 )
+  //camera.lookAt( 0, 0.5, 0 )
+  
   camera.updateProjectionMatrix()
-  controls = new OrbitControls( camera, renderer.domElement )
-  controls.target.set( -0.5, 0.5, 0 )
-  //controls.minAzimuthAngle = Math.PI*2
-  //controls.maxAzimuthAngle = Math.PI*0.25
-  //controls.minPolarAngle = Math.PI*0.25
-  //controls.maxPolarAngle = Math.PI*0.55
-  controls.enablePan = false
-  controls.enableDamping = true
   //#endregion sceneSetup
+  
   //#region environment
   //const pmremGenerator = new THREE.PMREMGenerator( renderer )
   //scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture
@@ -101,12 +117,13 @@ onMounted(() => {
   //sky.scale.setScalar( 450000 )
   //scene.add( sky )
   //#endregion environment
+
   //#region Lights
   ambientLight = new THREE.AmbientLight(0x404040)
   scene.add( ambientLight )
 
   lightSun = new THREE.DirectionalLight( 0xffaaaa, lightPower, 100 )
-  lightSun.position.set( 0, 5, 2 )
+  lightSun.position.set( 0, 40, -20 )
   lightSun.distance = 10
   lightSun.angle = 0.3
   lightSun.castShadow = true
@@ -116,7 +133,7 @@ onMounted(() => {
   lightHelperSun.color = 0xff0000
 
   lightMoon = new THREE.DirectionalLight( 0x0011ff, lightPower, 100 )
-  lightMoon.position.set( 0, -5, -2 )
+  lightMoon.position.set( 0, -5, 5 )
   lightMoon.distance = 10
   lightMoon.angle = 0.3
   lightMoon.castShadow = true
@@ -131,6 +148,7 @@ onMounted(() => {
   //lightGroup.add( lightSun )
   scene.add( lightGroup )
   //#endregion Lights
+  
   //#region GROUND
   groundGeometry = new THREE.PlaneGeometry( GROUND_SIZE, GROUND_SIZE )
   groundMaterial = new THREE.MeshStandardMaterial( { color: 0xffffff, side: THREE.DoubleSide } )
@@ -165,34 +183,49 @@ onMounted(() => {
   }, undefined, function ( e ) { console.error( e ) })
   //#endregion GROUND
   
+  // postprocessing
+  //const renderScene = new RenderPass( scene, camera )
+  //const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
+  //bloomPass.threshold = params.bloomThreshold;
+  //bloomPass.strength = params.bloomStrength;
+  //bloomPass.radius = params.bloomRadius;
+
+  //composer = new EffectComposer( renderer )
+  //composer.addPass( renderScene )
+  //composer.addPass( bloomPass )
+
+  document.addEventListener( 'mousemove', onDocumentMouseMove )
+  window.addEventListener( 'resize', onWindowResize )
   animate()
+  initProjector()
 
   function animate() {
     requestAnimationFrame( animate )
+    const targetX = mouseX/3 * .001-Math.PI*0.15
+		const targetY = mouseY/3 * .001
+    scene.rotation.y += 0.05 * ( targetX - scene.rotation.y )
+    scene.rotation.x += 0.05 * ( targetY - scene.rotation.x )
+
     time = clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME
     const fullTimeArc  = (Math.sin((time+Math.PI/4)*2)+1)/2
     const midArc = Math.cos(time)
 
-    if (midArc > 0)
-    sceneBg.value = chroma.mix( duskdawn, day, fullTimeArc, mixMethod ).gl()
-    else
-    //sceneBg.value = chroma.mix( duskdawn, day, fullTimeArc, mixMethod ).gl()
-    sceneBg.value = chroma.mix( duskdawn, night, fullTimeArc, mixMethod ).gl()
+    if (midArc > 0) sceneBg.value = chroma.mix( duskdawn, day, fullTimeArc, mixMethod ).gl()
+      else          sceneBg.value = chroma.mix( duskdawn, night, fullTimeArc, mixMethod ).gl()
     const color = new THREE.Color( sceneBg.value[0], sceneBg.value[1], sceneBg.value[2])
     
     scene.fog = new THREE.FogExp2( color, 0.2 )
     scene.background = color
     ambientLight.color = color
-    ambientLight.intensity = Math.cos(time*2)*0.25+0.5
+    ambientLight.intensity = Math.cos(time*2)*0.1+0.1
     lightSun.intensity = smoothstep( 0, 0.5, Math.cos(time) )
     lightMoon.intensity = smoothstep( 0, 0.5, Math.cos(time+Math.PI) )
-    //lightSun.intensity = 0
-    //lightMoon.intensity = 0
+    //if (telonMaterial) telonMaterial.color = color
 
     lightGroup.rotation.z = time
-    controls.update()
     //mixer.update( delta )
     renderer.render( scene, camera )
+    //composer.render()
   }
 
   function smoothstep (min, max, value) {
@@ -200,8 +233,23 @@ onMounted(() => {
     return x*x*(3 - 2*x)
   }
 
-  window.onresize = function () {
+  function onDocumentMouseMove( event ) {
+    mouseX = ( event.clientX - windowHalfX )
+    mouseY = ( event.clientY - windowHalfY ) * 0.3
+  }
+
+  function onWindowResize() {
+    windowHalfX = window.innerWidth / 2
+    windowHalfY = window.innerHeight / 2
+    //persp
     camera.aspect = container.clientWidth / container.clientHeight
+    //ortho
+    //const aspect = container.clientWidth / container.clientHeight
+    //camera.left = - frustumSize * aspect / 2;
+    //camera.right = frustumSize * aspect / 2;
+    //camera.top = frustumSize / 2;
+    //camera.bottom = - frustumSize / 2
+
     camera.updateProjectionMatrix()
     renderer.setSize(container.clientWidth, container.clientHeight )
   }
@@ -212,7 +260,6 @@ onUnmounted(() => {
   //scene.dispose()
   renderer.dispose()
   //camera.dispose()
-  controls.dispose()
   //sceneBg.dispose()
   ambientLight.dispose()
   lightSun.dispose()
@@ -227,13 +274,12 @@ onUnmounted(() => {
   <div id="container" class="h-96 block overflow-hidden">
     <video id="video"
       loop
+      muted
       crossOrigin="anonymous"
       playsinline
       style="display:none"
     >
       <source src="/planetario_old_film.mp4" type="video/mp4">
     </video>
-
-    <div id="overlay" class="absolute p-8"><button id="startButton" class="btn">Play</button></div>
   </div>
 </template>

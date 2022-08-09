@@ -21,6 +21,7 @@ const img = project.value.items[0].fields.imageFeatured ? project.value.items[0]
 const articleTags = project.value.items[0].metadata.tags
 //const createdAt = new Date(project.value.items[0].sys.createdAt)
 const imgGallery = project.value.items[0].fields.imgGallery
+const articleContenido = project.value.items[0].fields.contenido ? project.value.items[0].fields.contenido : ''
 </script>
 
 <template>
@@ -34,6 +35,6 @@ const imgGallery = project.value.items[0].fields.imgGallery
     <div class="prose my-4">
       <div class="mb-4" id="content" v-html="articleBody"></div>
     </div>
-    
+    <div v-html="articleContenido" class="rounded-lg aspect-video w-full"></div>
   </div>
 </template>
