@@ -24,11 +24,12 @@ const loader = new GLTFLoader()
 let sceneBg = ref()
 let mouseX = 0
 let mouseY = 0
+const initialSceneRotation = -Math.PI*0.2
 const frustumSize = 3
 const cameraPerspPos = {
   x: 0,
-  y: 0.8,
-  z: 3.2
+  y: 0.6,
+  z: 3.8
 }
 const params = {
   exposure: 1,
@@ -74,6 +75,8 @@ onMounted(() => {
   //#region sceneSetup
   container = document.getElementById( 'container' )
   scene = new THREE.Scene()
+  scene.rotation.y = initialSceneRotation
+
   renderer = new THREE.WebGLRenderer( { antialias: true } )
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
@@ -200,7 +203,7 @@ onMounted(() => {
 
   function animate() {
     requestAnimationFrame( animate )
-    const targetX = mouseX/3 * .001-Math.PI*0.15
+    const targetX = mouseX/3 * .001 + initialSceneRotation //rotación (encuadre) inicial
 		const targetY = mouseY/3 * .001
     scene.rotation.y += 0.05 * ( targetX - scene.rotation.y )
     scene.rotation.x += 0.05 * ( targetY - scene.rotation.x )
@@ -217,7 +220,7 @@ onMounted(() => {
     if (midArc < 0 && modelPanchera) modelPanchera.material.emissiveIntensity = 1
       else if (modelPanchera)        modelPanchera.material.emissiveIntensity = 0
 
-    scene.fog = new THREE.FogExp2( color, 0.2 )
+    scene.fog = new THREE.FogExp2( color, 0.1 )
     scene.background = color
     ambientLight.color = color
     ambientLight.intensity = Math.cos(time*2)*0.1+0.1
@@ -274,7 +277,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="container" class="h-96 block overflow-hidden">
+  <div id="container" class="hero block overflow-hidden">
     <video id="video"
       loop
       muted
@@ -286,3 +289,9 @@ onUnmounted(() => {
     </video>
   </div>
 </template>
+
+<style scoped>
+  .hero {
+    height: 66vh;
+  }
+</style>
