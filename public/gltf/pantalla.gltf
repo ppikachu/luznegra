@@ -84,22 +84,21 @@
   ],
   "images": [
     {
-      "uri": "m_pantalla_baseColor.png"
+      "uri": "m_pantalla_baseColor.jpg"
     },
     {
-      "uri": "m_pantalla_occlusionRoughnessMetallic.png"
+      "uri": "m_pantalla_occlusionRoughnessMetallic.jpg"
     },
     {
-      "uri": "m_pantalla_normal.png"
+      "uri": "m_pantalla_normal.jpg"
     },
     {
-      "uri": "m_pantalla_emissive.png"
+      "uri": "m_pantalla_emissive.jpg"
     }
   ],
   "materials": [
     {
       "alphaMode": "OPAQUE",
-      "doubleSided": true,
       "emissiveFactor": [
         1.0,
         1.0,

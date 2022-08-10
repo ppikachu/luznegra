@@ -84,16 +84,16 @@
   ],
   "images": [
     {
-      "uri": "m_panch_baseColor.png"
+      "uri": "m_panch_baseColor.jpg"
     },
     {
-      "uri": "m_panch_occlusionRoughnessMetallic.png"
+      "uri": "m_panch_occlusionRoughnessMetallic.jpg"
     },
     {
-      "uri": "m_panch_normal.png"
+      "uri": "m_panch_normal.jpg"
     },
     {
-      "uri": "m_panch_emissive.png"
+      "uri": "m_panch_emissive.jpg"
     }
   ],
   "materials": [

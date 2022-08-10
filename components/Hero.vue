@@ -40,7 +40,7 @@ let mixer, time = 0, container,
 scene, camera, renderer, composer,
 lightSun, lightMoon, ambientLight, lightHelperSun, lightHelperMoon, lightGroup,
 groundGeometry, groundMaterial, ground,
-telonMaterial
+telonMaterial, modelPanchera
 
 onMounted(() => {
   let windowHalfX = window.innerWidth / 2
@@ -172,14 +172,13 @@ onMounted(() => {
   }, undefined, function ( e ) { console.error( e ) })
 
   loader.load( '/gltf/panchera.gltf', function ( gltf ) {
-    const modelPanchera = gltf.scene.children[0].children[0].children[0]
+    modelPanchera = gltf.scene.children[0].children[0].children[0]
     modelPanchera.position.set( 0, 0, 1.7 )
     modelPanchera.scale.set( 10, 10, 10)
     modelPanchera.castShadow = true
     //modelPanchera.material.envMap = envMap
     //modelPanchera.material.needsUpdate = true
     scene.add( modelPanchera )
-    //console.log(modelPanchera)
   }, undefined, function ( e ) { console.error( e ) })
   //#endregion GROUND
   
@@ -214,6 +213,10 @@ onMounted(() => {
       else          sceneBg.value = chroma.mix( duskdawn, night, fullTimeArc, mixMethod ).gl()
     const color = new THREE.Color( sceneBg.value[0], sceneBg.value[1], sceneBg.value[2])
     
+    //luces auto on/off
+    if (midArc < 0 && modelPanchera) modelPanchera.material.emissiveIntensity = 1
+      else if (modelPanchera)        modelPanchera.material.emissiveIntensity = 0
+
     scene.fog = new THREE.FogExp2( color, 0.2 )
     scene.background = color
     ambientLight.color = color
