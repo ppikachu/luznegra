@@ -25,6 +25,10 @@ let sceneBg = ref()
 let mouseX = 0
 let mouseY = 0
 const initialSceneRotation = -Math.PI*0.2
+const turntableLimit = 1
+const turntableLimitX = -0.145
+const turntableSpeed = 0.002
+const turntableSpeedB = 0.005
 const frustumSize = 3
 const cameraPerspPos = {
   x: 0,
@@ -37,42 +41,16 @@ const params = {
   bloomThreshold: 0.9,
   bloomRadius: 0.1
 }
-let mixer, time = 0, container,
+let mixer, windowHalfX, windowHalfY, time = 0, container,
 scene, camera, renderer, composer,
 lightSun, lightMoon, ambientLight, lightHelperSun, lightHelperMoon, lightGroup,
 groundGeometry, groundMaterial, ground,
 telonMaterial, modelPanchera
 
 onMounted(() => {
-  let windowHalfX = window.innerWidth / 2
-  let windowHalfY = window.innerHeight / 2
-
-  function initProjector() {
-    const video = document.getElementById( 'video' )
-    video.play()
-
-    const telonGeometry = new THREE.PlaneGeometry( 2, 1.1 )
-    const telonTexture = new THREE.VideoTexture( video )
-    telonTexture.encoding = THREE.sRGBEncoding
-    telonTexture.needsUpdate = true
-
-    telonMaterial = new THREE.MeshLambertMaterial(
-      {
-        color: 0x000000,
-        emissive: 0xffffff,
-        //transparent: true,
-        emissiveMap: telonTexture,
-        alphaMap: telonTexture,
-      }
-    )
-    //telonMaterial.needsUpdate = true
-
-    const telon = new THREE.Mesh( telonGeometry, telonMaterial )
-    telon.position.set( 0, 0.9, 0.02 )
-    scene.add( telon )
-  }
-
   //#region sceneSetup
+  windowHalfX = window.innerWidth / 2
+  windowHalfY = window.innerHeight / 2
   container = document.getElementById( 'container' )
   scene = new THREE.Scene()
   scene.rotation.y = initialSceneRotation
@@ -93,14 +71,13 @@ onMounted(() => {
   camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 )
   camera.aspect = container.clientWidth / container.clientHeight
   camera.position.set( cameraPerspPos.x, cameraPerspPos.y, cameraPerspPos.z )
-  camera.lookAt( 0, 0.5, 0 )
 
   //orthographicCamera( left, right, top, bottom, near, far )
   //const aspect = container.clientWidth / container.clientHeight
   //camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 50 )
   //camera.position.set( 0, 0.5, 3 )
-  //camera.lookAt( 0, 0.5, 0 )
-  
+
+  camera.lookAt( 0, 0.5, 0 )
   camera.updateProjectionMatrix()
   //#endregion sceneSetup
   
@@ -185,7 +162,7 @@ onMounted(() => {
   }, undefined, function ( e ) { console.error( e ) })
   //#endregion GROUND
   
-  // postprocessing
+  //#region postprocessing
   //const renderScene = new RenderPass( scene, camera )
   //const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
   //bloomPass.threshold = params.bloomThreshold;
@@ -195,71 +172,97 @@ onMounted(() => {
   //composer = new EffectComposer( renderer )
   //composer.addPass( renderScene )
   //composer.addPass( bloomPass )
-
+  //#endregion postprocessing
+  
   document.addEventListener( 'mousemove', onDocumentMouseMove )
   window.addEventListener( 'resize', onWindowResize )
   animate()
   initProjector()
-
-  function animate() {
-    requestAnimationFrame( animate )
-    const targetX = mouseX/3 * .001 + initialSceneRotation //rotación (encuadre) inicial
-		const targetY = mouseY/3 * .001
-    scene.rotation.y += 0.05 * ( targetX - scene.rotation.y )
-    scene.rotation.x += 0.05 * ( targetY - scene.rotation.x )
-
-    time = clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME
-    const fullTimeArc  = (Math.sin((time+Math.PI/4)*2)+1)/2
-    const midArc = Math.cos(time)
-
-    if (midArc > 0) sceneBg.value = chroma.mix( duskdawn, day, fullTimeArc, mixMethod ).gl()
-      else          sceneBg.value = chroma.mix( duskdawn, night, fullTimeArc, mixMethod ).gl()
-    const color = new THREE.Color( sceneBg.value[0], sceneBg.value[1], sceneBg.value[2])
-    
-    //luces auto on/off
-    if (midArc < 0 && modelPanchera) modelPanchera.material.emissiveIntensity = 1
-      else if (modelPanchera)        modelPanchera.material.emissiveIntensity = 0
-
-    scene.fog = new THREE.FogExp2( color, 0.1 )
-    scene.background = color
-    ambientLight.color = color
-    ambientLight.intensity = Math.cos(time*2)*0.1+0.1
-    lightSun.intensity = smoothstep( 0, 0.5, Math.cos(time) )
-    lightMoon.intensity = smoothstep( 0, 0.5, Math.cos(time+Math.PI) )
-    //if (telonMaterial) telonMaterial.color = color
-
-    lightGroup.rotation.z = time
-    //mixer.update( delta )
-    renderer.render( scene, camera )
-    //composer.render()
-  }
-
-  function smoothstep (min, max, value) {
-    var x = Math.max(0, Math.min(1, (value-min)/(max-min)))
-    return x*x*(3 - 2*x)
-  }
-
-  function onDocumentMouseMove( event ) {
-    mouseX = ( event.clientX - windowHalfX )
-    mouseY = ( event.clientY - windowHalfY ) * 0.3
-  }
-
-  function onWindowResize() {
-    windowHalfX = window.innerWidth / 2
-    windowHalfY = window.innerHeight / 2
-    //persp
-    camera.aspect = container.clientWidth / container.clientHeight
-    //ortho
-    //const aspect = container.clientWidth / container.clientHeight
-    //camera.left = - frustumSize * aspect / 2;
-    //camera.right = frustumSize * aspect / 2;
-    //camera.top = frustumSize / 2;
-    //camera.bottom = - frustumSize / 2
-
-    camera.updateProjectionMatrix()
-    renderer.setSize(container.clientWidth, container.clientHeight )
-  }
 })
+
+function initProjector() {
+  const video = document.getElementById( 'video' )
+  video.play()
+
+  const telonGeometry = new THREE.PlaneGeometry( 2.15, 1.25 )
+  const telonTexture = new THREE.VideoTexture( video )
+  telonTexture.encoding = THREE.sRGBEncoding
+  telonTexture.needsUpdate = true
+
+  telonMaterial = new THREE.MeshLambertMaterial(
+    {
+      color: 0x000000,
+      emissive: 0xffffff,
+      //transparent: true,
+      emissiveMap: telonTexture,
+      alphaMap: telonTexture,
+    }
+  )
+  //telonMaterial.needsUpdate = true
+
+  const telon = new THREE.Mesh( telonGeometry, telonMaterial )
+  telon.position.set( 0, 0.9, -0.001 )
+  scene.add( telon )
+}
+
+function animate() {
+  requestAnimationFrame( animate )
+  const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation //rotación (encuadre) inicial
+  const targetY = mouseY/turntableLimit * turntableSpeed
+  scene.rotation.y += turntableSpeedB * ( targetX - scene.rotation.y )
+  scene.rotation.x += turntableSpeedB * ( targetY - scene.rotation.x )
+  if (scene.rotation.x < turntableLimitX ) scene.rotation.x = turntableLimitX 
+  time = clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME
+  const fullTimeArc  = (Math.sin((time+Math.PI/4)*2)+1)/2
+  const midArc = Math.cos(time)
+
+  if (midArc > 0) sceneBg.value = chroma.mix( duskdawn, day, fullTimeArc, mixMethod ).gl()
+    else          sceneBg.value = chroma.mix( duskdawn, night, fullTimeArc, mixMethod ).gl()
+  const color = new THREE.Color( sceneBg.value[0], sceneBg.value[1], sceneBg.value[2])
+  
+  //luces auto on/off
+  if (midArc < 0 && modelPanchera) modelPanchera.material.emissiveIntensity = 1
+    else if (modelPanchera)        modelPanchera.material.emissiveIntensity = 0
+
+  scene.fog = new THREE.FogExp2( color, 0.1 )
+  scene.background = color
+  ambientLight.color = color
+  ambientLight.intensity = Math.cos(time*2)*0.1+0.1
+  lightSun.intensity = smoothstep( 0, 0.5, Math.cos(time) )
+  lightMoon.intensity = smoothstep( 0, 0.5, Math.cos(time+Math.PI) )
+  //if (telonMaterial) telonMaterial.color = color
+
+  lightGroup.rotation.z = time
+  //mixer.update( delta )
+  renderer.render( scene, camera )
+  //composer.render()
+}
+
+function onDocumentMouseMove(event) {
+  mouseX = ( event.clientX - windowHalfX )
+  mouseY = ( event.clientY - windowHalfY ) * 0.3
+}
+
+function onWindowResize() {
+  windowHalfX = window.innerWidth / 2
+  windowHalfY = window.innerHeight / 2
+  //persp
+  camera.aspect = container.clientWidth / container.clientHeight
+  //ortho
+  //const aspect = container.clientWidth / container.clientHeight
+  //camera.left = - frustumSize * aspect / 2;
+  //camera.right = frustumSize * aspect / 2;
+  //camera.top = frustumSize / 2;
+  //camera.bottom = - frustumSize / 2
+
+  camera.updateProjectionMatrix()
+  renderer.setSize(container.clientWidth, container.clientHeight )
+}
+
+function smoothstep (min, max, value) {
+  var x = Math.max(0, Math.min(1, (value-min)/(max-min)))
+  return x*x*(3 - 2*x)
+}
 
 onUnmounted(() => {
   //clock.dispose()

@@ -3,13 +3,13 @@
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 1062,
+      "count": 918,
       "type": "SCALAR"
     },
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 532,
+      "count": 544,
       "max": [
         0.0900000035762787,
         0.120000004768372,
@@ -25,19 +25,19 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 532,
+      "count": 544,
       "type": "VEC3"
     },
     {
       "bufferView": 3,
       "componentType": 5126,
-      "count": 532,
+      "count": 544,
       "type": "VEC4"
     },
     {
       "bufferView": 4,
       "componentType": 5126,
-      "count": 532,
+      "count": 544,
       "type": "VEC2"
     }
   ],
@@ -48,31 +48,31 @@
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 4248,
+      "byteLength": 3672,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 6384,
-      "byteOffset": 4248,
+      "byteLength": 6528,
+      "byteOffset": 3672,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 6384,
-      "byteOffset": 10632,
+      "byteLength": 6528,
+      "byteOffset": 10200,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 8512,
-      "byteOffset": 17016,
+      "byteLength": 8704,
+      "byteOffset": 16728,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 4256,
-      "byteOffset": 25528,
+      "byteLength": 4352,
+      "byteOffset": 25432,
       "target": 34962
     }
   ],
@@ -90,27 +90,22 @@
       "uri": "m_pantalla_occlusionRoughnessMetallic.jpg"
     },
     {
-      "uri": "m_pantalla_normal.jpg"
-    },
-    {
       "uri": "m_pantalla_emissive.jpg"
     }
   ],
   "materials": [
     {
       "alphaMode": "OPAQUE",
+      "doubleSided": true,
       "emissiveFactor": [
         1.0,
         1.0,
         1.0
       ],
       "emissiveTexture": {
-        "index": 3
-      },
-      "name": "m_pantalla",
-      "normalTexture": {
         "index": 2
       },
+      "name": "m_pantalla",
       "occlusionTexture": {
         "index": 1
       },
@@ -126,7 +121,7 @@
   ],
   "meshes": [
     {
-      "name": "m_pantalla",
+      "name": "m_pantalla_corte",
       "primitives": [
         {
           "attributes": {
@@ -147,17 +142,17 @@
       "children": [
         1
       ],
-      "name": "pantalla2.obj"
+      "name": "pantalla4.obj"
     },
     {
       "children": [
         2
       ],
-      "name": "m_pantalla"
+      "name": "m_pantalla_corte"
     },
     {
       "mesh": 0,
-      "name": "m_pantalla"
+      "name": "m_pantalla_corte"
     }
   ],
   "samplers": [
@@ -189,10 +184,6 @@
     {
       "sampler": 0,
       "source": 2
-    },
-    {
-      "sampler": 0,
-      "source": 3
     }
   ]
 }
