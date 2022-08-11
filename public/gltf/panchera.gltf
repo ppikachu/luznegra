@@ -90,9 +90,6 @@
       "uri": "m_panch_occlusionRoughnessMetallic.jpg"
     },
     {
-      "uri": "m_panch_normal.jpg"
-    },
-    {
       "uri": "m_panch_emissive.jpg"
     }
   ],
@@ -105,12 +102,9 @@
         1.0
       ],
       "emissiveTexture": {
-        "index": 3
-      },
-      "name": "m_panch",
-      "normalTexture": {
         "index": 2
       },
+      "name": "m_panch",
       "occlusionTexture": {
         "index": 1
       },
@@ -132,7 +126,6 @@
           "attributes": {
             "NORMAL": 2,
             "POSITION": 1,
-            "TANGENT": 3,
             "TEXCOORD_0": 4
           },
           "indices": 0,
@@ -189,10 +182,6 @@
     {
       "sampler": 0,
       "source": 2
-    },
-    {
-      "sampler": 0,
-      "source": 3
     }
   ]
 }

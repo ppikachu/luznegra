@@ -11,7 +11,6 @@
     "@troisjs/components": "^0.0.4",
     "chroma-js": "^2.4.2",
     "contentful": "^10.0.0-beta-v10.8",
-    "lodash.camelcase": "^4.3.0",
     "lodash.startcase": "^4.4.0",
     "lodash.upperfirst": "^4.3.1",
     "three": "^0.143.0",

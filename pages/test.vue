@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-  layout: 'with-sidebar',
+  layout: 'clean',
 })
 </script>
 

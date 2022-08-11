@@ -1,16 +1,17 @@
 <script lang="ts" setup>
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+
 /* Fetch projects */
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
-    order: 'sys.createdAt',
-    //order: 'fields.order',
-
+    order: 'sys.createdAt'
   })
 })
 const posts = data
 /* Default tags */
 const currentTag = ref()
+const openProyect = ref(null)
 
 function onTag(tag) {
   currentTag.value = tag != '' ? tag.sys.id : null
@@ -25,6 +26,28 @@ const filtered = computed(() => {
 
 <template>
   <section id="portfolio" class="container mx-auto px-4 md:px-8 my-10">
+    <ClientOnly>
+      <Teleport to="html">
+        <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
+          <div class="modal-box relative w-11/12 max-w-5xl">
+            <label for="modal-proyecto" @click="openProyect = false" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
+            <PortfolioVideos :videos="openProyect.fields.video" />
+            <PortfolioGallery :gallery="openProyect.fields.imgGallery" />
+            <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
+              <h1 class="text-4xl">{{ openProyect.fields.title }}</h1>
+              <ArticleMeta :tags="openProyect.metadata.tags" />
+            </div>
+            <div class="prose my-4">
+              <div class="mb-4" id="content" v-html="openProyect.fields.content ? documentToHtmlString(openProyect.fields.content) : ''"></div>
+            </div>
+            <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
+            <div class="modal-action">
+              <!--<button @click="openProyect = false" class="btn btn-secondary">Cerrar</button>-->
+            </div>
+          </div>
+        </div>
+      </Teleport>
+    </ClientOnly>
 
     <h1 class="text-5xl font-bold text-center my-8">
       Portfolio
@@ -56,8 +79,11 @@ const filtered = computed(() => {
                   class="pt-2"
                 />
                 <span v-if="!post.fields.content" class="badge badge-error">⚠️ content</span>
-                <!--<span v-if="!post.fields.video" class="badge badge-error">no video</span>-->
-                <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0">
+                <a
+                  :href="`/proyecto/${post.fields.slug}`"
+                  class="absolute inset-0"
+                  @click.prevent="openProyect = post"
+                >
                 </a>
               </div>
           </div>
