@@ -6,6 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 //import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 //import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import chroma from 'chroma-js'
+import gsap from "gsap"
 
 const params = {
   exposure: 1,
@@ -102,13 +103,15 @@ const turntableSpeedB = 0.005
 const cameraPerspPos = {
   x: 0,
   y: 0.6,
-  z: 3.8
+  z: 5
 }
 let mixer, windowHalfX, windowHalfY, time = 0, container,
 scene, camera, renderer, composer,
-lightSun, lightMoon, ambientLight, lightHelperSun, lightHelperMoon, lightGroup,
-groundGeometry, groundMaterial, ground,
-telonMaterial, modelPanchera, daySkyMaterial, nightSkyMaterial
+lightSun, lightMoon, ambientLight, lightHelperMoon,
+lightGroup,lightHelperSun,
+groundGeometry, ground, modelPanchera, modelPantalla,
+groundMaterial, telonMaterial, daySkyMaterial, nightSkyMaterial,
+lucesOn = false, driverLuzPantalla = { intensity: 0 }
 
 onMounted(() => {
   //#region sceneSetup
@@ -246,9 +249,10 @@ function props() {
   scene.add( ground )
 
   loader.load( '/gltf/pantalla.gltf', function ( gltf ) {
-    const modelPantalla = gltf.scene.children[0].children[0].children[0]
+    modelPantalla = gltf.scene.children[0].children[0].children[0]
     //model.position.set( 1, 1, 0 )
     modelPantalla.scale.set( 15, 15, 15)
+    modelPantalla.material.emissiveIntensity = 0
     //modelPantalla.receiveShadow = true
     modelPantalla.castShadow = true
     //modelPantalla.material.envMap = envMap
@@ -262,6 +266,7 @@ function props() {
     modelPanchera = gltf.scene.children[0].children[0].children[0]
     modelPanchera.position.set( 0, 0, 1.7 )
     modelPanchera.scale.set( 10, 10, 10)
+    modelPanchera.material.emissiveIntensity = 0
     modelPanchera.castShadow = true
     //modelPanchera.material.envMap = envMap
     //modelPanchera.material.needsUpdate = true
@@ -308,25 +313,37 @@ function animate() {
   const fullTimeArc  = (Math.sin((time+Math.PI/4)*2)+1)/2
   const midArc = Math.cos(time)
 
-  if (midArc > 0) sceneBg.value = chroma.mix( duskdawn, day, fullTimeArc, mixMethod ).gl()
-    else          sceneBg.value = chroma.mix( duskdawn, night, fullTimeArc, mixMethod ).gl()
+  if (midArc > 0) {
+    sceneBg.value = chroma.mix( duskdawn, day, fullTimeArc, mixMethod ).gl()
+    modelPantalla.material.emissiveIntensity = 0
+  }
+  else {
+    modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity + Math.random()*0.3
+    sceneBg.value = chroma.mix( duskdawn, night, fullTimeArc, mixMethod ).gl()
+  }
   const color = new THREE.Color( sceneBg.value[0], sceneBg.value[1], sceneBg.value[2])
   
   //luces auto on/off
-  if (midArc < 0 && modelPanchera) modelPanchera.material.emissiveIntensity = 1
-    else if (modelPanchera)        modelPanchera.material.emissiveIntensity = 0
+  if (midArc < 0 && lucesOn === false) {
+    gsap.fromTo(driverLuzPantalla, { intensity: 0 }, { intensity: 1, duration: 2, ease: "bounce.inOut" })
+    gsap.to(modelPanchera.material, { emissiveIntensity: 1, duration: 1, delay: 3, ease: "back.out(4)" })
+    lucesOn = true
+  }
+  else if (midArc > 0 && lucesOn === true) {
+    gsap.to(driverLuzPantalla, { intensity: 0, duration: 0.5, delay: 4 })
+    gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
+    lucesOn = false
+  }
 
   scene.fog = new THREE.FogExp2( color, 0.1 )
   scene.background = color
   if (ambientLight) {
     ambientLight.color = color
-    //ambientLight.intensity = Math.cos(time*2)*0.1+0.1
     ambientLight.intensity = smoothstep( 0, 3, Math.cos(time) )
     lightSun.intensity = smoothstep( 0, 2, Math.cos(time) )
     lightMoon.intensity = smoothstep( 0, 4, Math.cos(time+Math.PI) )
     lightGroup.rotation.z = time
   }
-  //if (telonMaterial) telonMaterial.color = color
 
   //mixer.update( delta )
   uniforms[ 'iTime' ].value =performance.now() / 1000
@@ -367,6 +384,8 @@ onUnmounted(() => {
   lightMoon.dispose()
   lightHelperSun.dispose()
   lightHelperMoon.dispose()
+  modelPanchera.dispose()
+  modelPantalla.dispose()
   //lightGroup.dispose()
 })
 </script>
@@ -382,6 +401,7 @@ onUnmounted(() => {
     >
       <source src="/planetario_old_film.mp4" type="video/mp4">
     </video>
+    <div class="absolute bottom-16 w-full text-center text-xl">▼</div>
   </div>
 </template>
 
