@@ -7,7 +7,7 @@
 
     <Hero />
     <section class="mt-12">
-      <div class="hero container bg-secondary">
+      <div class="hero bg-secondaryx">
         <div class="hero-content flex-col lg:flex-row">
           <img
             src="/images/et2.gif"
@@ -24,7 +24,7 @@
         </div>
       </div>
   
-      <div class="hero">
+      <div class="hero bg-primaryx">
         <div class="hero-content flex-col lg:flex-row-reverse">
           <img
             src="/images/bety.gif"

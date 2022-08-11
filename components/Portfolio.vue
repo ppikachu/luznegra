@@ -29,7 +29,7 @@ const filtered = computed(() => {
     <ClientOnly>
       <Teleport to="html">
         <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
-          <div class="modal-box relative">
+          <div class="modal-box relative w-11/12 max-w-5xl">
             <label for="modal-proyecto" @click="openProyect = false" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
             <PortfolioVideos :videos="openProyect.fields.video" />
             <PortfolioGallery :gallery="openProyect.fields.imgGallery" />
