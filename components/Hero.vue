@@ -407,6 +407,6 @@ onUnmounted(() => {
 
 <style scoped>
   .hero {
-    height: 90vh;
+    height: 66vh;
   }
 </style>
