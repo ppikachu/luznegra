@@ -28,13 +28,13 @@ const articleContenido = project.value.items[0].fields.contenido ? project.value
   <div class="container mx-auto px-4 md:px-8 pb-16">
     <PortfolioVideos :videos="articleVideos" />
     <PortfolioGallery :gallery="imgGallery" />
-    <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
+    <div class="flex md:flex-row space-x-4 lg:justify-between items-center my-8">
       <h1 class="text-4xl">{{ articleTitle }}</h1>
       <ArticleMeta :tags="articleTags" />
     </div>
     <div class="prose my-4">
       <div class="mb-4" id="content" v-html="articleBody"></div>
     </div>
-    <div v-html="articleContenido" class="rounded-lg aspect-video w-full"></div>
+    <div v-if="articleContenido" v-html="articleContenido" class="rounded-lg aspect-video w-full"></div>
   </div>
 </template>

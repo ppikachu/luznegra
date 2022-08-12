@@ -29,7 +29,7 @@ const filtered = computed(() => {
     <ClientOnly>
       <Teleport to="html">
         <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
-          <div class="modal-box relative w-11/12 max-w-5xl">
+          <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
             <label for="modal-proyecto" @click="openProyect = false" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
             <PortfolioVideos :videos="openProyect.fields.video" />
             <PortfolioGallery :gallery="openProyect.fields.imgGallery" />
@@ -73,11 +73,8 @@ const filtered = computed(() => {
           <div class="card-body">
               <h2 class="card-title">{{ post.fields.title }}</h2>
               <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
-              <div class="card-actions mt-1">
-                <ArticleMeta v-if="post.metadata.tags[0]"
-                  :tags="post.metadata.tags"
-                  class="pt-2"
-                />
+              <div class="card-actions">
+                <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
                 <span v-if="!post.fields.content" class="badge badge-error">⚠️ content</span>
                 <a
                   :href="`/proyecto/${post.fields.slug}`"
