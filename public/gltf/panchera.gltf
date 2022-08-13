@@ -84,13 +84,13 @@
   ],
   "images": [
     {
-      "uri": "m_panch_baseColor.jpg"
+      "uri": "m_panch_baseColor.png"
     },
     {
-      "uri": "m_panch_occlusionRoughnessMetallic.jpg"
+      "uri": "m_panch_occlusionRoughnessMetallic.png"
     },
     {
-      "uri": "m_panch_emissive.jpg"
+      "uri": "m_panch_emissive.png"
     }
   ],
   "materials": [
@@ -126,6 +126,7 @@
           "attributes": {
             "NORMAL": 2,
             "POSITION": 1,
+            "TANGENT": 3,
             "TEXCOORD_0": 4
           },
           "indices": 0,
