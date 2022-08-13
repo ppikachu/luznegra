@@ -7,24 +7,23 @@
       </div>
       <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <div class="card-body">
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Email</span>
-            </label>
-            <input type="text" placeholder="email" class="input input-bordered" />
-          </div>
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Mensaje</span>
-            </label>
-            <textarea class="textarea textarea-bordered" placeholder="Tu mensaje"></textarea>
-            <label class="label">
-              <!--<a href="#" class="label-text-alt link link-hover">Forgot password?</a>-->
-            </label>
-          </div>
-          <div class="form-control mt-6">
-            <button class="btn btn-primary">Enviar</button>
-          </div>
+          <form action="https://app.headlessforms.cloud/api/v1/form-submission/awfCcRTUJ4" method="POST">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Email</span>
+              </label>
+              <input type="email" name="email" required placeholder="email" class="input input-bordered" />
+            </div>
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Mensaje</span>
+              </label>
+              <textarea name="mensaje" class="textarea textarea-bordered" placeholder="Tu mensaje"></textarea>
+            </div>
+            <div class="form-control mt-6">
+              <button class="btn btn-primary">Enviar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
