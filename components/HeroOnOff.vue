@@ -133,7 +133,7 @@ const debug = {
   showGround: true,
   showGLTFs: true,
   showPantalla: true,
-  showAmbientLight: false,
+  showAmbientLight: true,
   showLights: true,
 }
 let windowHalfX, windowHalfY, container,
@@ -340,6 +340,39 @@ function initProjector() {
   rectLight.add( rectLightHelper )
 }
 
+function swapDayNight() {
+  if (params.dayOrNight === 'day') {
+    gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 0, duration: 1, delay: 0, onComplete: () => {
+      starrySky.material = daySkyMaterial
+      scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
+      lightShadow.position.set( params.lightSunPosition.x, params.lightSunPosition.y, params.lightSunPosition.z )
+      lightSun.position.y = params.lightSunPosition.y
+      ambientLight.color.set( params.lightSunColor )
+      lightSun.color.set( params.lightSunColor )
+      lightShadow.color.set( params.lightSunColor )
+      gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 1, duration: 1, delay: 0 })
+    }})
+    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
+
+  } else {
+    gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 0, duration: 1, delay: 0, onComplete: () => {
+      starrySky.material = nightSkyMaterial
+      scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
+      lightShadow.position.set( params.lightMoonPosition.x, params.lightMoonPosition.y, params.lightMoonPosition.z )
+      lightSun.position.y = params.lightMoonPosition.y
+      ambientLight.color.set( params.lightMoonColor )
+      lightSun.color.set( params.lightMoonColor )
+      lightShadow.color.set( params.lightMoonColor )
+      gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 1, duration: 1, delay: 0 })
+    }})
+    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 1, duration: 1, delay: 1, ease: "back.out(4)" })
+    const uniformedColor = new chroma(params.nightSkyColor).gl()
+    const finalUniformedColor = [uniformedColor[0], uniformedColor[1], uniformedColor[2], 1]
+    uniforms[ 'skyColor' ].value = finalUniformedColor
+  }
+
+}
+
 function updateScene() {
   dayFolder.hidden = params.dayOrNight === 'day' ? false : true
   nightFolder.hidden = params.dayOrNight === 'night' ? false : true
@@ -358,7 +391,6 @@ function updateScene() {
     ambientLight.color.set( params.lightSunColor )
     ambientLight.intensity = params.ambientLightSunIntensity
     scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
-    //gsap.to([driverLuzPantalla, lightSun, lightShadow], { intensity: 0, duration: 1, delay: 1 })
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
   } else {
     starrySky.material = nightSkyMaterial
@@ -371,8 +403,6 @@ function updateScene() {
     ambientLight.color.set( params.lightMoonColor )
     ambientLight.intensity = params.ambientLightMoonIntensity
     scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
-    gsap.to(driverLuzPantalla, { intensity: 1, duration: 0.5, delay: 1 })
-    gsap.to(modelPanchera.material, { emissiveIntensity: 1, duration: 1, delay: 1, ease: "back.out(4)" })
     const uniformedColor = new chroma(params.nightSkyColor).gl()
     const finalUniformedColor = [uniformedColor[0], uniformedColor[1], uniformedColor[2], 1]
     uniforms[ 'skyColor' ].value = finalUniformedColor
@@ -405,8 +435,14 @@ function makeTweak() {
   pane.on('change', (ev) => {
     updateScene()
   })
+  
+  const dayNightToggle = new Pane({ container: document.getElementById('day-night-toggle') })
+  dayNightToggle.on('change', () => {
+    swapDayNight()
+  })
+  dayNightToggle.addInput(params, 'dayOrNight', { type: 'select', options: { dia: 'day', noche: 'night' }, label: 'día/noche' })
 
-  pane.addInput(params, 'dayOrNight', { type: 'select', options: { dia: 'day', noche: 'night' }, label: 'día/noche' })
+  
   pane.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
   pane.addInput(params, 'groundColor', { view: 'color', label: 'color piso' })
   pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 3, step: 0.1 })
@@ -481,6 +517,7 @@ onUnmounted(() => {
   }
   //get rid of makeTweak
   if (pane) pane.dispose()
+  if (dayNightToggle) dayNightToggle.dispose()
 })
 </script>
 
@@ -501,7 +538,10 @@ onUnmounted(() => {
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
       <button class="btn glass btn-sm"> ▼ </button>
     </div>
-    <div id="parameters" class="absolute w-80 right-0 p-4"></div>
+    <div id="debugger" class="absolute w-80 right-0 p-4 grid gap-4">
+      <div id="day-night-toggle"></div>
+      <div id="parameters"></div>
+    </div>
   </div>
 </template>
 
