@@ -12,6 +12,12 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
     limit: 1,
   })
 })
+if (!data) {
+  console.log('No data')
+  
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+}
+
 /* Define article data */
 const project = data
 const articleBody = project.value.items[0].fields.content ? documentToHtmlString(project.value.items[0].fields.content) : ''
