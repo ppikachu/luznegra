@@ -139,7 +139,7 @@ const debug = {
 let windowHalfX, windowHalfY, container,
 scene, camera, renderer, composer,
 lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
-pane, dayNightToggle, dayFolder, nightFolder, preset = { debug: '' },
+pane, dayNightToggle, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
 groundGeometry, ground,
 modelPanchera, modelPantalla, starrySky,
 groundMaterial, telonMaterial, daySkyMaterial, nightSkyMaterial,
@@ -450,6 +450,7 @@ function makeTweak() {
   pane = new Pane({ container: document.getElementById('parameters') })
   pane.on('change', (ev) => {
     updateScene()
+    presetDebug.hidden = true
   })
   
   dayNightToggle = new Pane({ container: document.getElementById('day-night-toggle') })
@@ -457,13 +458,10 @@ function makeTweak() {
     swapDayNight()
   })
   dayNightToggle.addInput(params, 'dayOrNight', { type: 'select', options: { dia: 'day', noche: 'night' }, label: 'día/noche' })
-
   
-  pane.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
   pane.addInput(params, 'groundColor', { view: 'color', label: 'color piso' })
   pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 3, step: 0.1 })
   pane.addSeparator()
-  pane.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
   //PARAMETROS
   pane.addInput(params, 'lightPlaneSize', {label: 'tamaño luz', min: 0.1, max: 10, step: 0.01})
   dayFolder = pane.addFolder({ title: 'DIA', expanded: true, hidden: params.dayOrNight === 'day' ? false : true })
@@ -485,21 +483,25 @@ function makeTweak() {
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
 
   //DEBUG
+  debugFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
+  debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
   const btn = debugFolder.addButton({
     title: 'export',
   })
   btn.on('click', () => {
    exportPreset()
   })
-  debugFolder.addMonitor(preset, 'debug', {
+  presetDebug = debugFolder.addMonitor(preset, 'debug', {
     label: 'preset',
     multiline: true,
     lineCount: 10,
+    hidden: true,
   })
 }
 
 function exportPreset() {
   preset.debug = JSON.stringify(pane.exportPreset(), null, 1)
+  presetDebug.hidden = false
 }
 
 function onDocumentMouseMove(event) {
@@ -546,7 +548,7 @@ onUnmounted(() => {
       playsinline
       style="display:none"
     >
-      <source src="/motion_graphics_reel.mp4" type="video/mp4">
+      <source src="/experimental.mp4" type="video/mp4">
     </video>
     <!--<div class="absolute top-8 text-xl cursor-pointer flex justify-center w-full">
       <button @click="toggleDayNight" class="btn">✹</button>
