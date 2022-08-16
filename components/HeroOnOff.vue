@@ -139,7 +139,7 @@ const debug = {
 let windowHalfX, windowHalfY, container,
 scene, camera, renderer, composer,
 lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
-pane, dayFolder, nightFolder,
+pane, dayFolder, nightFolder, preset = { debug: '' },
 groundGeometry, ground,
 modelPanchera, modelPantalla, starrySky,
 groundMaterial, telonMaterial, daySkyMaterial, nightSkyMaterial,
@@ -358,8 +358,7 @@ function updateScene() {
     ambientLight.color.set( params.lightSunColor )
     ambientLight.intensity = params.ambientLightSunIntensity
     scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
-    //gsap.fromTo(driverLuzPantalla, { intensity: 0 }, { intensity: 1, duration: 2, ease: "bounce.inOut" })
-    gsap.to(driverLuzPantalla, { intensity: 0, duration: 0.5, delay: 1 })
+    //gsap.to([driverLuzPantalla, lightSun, lightShadow], { intensity: 0, duration: 1, delay: 1 })
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
   } else {
     starrySky.material = nightSkyMaterial
@@ -426,17 +425,29 @@ function makeTweak() {
   nightFolder = pane.addFolder({ title: 'NOCHE', expanded: true, hidden: params.dayOrNight === 'night' ? false : true })
   nightFolder.addInput(params, 'lightMoonColor', { view: 'color', label: 'color luna' })
   nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 5, step: 0.1, label: 'power luna' })
-  nightFolder.addInput(params, 'lightMoonPosition', { label: 'pos luna', min: -10, max: 10, step: 0.1 })
+  nightFolder.addInput(params, 'lightMoonPosition', { label: 'posición luna', min: -10, max: 10, step: 0.1 })
   nightFolder.addSeparator()
   nightFolder.addInput(params, 'nightSkyColor', { view: 'color', label: 'cielo noche' })
   nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'niebla noche' })
   
-  //const fxFolder = pane.addFolder({ title: 'fx', expanded:false })
+  const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
 
   //DEBUG
-  /* this.pane.addMonitor(this.tiltShift, 'gradientBlur', {
-    label: 'gradientBlur',
-  }) */
+  const btn = debugFolder.addButton({
+    title: 'export',
+  })
+  btn.on('click', () => {
+   exportPreset()
+  })
+  debugFolder.addMonitor(preset, 'debug', {
+    label: 'preset',
+    multiline: true,
+    lineCount: 10,
+  })
+}
+
+function exportPreset() {
+  preset.debug = JSON.stringify(pane.exportPreset(), null, 1)
 }
 
 function onDocumentMouseMove(event) {
