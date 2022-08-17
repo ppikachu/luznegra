@@ -3,15 +3,18 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 //import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
-//import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-//import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-//import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import chroma from 'chroma-js'
-import gsap from "gsap"
+import gsap from 'gsap'
+import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
 
 const route = useRoute()
+//const userAgent = req.headers['user-agent'];
+const amIMobile = isMobile().any
 
 const params = {
   mouseFollow: true,
@@ -29,7 +32,7 @@ const params = {
   fogDensityDay: 0.1,
   fogDensityNight: 0.1,
 
-  showLightsHelpers: true,
+  showLightsHelpers: false,
   lightPlaneSize: 2,
   lightPlaneOffset: 4,
   lightSunColor: 0xffebdb,
@@ -132,6 +135,11 @@ const cameraPerspPos = {
   y: 0.6,
   z: 5
 }
+const cameraMobilePerspPos = {
+  x: 0,
+  y: 1,
+  z: 7
+}
 const debug = {
   showGround: true,
   showGLTFs: true,
@@ -172,7 +180,11 @@ onMounted(() => {
   //perspectiveCamera( fov, aspect, near, far )
   camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 )
   camera.aspect = container.clientWidth / container.clientHeight
-  camera.position.set( cameraPerspPos.x, cameraPerspPos.y, cameraPerspPos.z )
+  if (amIMobile) {
+    camera.position.set(cameraMobilePerspPos.x, cameraMobilePerspPos.y, cameraMobilePerspPos.z)
+  } else {
+    camera.position.set(cameraPerspPos.x, cameraPerspPos.y, cameraPerspPos.z)
+  }
   camera.lookAt( 0, 0.5, 0 )
   camera.updateProjectionMatrix()
   //#endregion sceneSetup
@@ -190,15 +202,17 @@ onMounted(() => {
   //#endregion environmentSetup
 
   //#region postprocessing
-  //const renderScene = new RenderPass( scene, camera )
-  //const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
-  //bloomPass.threshold = params.bloomThreshold;
-  //bloomPass.strength = params.bloomStrength;
-  //bloomPass.radius = params.bloomRadius;
+  if (!amIMobile) {
+    const renderScene = new RenderPass( scene, camera )
+    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
+    bloomPass.threshold = params.bloomThreshold;
+    bloomPass.strength = params.bloomStrength;
+    bloomPass.radius = params.bloomRadius;
 
-  //composer = new EffectComposer( renderer )
-  //composer.addPass( renderScene )
-  //composer.addPass( bloomPass )
+    composer = new EffectComposer( renderer )
+    composer.addPass( renderScene )
+    composer.addPass( bloomPass )
+  }
   //#endregion postprocessing
   
   document.addEventListener( 'mousemove', onDocumentMouseMove )
@@ -210,15 +224,22 @@ onMounted(() => {
 
 function props() {
   //#region environment
-  const uniformedColor = new chroma(params.nightSkyColor).gl()
-  const finalUniformedColor = [uniformedColor[0], uniformedColor[1], uniformedColor[2], 1]
-  uniforms[ 'skyColor' ].value = finalUniformedColor
-  nightSkyMaterial = new THREE.ShaderMaterial({
-    side: THREE.BackSide,
-    uniforms: uniforms,
-    vertexShader: vertexShaderCode,
-    fragmentShader: fragmentShaderCode
-  })
+  if (amIMobile) {
+    nightSkyMaterial = new THREE.MeshBasicMaterial({
+      side: THREE.BackSide,
+      color: params.nightSkyColor,
+    })
+  } else {
+    const uniformedColor = new chroma(params.nightSkyColor).gl()
+    const finalUniformedColor = [uniformedColor[0], uniformedColor[1], uniformedColor[2], 1]
+    uniforms[ 'skyColor' ].value = finalUniformedColor
+    nightSkyMaterial = new THREE.ShaderMaterial({
+      side: THREE.BackSide,
+      uniforms: uniforms,
+      vertexShader: vertexShaderCode,
+      fragmentShader: fragmentShaderCode
+    })
+  }
 
   daySkyMaterial = new THREE.MeshBasicMaterial({
     side: THREE.BackSide,
@@ -317,12 +338,11 @@ function initProjector() {
   RectAreaLightUniformsLib.init()
   const video = document.getElementById( 'video' )
   video.play()
-  const telonSize = new THREE.Vector2( 2.15, 1.25 )
+  const telonSize = new THREE.Vector2( 2.12, 1.25 )
   const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
   const telonTexture = new THREE.VideoTexture( video )
   telonTexture.encoding = THREE.sRGBEncoding
-  telonTexture.needsUpdate = true
-
+  //telonTexture.minFilter = THREE.LinearFilter
   telonMaterial = new THREE.MeshLambertMaterial(
     {
       color: 0x000000,
@@ -332,14 +352,13 @@ function initProjector() {
       alphaMap: telonTexture,
     }
   )
-  //telonMaterial.needsUpdate = true
-  const telonPosition = new THREE.Vector3(0, 0.9, -0.001 )
   const telon = new THREE.Mesh( telonGeometry, telonMaterial )
+  const telonPosition = new THREE.Vector3(0, 0.9, -0.001 )
   telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
   scene.add( telon )
 
   //proyector light
-  rectLight = new THREE.RectAreaLight( 0xffffff, params.screenIntensity, telonSize.x/2, telonSize.y/2 )
+  rectLight = new THREE.RectAreaLight( 0xffffff, params.screenIntensity, telonSize.x, telonSize.y )
   rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.1 )
   rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
   scene.add( rectLight )
@@ -436,10 +455,12 @@ function updateScene() {
 
 function animate() {
   requestAnimationFrame(animate)
+  //projector flickering
   rectLight.intensity = params.screenIntensity * Math.random()*0.3
+  //luz negra screen flickering
   if (modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * (Math.sin(performance.now() / 20)*0.1  + 0.9)
   //mouse follow?
-  if (params.mouseFollow) {
+  if (params.mouseFollow && !amIMobile) {
     const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation //rotación (encuadre) inicial
     const targetY = mouseY/turntableLimit * turntableSpeed
     scene.rotation.y += turntableSpeedB * ( targetX - scene.rotation.y )
@@ -452,7 +473,7 @@ function animate() {
   uniforms[ 'iTime' ].value = performance.now() / 1000
 
   renderer.render( scene, camera )
-  //composer.render()
+  if(!amIMobile) composer.render()
 }
 
 function makeTweak() {
@@ -550,7 +571,7 @@ onUnmounted(() => {
       playsinline
       style="display:none"
     >
-      <source src="/experimental.mp4" type="video/mp4">
+      <source src="/images/experimental.mp4" type="video/mp4">
     </video>
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
       <label class="swap swap-rotate">
