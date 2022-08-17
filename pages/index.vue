@@ -5,7 +5,7 @@
 <template>
   <main class="block">
 
-    <Hero />
+    <HeroOnOff />
     <section class="mt-12 max-w-5xl mx-auto">
       <div class="hero bg-secondaryx">
         <div class="hero-content flex-col lg:flex-row">

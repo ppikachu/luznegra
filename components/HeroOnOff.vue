@@ -11,10 +11,13 @@ import chroma from 'chroma-js'
 import gsap from "gsap"
 import { Pane } from 'tweakpane'
 
+const route = useRoute()
+
 const params = {
-  mouseFollow: false,
+  mouseFollow: true,
   dayOrNight: "night",
-  dayNightSpeed: 0.5,
+  dayNightSpeed: 0.25,
+  dayNightDelay: 0.5,
   exposure: 1,
   emissiveIntensity: 0.5,
   bloomStrength: 0.5,
@@ -38,7 +41,7 @@ const params = {
   ambientLightSunIntensity: 0.1,
   ambientLightMoonIntensity: 0.1,
 
-  screenIntensity: 0.5,
+  screenIntensity: 0.8,
   groundColor: 0xffffff
 }
 
@@ -139,7 +142,7 @@ const debug = {
 let windowHalfX, windowHalfY, container,
 scene, camera, renderer, composer,
 lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
-pane, dayNightToggle, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
+pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
 groundGeometry, ground,
 modelPanchera, modelPantalla, starrySky,
 groundMaterial, telonMaterial, daySkyMaterial, nightSkyMaterial,
@@ -202,7 +205,7 @@ onMounted(() => {
   window.addEventListener( 'resize', onWindowResize )
   props()
   animate()
-  makeTweak()
+  if(route.name == 'onoff') makeTweak()
 })
 
 function props() {
@@ -307,7 +310,7 @@ function props() {
   scene.rotation.y = initialSceneRotation
   //Inicia proyector
   if(debug.showPantalla) initProjector()
-  console.log(scene)
+  //console.log(scene)
 }
 
 function initProjector() {
@@ -346,8 +349,13 @@ function initProjector() {
 }
 
 function swapDayNight() {
-  if (params.dayOrNight === 'day') {
-    gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 0, duration: 1, delay: 0, onComplete: () => {
+  if (params.dayOrNight === 'night') {
+    params.dayOrNight = 'day'
+    //move lightShadow position
+    gsap.to(lightShadow.position, { x: params.lightSunPosition.x, y: params.lightSunPosition.y, z: params.lightSunPosition.z, duration: params.dayNightSpeed })
+    //turn off modelPanchera inner emissive
+    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
+    gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, onComplete: () => {
       //stepped:
       starrySky.material = daySkyMaterial
       scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
@@ -356,15 +364,17 @@ function swapDayNight() {
       lightSun.color.set( params.lightSunColor )
       lightShadow.color.set( params.lightSunColor )
       //fade in:
-      gsap.to([ ambientLight ], { intensity: params.ambientLightSunIntensity, duration: 1, delay: 0 })
-      gsap.to([driverLuzPantalla, lightSun, lightShadow], { intensity: params.lightSunIntensity, duration: 1, delay: 0 })
+      gsap.to([ ambientLight ], { intensity: params.ambientLightSunIntensity, duration: params.dayNightSpeed })
+      gsap.to([ lightSun, lightShadow], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed })
     }})
-    //fade lightShadow position
-    gsap.to(lightShadow.position, { x: params.lightSunPosition.x, y: params.lightSunPosition.y, z: params.lightSunPosition.z, duration: 1, delay: 0 })
-    //turn off modelPanchera inner emissive
-    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
   } else {
-    gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 0, duration: 1, delay: 0, onComplete: () => {
+    //NIGHT:
+    params.dayOrNight = 'night'
+    //move lightShadow position
+    gsap.to(lightShadow.position, { x: params.lightMoonPosition.x, y: params.lightMoonPosition.y, z: params.lightMoonPosition.z, duration: params.dayNightSpeed })
+    //turn on modelPanchera inner emissive
+    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, delay: 1, ease: "back.out(4)" })
+    gsap.to([ ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, delay: 0, onComplete: () => {
       //stepped:
       starrySky.material = nightSkyMaterial
       //starry sky color
@@ -377,18 +387,17 @@ function swapDayNight() {
       lightSun.color.set( params.lightMoonColor )
       lightShadow.color.set( params.lightMoonColor )
       //fade in:
-      gsap.to([ ambientLight ], { intensity: params.ambientLightMoonIntensity, duration: 1, delay: 0 })
-      gsap.to([driverLuzPantalla, lightSun, lightShadow], { intensity: params.lightMoonIntensity, duration: 1, delay: 0 })
+      gsap.to([ ambientLight ], { intensity: params.ambientLightMoonIntensity, duration: params.dayNightSpeed, delay: 0 })
+      gsap.to([ lightSun, lightShadow], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed, delay: 0 })
+      gsap.to([ driverLuzPantalla], { intensity: params.screenIntensity, duration: params.dayNightSpeed, delay: 1 })
     }})
-    //fade lightShadow position
-    gsap.to(lightShadow.position, { x: params.lightMoonPosition.x, y: params.lightMoonPosition.y, z: params.lightMoonPosition.z, duration: 1, delay: 0 })
-    //turn on modelPanchera inner emissive
-    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 1, duration: 1, delay: 1, ease: "back.out(4)" })
   }
 
   //hide tweakpane sections
-  dayFolder.hidden = params.dayOrNight === 'day' ? false : true
-  nightFolder.hidden = params.dayOrNight === 'night' ? false : true
+  if (pane) {
+    dayFolder.hidden = params.dayOrNight === 'day' ? false : true
+    nightFolder.hidden = params.dayOrNight === 'night' ? false : true
+  }
 }
 
 function updateScene() {
@@ -428,7 +437,7 @@ function updateScene() {
 function animate() {
   requestAnimationFrame(animate)
   rectLight.intensity = params.screenIntensity * Math.random()*0.3
-  if (modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * Math.random()*0.3
+  if (modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * (Math.sin(performance.now() / 20)*0.1  + 0.9)
   //mouse follow?
   if (params.mouseFollow) {
     const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation //rotación (encuadre) inicial
@@ -440,7 +449,7 @@ function animate() {
   }
 
   //time = doCycle ? clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME : WAKE_UP_TIME
-  uniforms[ 'iTime' ].value =performance.now() / 1000
+  uniforms[ 'iTime' ].value = performance.now() / 1000
 
   renderer.render( scene, camera )
   //composer.render()
@@ -452,13 +461,7 @@ function makeTweak() {
     updateScene()
     presetDebug.hidden = true
   })
-  
-  dayNightToggle = new Pane({ container: document.getElementById('day-night-toggle') })
-  dayNightToggle.on('change', () => {
-    swapDayNight()
-  })
-  dayNightToggle.addInput(params, 'dayOrNight', { type: 'select', options: { dia: 'day', noche: 'night' }, label: 'día/noche' })
-  
+    
   pane.addInput(params, 'groundColor', { view: 'color', label: 'color piso' })
   pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 3, step: 0.1 })
   pane.addSeparator()
@@ -535,7 +538,6 @@ onUnmounted(() => {
   }
   //get rid of makeTweak
   if (pane) pane.dispose()
-  if (dayNightToggle) dayNightToggle.dispose()
 })
 </script>
 
@@ -550,11 +552,17 @@ onUnmounted(() => {
     >
       <source src="/experimental.mp4" type="video/mp4">
     </video>
-    <!--<div class="absolute top-8 text-xl cursor-pointer flex justify-center w-full">
-      <button @click="toggleDayNight" class="btn">✹</button>
-    </div>-->
+    <div class="absolute top-8 text-xl cursor-pointer flex justify-center w-full">
+      <label class="swap swap-rotate">
+        <!-- this hidden checkbox controls the state -->
+        <input @click="swapDayNight" type="checkbox" />
+        <!-- sun icon -->
+        <svg class="swap-on fill-secondary w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
+        <!-- moon icon -->
+        <svg class="swap-off fill-secondary w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
+      </label>
+    </div>
     <div id="debugger" class="absolute w-80 right-0 p-4 grid gap-4">
-      <div id="day-night-toggle"></div>
       <div id="parameters"></div>
     </div>
   </div>
