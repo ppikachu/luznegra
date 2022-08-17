@@ -202,17 +202,17 @@ onMounted(() => {
   //#endregion environmentSetup
 
   //#region postprocessing
-  if (!amIMobile) {
-    const renderScene = new RenderPass( scene, camera )
-    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
-    bloomPass.threshold = params.bloomThreshold;
-    bloomPass.strength = params.bloomStrength;
-    bloomPass.radius = params.bloomRadius;
+  //if (!amIMobile) {
+  //  const renderScene = new RenderPass( scene, camera )
+  //  const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
+  //  bloomPass.threshold = params.bloomThreshold;
+  //  bloomPass.strength = params.bloomStrength;
+  //  bloomPass.radius = params.bloomRadius;
 
-    composer = new EffectComposer( renderer )
-    composer.addPass( renderScene )
-    composer.addPass( bloomPass )
-  }
+  //  composer = new EffectComposer( renderer )
+  //  composer.addPass( renderScene )
+  //  composer.addPass( bloomPass )
+  //}
   //#endregion postprocessing
   
   document.addEventListener( 'mousemove', onDocumentMouseMove )
@@ -473,7 +473,7 @@ function animate() {
   uniforms[ 'iTime' ].value = performance.now() / 1000
 
   renderer.render( scene, camera )
-  if(!amIMobile) composer.render()
+  //if(!amIMobile) composer.render()
 }
 
 function makeTweak() {
