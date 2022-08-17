@@ -467,7 +467,7 @@ onUnmounted(() => {
       playsinline
       style="display:none"
     >
-      <source src="/planetario_old_film.mp4" type="video/mp4">
+      <source src="/images/planetario_old_film.mp4" type="video/mp4">
     </video>
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
       <button class="btn glass btn-sm"> ▼ </button>
