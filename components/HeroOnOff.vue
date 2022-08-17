@@ -13,8 +13,6 @@ import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
 
 const route = useRoute()
-//const userAgent = req.headers['user-agent'];
-const amIMobile = isMobile().any
 
 const params = {
   mouseFollow: true,
@@ -147,7 +145,7 @@ const debug = {
   showAmbientLight: true,
   showLights: true,
 }
-let windowHalfX, windowHalfY, container,
+let windowHalfX, windowHalfY, container, amIMobile,
 scene, camera, renderer, composer,
 lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
@@ -157,6 +155,8 @@ groundMaterial, telonMaterial, daySkyMaterial, nightSkyMaterial,
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 }
 
 onMounted(() => {
+  amIMobile = isMobile().any
+
   //#region sceneSetup
   windowHalfX = window.innerWidth / 2
   windowHalfY = window.innerHeight / 2
