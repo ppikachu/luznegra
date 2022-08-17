@@ -552,7 +552,7 @@ onUnmounted(() => {
     >
       <source src="/experimental.mp4" type="video/mp4">
     </video>
-    <div class="absolute top-8 text-xl cursor-pointer flex justify-center w-full">
+    <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
       <label class="swap swap-rotate">
         <!-- this hidden checkbox controls the state -->
         <input @click="swapDayNight" type="checkbox" />
