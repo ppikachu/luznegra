@@ -15,7 +15,7 @@ import { Pane } from 'tweakpane'
 const route = useRoute()
 
 const params = {
-  mouseFollow: true,
+  mouseFollow: false,
   dayOrNight: "night",
   dayNightSpeed: 0.25,
   dayNightDelay: 0.5,
@@ -43,7 +43,7 @@ const params = {
   ambientLightMoonIntensity: 0.1,
 
   screenIntensity: 0.8,
-  groundColor: 0xffffff
+  groundColor: 0x3f5628
 }
 
 const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
@@ -262,8 +262,8 @@ function initProjector() {
   scene.add( telon )
 
   //proyector light
-  rectLight = new THREE.RectAreaLight( 0xffffff, params.screenIntensity, telonSize.x, telonSize.y )
-  rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.1 )
+  rectLight = new THREE.RectAreaLight( 0xffff55, params.screenIntensity, telonSize.x, telonSize.y )
+  rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
   rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
   scene.add( rectLight )
 
@@ -306,7 +306,7 @@ function swapDayNight() {
       //fade in:
       gsap.to([ ambientLight ], { intensity: params.ambientLightMoonIntensity, duration: params.dayNightSpeed, delay: 0 })
       gsap.to([ lightSun, lightShadow], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed, delay: 0 })
-      gsap.to([ driverLuzPantalla], { intensity: params.screenIntensity, duration: params.dayNightSpeed, delay: 1 })
+      gsap.to([ driverLuzPantalla], { intensity: params.screenIntensity, duration: params.dayNightSpeed*3, delay: 1 })
     }})
   }
 
@@ -349,9 +349,10 @@ function updateScene() {
 function animate() {
   requestAnimationFrame(animate)
   //projector flickering
-  rectLight.intensity = params.screenIntensity * Math.random()*0.3
+  const flick = Math.sin(performance.now() / 20)*0.1  + 0.9
+  rectLight.intensity = params.screenIntensity * flick
   //luz negra screen flickering
-  if (modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * (Math.sin(performance.now() / 20)*0.1  + 0.9)
+  if (modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
   //mouse follow?
   if (params.mouseFollow && !amIMobile) {
     const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation.y //rotación (encuadre) inicial
