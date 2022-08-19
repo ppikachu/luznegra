@@ -19,6 +19,7 @@ const params = {
   dayOrNight: "night",
   dayNightSpeed: 0.25,
   dayNightDelay: 0.5,
+  fx: false,
   exposure: 1,
   emissiveIntensity: 0.5,
   bloomStrength: 0.5,
@@ -35,10 +36,10 @@ const params = {
   lightPlaneOffset: 4,
   lightSunColor: 0xffebdb,
   lightSunIntensity: 1,
-  lightSunPosition: new THREE.Vector3(1.4, 4, 6),
+  lightSunPosition: new THREE.Vector3(-1.4, 4, 6),
   lightMoonColor: 0x660103,
   lightMoonIntensity: 1,
-  lightMoonPosition: new THREE.Vector3(-3, 4, 2),
+  lightMoonPosition: new THREE.Vector3(-11, 4, -1),
   ambientLightSunIntensity: 0.1,
   ambientLightMoonIntensity: 0.1,
 
@@ -64,9 +65,10 @@ const turntableSpeedB = 0.005
 const cameraOrthoPos = {
   x: 0,
   y: 0.5,
-  z: 0
+  z: 3
 }
-const frustumSize = 4
+const frustumDesktopSize = 4
+const frustumMobileSize = 6
 
 const debug = {
   showGround: true,
@@ -76,7 +78,7 @@ const debug = {
   showLights: true,
 }
 let windowHalfX, windowHalfY, container, amIMobile,
-scene, camera, renderer, composer,
+scene, camera, frustumSize, renderer, composer, bloomPass,
 lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
 groundGeometry, ground,
@@ -86,6 +88,7 @@ driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIn
 
 onMounted(() => {
   amIMobile = isMobile().any
+  frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
   //#region sceneSetup
   container = document.getElementById( 'container' )
   windowHalfX = container.clientWidth / 2
@@ -110,7 +113,7 @@ onMounted(() => {
   camera = new THREE.OrthographicCamera(
     frustumSize / 2 * -aspect , frustumSize / 2 * aspect,
     frustumSize / 2, frustumSize / -2,
-    0, 100
+    0, 50
   )
   scene.position.set(0, 0, -5)
   camera.position.set(cameraOrthoPos.x, cameraOrthoPos.y, cameraOrthoPos.z)
@@ -135,17 +138,17 @@ onMounted(() => {
   //#endregion environmentSetup
 
   //#region postprocessing
-  //if (!amIMobile) {
-  //  const renderScene = new RenderPass( scene, camera )
-  //  const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
-  //  bloomPass.threshold = params.bloomThreshold;
-  //  bloomPass.strength = params.bloomStrength;
-  //  bloomPass.radius = params.bloomRadius;
+  if (!amIMobile) {
+    const renderScene = new RenderPass( scene, camera )
+    bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
+    bloomPass.threshold = params.bloomThreshold
+    bloomPass.strength = params.bloomStrength
+    bloomPass.radius = params.bloomRadius
 
-  //  composer = new EffectComposer( renderer )
-  //  composer.addPass( renderScene )
-  //  composer.addPass( bloomPass )
-  //}
+    composer = new EffectComposer( renderer )
+    composer.addPass( renderScene )
+    composer.addPass( bloomPass )
+  }
   //#endregion postprocessing
   
   document.addEventListener( 'mousemove', onDocumentMouseMove )
@@ -278,13 +281,14 @@ function swapDayNight() {
     gsap.to(lightShadow.position, { x: params.lightSunPosition.x, y: params.lightSunPosition.y, z: params.lightSunPosition.z, duration: params.dayNightSpeed })
     //turn off modelPanchera inner emissive
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
-    gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, onComplete: () => {
+    gsap.to([ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, onComplete: () => {
       //stepped:
       scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
       ambientLight.color.set( params.lightSunColor )
       lightSun.position.y = params.lightSunPosition.y
       lightSun.color.set( params.lightSunColor )
       lightShadow.color.set( params.lightSunColor )
+      driverLuzPantalla.intensity = params.screenIntensity/2
       //fade in:
       gsap.to([ ambientLight ], { intensity: params.ambientLightSunIntensity, duration: params.dayNightSpeed })
       gsap.to([ lightSun, lightShadow], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed })
@@ -321,6 +325,9 @@ function updateScene() {
   lightSun.width = lightSun.height = params.lightPlaneSize
   lightHelperSun.visible = params.showLightsHelpers
   groundMaterial.color.set(params.groundColor)
+  bloomPass.threshold = params.bloomThreshold
+  bloomPass.strength = params.bloomStrength
+  bloomPass.radius = params.bloomRadius
   //Actualiza el ambiente
   if (params.dayOrNight === 'day') {
     lightSun.color.set( params.lightSunColor )
@@ -352,7 +359,7 @@ function animate() {
   const flick = Math.sin(performance.now() / 20)*0.1  + 0.9
   rectLight.intensity = params.screenIntensity * flick
   //luz negra screen flickering
-  if (modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
+  if (modelPantalla && params.dayOrNight == 'night') modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
   //mouse follow?
   if (params.mouseFollow && !amIMobile) {
     const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation.y //rotación (encuadre) inicial
@@ -365,8 +372,8 @@ function animate() {
 
   //time = doCycle ? clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME : WAKE_UP_TIME
 
-  renderer.render( scene, camera )
-  //if(!amIMobile) composer.render()
+  if(!amIMobile && params.fx) composer.render()
+  else renderer.render( scene, camera )
 }
 
 function makeTweak() {
@@ -397,9 +404,14 @@ function makeTweak() {
   nightFolder.addInput(params, 'nightSkyColor', { view: 'color', label: 'cielo noche' })
   nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'niebla noche' })
   
-  const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
+  const fxFolder = pane.addFolder({ title: 'FX', expanded: false })
+  fxFolder.addInput(params, 'fx', { type: 'checkbox', label: 'fx' })
+  fxFolder.addInput(params, 'bloomThreshold', { type: 'number', min: 0, max: 1, step: 0.01, label: 'threshold' })
+  fxFolder.addInput(params, 'bloomStrength', { type: 'number', min: 0, max: 2, step: 0.01, label: 'strength' })
+  fxFolder.addInput(params, 'bloomRadius', { type: 'number', min: 0, max: 1, step: 0.01, label: 'radius' })
 
   //DEBUG
+  const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
   debugFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
   const btn = debugFolder.addButton({

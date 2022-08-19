@@ -5,5 +5,5 @@ definePageMeta({
 </script>
 
 <template>
-  <HeroOnOff />
+  <HeroOnOffOrtho />
 </template>
