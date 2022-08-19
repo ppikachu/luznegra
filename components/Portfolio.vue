@@ -59,7 +59,7 @@ const filtered = computed(() => {
       <li v-for="(post, i) in filtered" :key="post" class="card card-compact bg-base-300 shadow-xl">
           <figure>
             <img v-if="post.fields.imageFeatured"
-              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=400&h=300`"
+              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=400&h=220`"
               :alt="post.fields.imageFeatured.fields.title"
               :loading="i > 0 ? 'lazy' : undefined"
               class="w-full"

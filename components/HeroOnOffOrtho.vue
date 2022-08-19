@@ -31,7 +31,7 @@ const params = {
   fogDensityNight: 0.1,
 
   showLightsHelpers: false,
-  lightPlaneSize: 2,
+  lightPlaneSize: 6,
   lightPlaneOffset: 4,
   lightSunColor: 0xffebdb,
   lightSunIntensity: 1,
@@ -46,74 +46,7 @@ const params = {
   groundColor: 0xffffff
 }
 
-const vertexShaderCode = `
-varying vec2 vUv;
-void main()
-{
-  vUv = uv;
-  vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-  gl_Position = projectionMatrix * mvPosition;
-}
-`
-const fragmentShaderCode = `
-varying vec2 vUv;
-uniform vec2 iResolution;
-uniform float iTime;
-uniform vec4 skyColor;
-
-// 3D Gradient noise from: https://www.shadertoy.com/view/Xsl3Dl
-vec3 hash( vec3 p ) // replace this by something better
-{
-	p = vec3(dot(p,vec3(127.1,311.7, 74.7)),
-			dot(p,vec3(269.5,183.3,246.1)),
-			dot(p,vec3(113.5,271.9,124.6)));
-
-	return -1.0 + 2.0*fract(sin(p)*43758.5453123);
-}
-float noise( in vec3 p )
-{
-  vec3 i = floor( p );
-  vec3 f = fract( p );
-	vec3 u = f*f*(3.0-2.0*f);
-
-    return mix( mix( mix( dot( hash( i + vec3(0.0,0.0,0.0) ), f - vec3(0.0,0.0,0.0) ), 
-                          dot( hash( i + vec3(1.0,0.0,0.0) ), f - vec3(1.0,0.0,0.0) ), u.x),
-                     mix( dot( hash( i + vec3(0.0,1.0,0.0) ), f - vec3(0.0,1.0,0.0) ), 
-                          dot( hash( i + vec3(1.0,1.0,0.0) ), f - vec3(1.0,1.0,0.0) ), u.x), u.y),
-                mix( mix( dot( hash( i + vec3(0.0,0.0,1.0) ), f - vec3(0.0,0.0,1.0) ), 
-                          dot( hash( i + vec3(1.0,0.0,1.0) ), f - vec3(1.0,0.0,1.0) ), u.x),
-                     mix( dot( hash( i + vec3(0.0,1.0,1.0) ), f - vec3(0.0,1.0,1.0) ), 
-                          dot( hash( i + vec3(1.0,1.0,1.0) ), f - vec3(1.0,1.0,1.0) ), u.x), u.y), u.z );
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-  // Normalized pixel coordinates (from 0 to 1)
-  vec2 uv = fract(fragCoord * vec2(5.0,5.0));
-  
-  // Stars computation:
-  vec3 stars_direction = normalize(vec3(uv * 2.0f - 1.0f, 1.0f)); // could be view vector for example
-	float stars_threshold = 8.0f; // modifies the number of stars that are visible
-	float stars_exposure = 100.0f; // modifies the overall strength of the stars
-	float stars = pow(clamp(noise(stars_direction * 200.0f), 0.0f, 1.0f), stars_threshold) * stars_exposure;
-	stars *= mix(0.4, 1.4, noise(stars_direction * 100.0f + vec3(iTime))); // time based flickering
-	
-  // Output to screen
-  vec3 blue = vec3(skyColor.r, skyColor.g, skyColor.b);
-  fragColor = vec4(vec3(stars)+blue,1.0);
-}
-
-void main() {
-  mainImage(gl_FragColor, vUv * iResolution.xy);
-}
-`
 const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
-
-const uniforms = {
-  iTime: { value: 0 },
-  iResolution:  { value: new THREE.Vector3(1, 1, 1) },
-  skyColor: { value: params.nightSkyColor },
-}
 
 const GROUND_SIZE = 100
 const SHADOW_SIZE = 2048
@@ -123,21 +56,18 @@ const clock = new THREE.Clock()
 const loader = new GLTFLoader()
 let mouseX = 0
 let mouseY = 0
-const initialSceneRotation = -Math.PI*0.2
+const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
 const turntableLimit = 1
-const turntableLimitX = -0.11
+const turntableLimitX = Math.PI*0.1
 const turntableSpeed = 0.002
 const turntableSpeedB = 0.005
-const cameraPerspPos = {
+const cameraOrthoPos = {
   x: 0,
-  y: 0.6,
-  z: 5
+  y: 0.5,
+  z: 0
 }
-const cameraMobilePerspPos = {
-  x: 0,
-  y: 1,
-  z: 7
-}
+const frustumSize = 4
+
 const debug = {
   showGround: true,
   showGLTFs: true,
@@ -150,17 +80,16 @@ scene, camera, renderer, composer,
 lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
 groundGeometry, ground,
-modelPanchera, modelPantalla, starrySky,
-groundMaterial, telonMaterial, daySkyMaterial, nightSkyMaterial,
+modelPanchera, modelPantalla,
+groundMaterial, telonMaterial,
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 }
 
 onMounted(() => {
   amIMobile = isMobile().any
-
   //#region sceneSetup
-  windowHalfX = window.innerWidth / 2
-  windowHalfY = window.innerHeight / 2
   container = document.getElementById( 'container' )
+  windowHalfX = container.clientWidth / 2
+  windowHalfY = container.clientHeight / 2
   scene = new THREE.Scene()
 
   renderer = new THREE.WebGLRenderer( { antialias: true } )
@@ -177,15 +106,19 @@ onMounted(() => {
   //scene.background = color
   container.appendChild( renderer.domElement )
 
-  //perspectiveCamera( fov, aspect, near, far )
-  camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 )
-  camera.aspect = container.clientWidth / container.clientHeight
-  if (amIMobile) {
-    camera.position.set(cameraMobilePerspPos.x, cameraMobilePerspPos.y, cameraMobilePerspPos.z)
-  } else {
-    camera.position.set(cameraPerspPos.x, cameraPerspPos.y, cameraPerspPos.z)
-  }
-  camera.lookAt( 0, 0.5, 0 )
+  const aspect = container.clientWidth / container.clientHeight
+  camera = new THREE.OrthographicCamera(
+    frustumSize / 2 * -aspect , frustumSize / 2 * aspect,
+    frustumSize / 2, frustumSize / -2,
+    0, 100
+  )
+  scene.position.set(0, 0, -5)
+  camera.position.set(cameraOrthoPos.x, cameraOrthoPos.y, cameraOrthoPos.z)
+  //if (amIMobile) {
+  //  camera.position.set(cameraMobilePerspPos.x, cameraMobilePerspPos.y, cameraMobilePerspPos.z)
+  //} else {
+  //  camera.position.set(cameraPerspPos.x, cameraPerspPos.y, cameraPerspPos.z)
+  //}
   camera.updateProjectionMatrix()
   //#endregion sceneSetup
   
@@ -219,40 +152,10 @@ onMounted(() => {
   window.addEventListener( 'resize', onWindowResize )
   props()
   animate()
-  if(route.name == 'onoff') makeTweak()
+  if(route.name == 'onoff' || route.name == 'test') makeTweak()
 })
 
 function props() {
-  //#region environment
-  if (amIMobile) {
-    nightSkyMaterial = new THREE.MeshBasicMaterial({
-      side: THREE.BackSide,
-      color: params.nightSkyColor,
-    })
-  } else {
-    const uniformedColor = new chroma(params.nightSkyColor).gl()
-    const finalUniformedColor = [uniformedColor[0], uniformedColor[1], uniformedColor[2], 1]
-    uniforms[ 'skyColor' ].value = finalUniformedColor
-    nightSkyMaterial = new THREE.ShaderMaterial({
-      side: THREE.BackSide,
-      uniforms: uniforms,
-      vertexShader: vertexShaderCode,
-      fragmentShader: fragmentShaderCode
-    })
-  }
-
-  daySkyMaterial = new THREE.MeshBasicMaterial({
-    side: THREE.BackSide,
-    color: params.daySkyColor,
-    transparent: true
-  })
-  //SphereGeometry(radius:Float, widthSegments:Integer, heightSegments:Integer, phiStart:Float, phiLength:Float, thetaStart Float, thetaLength:Float)
-  const skyGeometry = new THREE.SphereGeometry( 40, 32, 16, 0, Math.PI*2, 0, Math.PI*2 )
-  starrySky = params.dayOrNight === 'day' ? new THREE.Mesh(skyGeometry, daySkyMaterial) : new THREE.Mesh( skyGeometry, nightSkyMaterial )
-  starrySky.name = 'starrySky'
-  scene.add( starrySky )
-  //#endregion environment
-
   //#region Lights
   ambientLight = new THREE.AmbientLight()
   ambientLight.intensity = params.dayOrNight === 'day' ? params.ambientLightSunIntensity : params.ambientLightMoonIntensity
@@ -280,16 +183,16 @@ function props() {
   lightShadow.castShadow = true
   lightShadow.shadow.mapSize.width = SHADOW_SIZE
   lightShadow.shadow.mapSize.height = SHADOW_SIZE
-  lightShadow.shadow.camera.near = 0.5
-  lightShadow.shadow.camera.far = 30
+  lightShadow.shadow.camera.near = 0.05
+  lightShadow.shadow.camera.far = 20
   lightShadow.shadow.camera.left = -params.lightPlaneSize
   lightShadow.shadow.camera.right = params.lightPlaneSize
   lightShadow.shadow.camera.top = params.lightPlaneSize
   lightShadow.shadow.camera.bottom = -params.lightPlaneSize
   scene.add( lightShadow )
-  //lightHelperShadow = new THREE.DirectionalLightHelper( lightShadow )
-  //lightHelperShadow.visible = params.showLightsHelpers
-  //scene.add( lightHelperShadow )
+  lightHelperShadow = new THREE.DirectionalLightHelper( lightShadow )
+  lightHelperShadow.visible = params.showLightsHelpers
+  scene.add( lightHelperShadow )
   //#endregion Lights
   
   //#region GROUND
@@ -328,7 +231,8 @@ function props() {
   //#endregion GROUND
 
   //Gira la escena para que se vea con el angulo elegido
-  scene.rotation.y = initialSceneRotation
+  scene.rotation.x = initialSceneRotation.x
+  scene.rotation.y = initialSceneRotation.y
   //Inicia proyector
   if(debug.showPantalla) initProjector()
   //console.log(scene)
@@ -376,7 +280,6 @@ function swapDayNight() {
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
     gsap.to([driverLuzPantalla, ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, onComplete: () => {
       //stepped:
-      starrySky.material = daySkyMaterial
       scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
       ambientLight.color.set( params.lightSunColor )
       lightSun.position.y = params.lightSunPosition.y
@@ -395,11 +298,6 @@ function swapDayNight() {
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, delay: 1, ease: "back.out(4)" })
     gsap.to([ ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, delay: 0, onComplete: () => {
       //stepped:
-      starrySky.material = nightSkyMaterial
-      //starry sky color
-      const uniformedColor = new chroma(params.nightSkyColor).gl()
-      const finalUniformedColor = [uniformedColor[0], uniformedColor[1], uniformedColor[2], 1]
-      uniforms[ 'skyColor' ].value = finalUniformedColor
       scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
       ambientLight.color.set( params.lightMoonColor )
       lightSun.position.y = params.lightMoonPosition.y
@@ -425,7 +323,6 @@ function updateScene() {
   groundMaterial.color.set(params.groundColor)
   //Actualiza el ambiente
   if (params.dayOrNight === 'day') {
-    starrySky.material = daySkyMaterial
     lightSun.color.set( params.lightSunColor )
     lightSun.intensity = params.lightSunIntensity
     lightSun.position.y = params.lightSunPosition.y
@@ -437,7 +334,6 @@ function updateScene() {
     scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
   } else {
-    starrySky.material = nightSkyMaterial
     lightSun.color.set( params.lightMoonColor )
     lightSun.intensity = params.lightMoonIntensity
     lightSun.position.y = params.lightMoonPosition.y
@@ -447,9 +343,6 @@ function updateScene() {
     ambientLight.color.set( params.lightMoonColor )
     ambientLight.intensity = params.ambientLightMoonIntensity
     scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
-    const uniformedColor = new chroma(params.nightSkyColor).gl()
-    const finalUniformedColor = [uniformedColor[0], uniformedColor[1], uniformedColor[2], 1]
-    uniforms[ 'skyColor' ].value = finalUniformedColor
   }
 }
 
@@ -461,7 +354,7 @@ function animate() {
   if (modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * (Math.sin(performance.now() / 20)*0.1  + 0.9)
   //mouse follow?
   if (params.mouseFollow && !amIMobile) {
-    const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation //rotación (encuadre) inicial
+    const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation.y //rotación (encuadre) inicial
     const targetY = mouseY/turntableLimit * turntableSpeed
     scene.rotation.y += turntableSpeedB * ( targetX - scene.rotation.y )
     scene.rotation.x += turntableSpeedB * ( targetY - scene.rotation.x )
@@ -470,7 +363,6 @@ function animate() {
   }
 
   //time = doCycle ? clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME : WAKE_UP_TIME
-  uniforms[ 'iTime' ].value = performance.now() / 1000
 
   renderer.render( scene, camera )
   //if(!amIMobile) composer.render()
@@ -531,15 +423,17 @@ function exportPreset() {
 function onDocumentMouseMove(event) {
   mouseX = ( event.clientX - windowHalfX )
   mouseY = ( event.clientY - windowHalfY )
+  windowHalfX = container.clientWidth / 2
+  windowHalfY = container.clientHeight / 2
 }
 
 function onWindowResize() {
-  windowHalfX = window.innerWidth / 2
-  windowHalfY = window.innerHeight / 2
-  //persp
-  camera.aspect = container.clientWidth / container.clientHeight
+  const aspect = container.clientWidth / container.clientHeight
+  camera.left = - 0.5 * frustumSize * aspect
+  camera.right = 0.5 * frustumSize * aspect
+  camera.top = frustumSize / 2;
+  camera.bottom = - frustumSize / 2;
   camera.updateProjectionMatrix()
-  //uniforms.iResolution.value = [ container.clientWidth, container.clientHeight ]
   renderer.setSize(container.clientWidth, container.clientHeight )
 }
 

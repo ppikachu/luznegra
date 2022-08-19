@@ -6,6 +6,6 @@ definePageMeta({
 
 <template>
   <main class="block">
-    <Hero />
+    <HeroOnOffOrtho />
   </main>
 </template>
