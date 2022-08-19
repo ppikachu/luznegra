@@ -1,5 +1,7 @@
 <script setup>
-
+definePageMeta({
+  layout: 'clean',
+})
 </script>
 
 <template>
