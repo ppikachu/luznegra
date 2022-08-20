@@ -15,15 +15,18 @@ import { Pane } from 'tweakpane'
 const route = useRoute()
 
 const params = {
-  mouseFollow: false,
+  mouseFollow: true,
+  spring: 0.03,
+  friction: 0.97,
+  mass: 0.05,
   dayOrNight: "night",
   dayNightSpeed: 0.25,
   dayNightDelay: 0.5,
   fx: false,
   exposure: 1,
   emissiveIntensity: 0.5,
-  bloomStrength: 0.5,
-  bloomThreshold: 0.9,
+  bloomStrength: 0.6,
+  bloomThreshold: 0.25,
   bloomRadius: 0.1,
 
   daySkyColor: 0xaaeeff,
@@ -44,7 +47,7 @@ const params = {
   ambientLightMoonIntensity: 0.1,
 
   screenIntensity: 0.8,
-  groundColor: 0x3f5628
+  groundColor: 0x3f5628,
 }
 
 const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
@@ -56,12 +59,8 @@ const hdrimgUrl = '/images/Studio_80s.hdr'
 const clock = new THREE.Clock()
 const loader = new GLTFLoader()
 let mouseX = 0
-let mouseY = 0
 const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
-const turntableLimit = 1
-const turntableLimitX = Math.PI*0.1
-const turntableSpeed = 0.002
-const turntableSpeedB = 0.005
+const turntableLimitY = Math.PI*0.1
 const cameraOrthoPos = {
   x: 0,
   y: 0.5,
@@ -69,6 +68,7 @@ const cameraOrthoPos = {
 }
 const frustumDesktopSize = 4
 const frustumMobileSize = 6
+const emit = defineEmits(['bgColor'])
 
 const debug = {
   showGround: true,
@@ -77,8 +77,8 @@ const debug = {
   showAmbientLight: true,
   showLights: true,
 }
-let windowHalfX, windowHalfY, container, amIMobile,
-scene, camera, frustumSize, renderer, composer, bloomPass,
+let windowHalfX, container, amIMobile,
+scene, camera, frustumSize, previousX, deltaY=0, vx = 0, renderer, composer, bloomPass,
 lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
 groundGeometry, ground,
@@ -89,10 +89,11 @@ driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIn
 onMounted(() => {
   amIMobile = isMobile().any
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
+  emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.lightSunColor).hex() : chroma(params.lightMoonColor).hex() })
+
   //#region sceneSetup
   container = document.getElementById( 'container' )
   windowHalfX = container.clientWidth / 2
-  windowHalfY = container.clientHeight / 2
   scene = new THREE.Scene()
 
   renderer = new THREE.WebGLRenderer( { antialias: true } )
@@ -101,14 +102,15 @@ onMounted(() => {
   renderer.outputEncoding = THREE.sRGBEncoding
   renderer.shadowMap.enabled = true
   renderer.shadowMap.type = THREE.PCFShadowMap
-  //THREE.ColorManagement.legacyMode = false
-  //renderer.toneMapping =THREE. ACESFilmicToneMapping
+  THREE.ColorManagement.legacyMode = true
+  //renderer.toneMapping = THREE.ReinhardToneMapping
   //renderer.toneMappingExposure = 1
   // turn on the physically correct lighting model
   //renderer.physicallyCorrectLights = true
   //scene.background = color
   container.appendChild( renderer.domElement )
 
+  //CAMERA
   const aspect = container.clientWidth / container.clientHeight
   camera = new THREE.OrthographicCamera(
     frustumSize / 2 * -aspect , frustumSize / 2 * aspect,
@@ -117,11 +119,6 @@ onMounted(() => {
   )
   scene.position.set(0, 0, -5)
   camera.position.set(cameraOrthoPos.x, cameraOrthoPos.y, cameraOrthoPos.z)
-  //if (amIMobile) {
-  //  camera.position.set(cameraMobilePerspPos.x, cameraMobilePerspPos.y, cameraMobilePerspPos.z)
-  //} else {
-  //  camera.position.set(cameraPerspPos.x, cameraPerspPos.y, cameraPerspPos.z)
-  //}
   camera.updateProjectionMatrix()
   //#endregion sceneSetup
   
@@ -244,7 +241,6 @@ function props() {
 function initProjector() {
   RectAreaLightUniformsLib.init()
   const video = document.getElementById( 'video' )
-  video.play()
   const telonSize = new THREE.Vector2( 2.12, 1.25 )
   const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
   const telonTexture = new THREE.VideoTexture( video )
@@ -263,6 +259,7 @@ function initProjector() {
   const telonPosition = new THREE.Vector3(0, 0.9, -0.001 )
   telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
   scene.add( telon )
+  video.play()
 
   //proyector light
   rectLight = new THREE.RectAreaLight( 0xffff55, params.screenIntensity, telonSize.x, telonSize.y )
@@ -275,12 +272,14 @@ function initProjector() {
 }
 
 function swapDayNight() {
+
   if (params.dayOrNight === 'night') {
+    emit('bgColor', { which: params.dayOrNight, color: chroma(params.lightSunColor).hex()})
     params.dayOrNight = 'day'
     //move lightShadow position
     gsap.to(lightShadow.position, { x: params.lightSunPosition.x, y: params.lightSunPosition.y, z: params.lightSunPosition.z, duration: params.dayNightSpeed })
     //turn off modelPanchera inner emissive
-    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
+    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3, delay: 1 })
     gsap.to([ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, onComplete: () => {
       //stepped:
       scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
@@ -313,6 +312,8 @@ function swapDayNight() {
       gsap.to([ driverLuzPantalla], { intensity: params.screenIntensity, duration: params.dayNightSpeed*3, delay: 1 })
     }})
   }
+  
+  emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.lightSunColor).hex() : chroma(params.lightMoonColor).hex() })
 
   //hide tweakpane sections
   if (pane) {
@@ -362,14 +363,16 @@ function animate() {
   if (modelPantalla && params.dayOrNight == 'night') modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
   //mouse follow?
   if (params.mouseFollow && !amIMobile) {
-    const targetX = mouseX/turntableLimit * turntableSpeed + initialSceneRotation.y //rotación (encuadre) inicial
-    const targetY = mouseY/turntableLimit * turntableSpeed
-    scene.rotation.y += turntableSpeedB * ( targetX - scene.rotation.y )
-    scene.rotation.x += turntableSpeedB * ( targetY - scene.rotation.x )
+    var dx = mouseX - scene.rotation.x,
+    ax = dx * params.spring
+    vx += ax
+    vx *= params.friction
+    deltaY = (vx - previousX)*params.mass
+    previousX = vx
+    scene.rotation.y = deltaY + initialSceneRotation.y //rotación (encuadre) inicial
     //limit camera rotation:
-    if (scene.rotation.x < turntableLimitX) scene.rotation.x = turntableLimitX 
+    //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
   }
-
   //time = doCycle ? clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME : WAKE_UP_TIME
 
   if(!amIMobile && params.fx) composer.render()
@@ -382,11 +385,10 @@ function makeTweak() {
     updateScene()
     presetDebug.hidden = true
   })
-    
+  //PARAMETROS
   pane.addInput(params, 'groundColor', { view: 'color', label: 'color piso' })
   pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 3, step: 0.1 })
   pane.addSeparator()
-  //PARAMETROS
   pane.addInput(params, 'lightPlaneSize', {label: 'tamaño luz', min: 0.1, max: 10, step: 0.01})
   dayFolder = pane.addFolder({ title: 'DIA', expanded: true, hidden: params.dayOrNight === 'day' ? false : true })
   dayFolder.addInput(params, 'lightSunColor', { view: 'color', label: 'color sol' })
@@ -407,12 +409,16 @@ function makeTweak() {
   const fxFolder = pane.addFolder({ title: 'FX', expanded: false })
   fxFolder.addInput(params, 'fx', { type: 'checkbox', label: 'fx' })
   fxFolder.addInput(params, 'bloomThreshold', { type: 'number', min: 0, max: 1, step: 0.01, label: 'threshold' })
-  fxFolder.addInput(params, 'bloomStrength', { type: 'number', min: 0, max: 2, step: 0.01, label: 'strength' })
+  fxFolder.addInput(params, 'bloomStrength', { type: 'number', min: 0, max: 3, step: 0.01, label: 'strength' })
   fxFolder.addInput(params, 'bloomRadius', { type: 'number', min: 0, max: 1, step: 0.01, label: 'radius' })
 
   //DEBUG
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
   debugFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
+  debugFolder.addInput(params, 'spring', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'spring' })
+  debugFolder.addInput(params, 'friction', { type: 'number', min: 0.9, max: 1, step: 0.01, label: 'friction' })
+  debugFolder.addInput(params, 'mass', { type: 'number', min: 0, max: 0.1, step: 0.01, label: 'mass' })
+  debugFolder.addSeparator()
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
   const btn = debugFolder.addButton({
     title: 'export',
@@ -435,9 +441,6 @@ function exportPreset() {
 
 function onDocumentMouseMove(event) {
   mouseX = ( event.clientX - windowHalfX )
-  mouseY = ( event.clientY - windowHalfY )
-  windowHalfX = container.clientWidth / 2
-  windowHalfY = container.clientHeight / 2
 }
 
 function onWindowResize() {
@@ -501,6 +504,6 @@ onUnmounted(() => {
 
 <style scoped>
   .hero {
-    height: 66vh;
+    height: 80vh;
   }
 </style>

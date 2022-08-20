@@ -2,15 +2,25 @@
 definePageMeta({
   layout: 'clean',
 })
+
+const heroBgColor = ref()
+const heroTypeColor = ref()
+
+function onSwapScene(bgColor) {
+  //#TODO:
+  //heroBgColor.value = bgColor.color
+  //heroTypeColor.value = bgColor.which == 'day' ? 'text-black' : 'text-white'
+}
+
 </script>
 
 <template>
   <main class="block">
 
-    <HeroOnOffOrtho />
-    <section class="mt-12 max-w-5xl mx-auto">
-      <div class="hero bg-secondaryx">
-        <div class="hero-content flex-col lg:flex-row">
+    <HeroOnOffOrtho @bgColor="onSwapScene" />
+    <section class="max-w-5xl mx-auto">
+      <div class="hero bg-secondaryx pt-8 lg:pt-16" :style="`background-color: ${heroBgColor}`">
+        <div class="hero-content flex-col lg:flex-row" :class="heroTypeColor">
           <img
             src="/images/et1.gif"
             class="max-w-sm w-full rounded-lg"
