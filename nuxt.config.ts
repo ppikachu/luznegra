@@ -10,11 +10,11 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     private: {
+    },
+    public: {
       CONTENT_KEY: process.env.CONTENT_KEY,
       SPACE_ID: process.env.SPACE_ID,
       ACCESS_TOKEN: process.env.ACCESS_TOKEN,
-    },
-    public: {
       DEFAULT_LANGUAGE: 'es-AR',
       HOST: process.env.NODE_ENV === 'production' ? 'https://luznegra-nuxt.vercel.app' : 'http://localhost:3000',// WARN cambiar al deploy final 
       APP_NAME: 'LuzNegra',

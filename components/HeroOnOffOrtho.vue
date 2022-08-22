@@ -563,7 +563,7 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
-      <label class="swap swap-rotate">
+      <label class="animate-bounce swap swap-rotate">
         <!-- this hidden checkbox controls the state -->
         <input @click="swapDayNight" type="checkbox" />
         <!-- sun icon -->
