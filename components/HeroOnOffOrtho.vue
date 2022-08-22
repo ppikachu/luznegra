@@ -16,7 +16,7 @@ import { Pane } from 'tweakpane'
 
 const params = {
   mouseFollow: true,
-  spring: 0.03,
+  spring: 0.02,
   friction: 0.97,
   mass: 0.05,
   dayOrNight: "night",
