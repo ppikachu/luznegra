@@ -55,9 +55,6 @@ const params = {
 
 const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
 
-const GROUND_SIZE = 100
-const SHADOW_SIZE = 2048
-
 const hdrimgUrl = '/images/Studio_80s.hdr'
 const clock = new THREE.Clock()
 const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
@@ -77,7 +74,7 @@ const debug = {
   showAmbientLight: true,
   showLights: true,
 }
-let container,scene, camera, frustumSize, renderer, composer, bloomPass, saoPass,
+let container,scene, camera, SHADOW_SIZE, GROUND_SIZE = 20, frustumSize, renderer, composer, bloomPass, saoPass,
 lightSun, lightMoon, lightAreaSun, lightAreaMoon, rectLightHelper, rectLightHelperB, rectLight, rectLightB, lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon,
 groundGeometry, ground, modelPanchera, modelPantalla, groundMaterial, telonMaterial,
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 },
@@ -108,12 +105,16 @@ onMounted(() => {
 function init() {
   amIMobile = isMobile().any
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
+  SHADOW_SIZE = amIMobile ? 512 : 1024
   //#region sceneSetup
   container = document.getElementById( 'container' )
   windowHalfX = container.clientWidth / 2
   scene = new THREE.Scene()
 
-  renderer = new THREE.WebGLRenderer( { antialias: true } )
+  renderer = new THREE.WebGLRenderer({
+    antialias: amIMobile ? false : true,
+    powerPreference: "high-performance"
+  })
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
   renderer.outputEncoding = THREE.sRGBEncoding
@@ -244,7 +245,7 @@ async function props() {
   
   //#region GROUND
   if (debug.showGround) {
-    groundGeometry = new THREE.PlaneGeometry( GROUND_SIZE, GROUND_SIZE )
+    groundGeometry = new THREE.PlaneBufferGeometry( GROUND_SIZE, GROUND_SIZE )
     groundMaterial = new THREE.MeshStandardMaterial( { color: params.groundColor } )
     ground = new THREE.Mesh( groundGeometry, groundMaterial )
     ground.rotation.x = -Math.PI / 2
@@ -277,9 +278,12 @@ async function loadModels() {
   modelPanchera = setupModel(pancheraData)
   modelPanchera.scale.set( 10, 10, 10)
   modelPanchera.position.set( 0, 0, 1.7 )
+  //modelPanchera.matrixAutoUpdate = false
 
   modelPantalla = setupModel(pantallaData)
   modelPantalla.scale.set( 15, 15, 15)
+  //modelPantalla.matrixAutoUpdate = false
+
   loadedModels.value = true
   return { modelPanchera, modelPantalla }
 }
@@ -366,7 +370,7 @@ function swapDayNight() {
     tlnight.play()
   }
   
-  emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.lightSunColor).hex() : chroma(params.lightMoonColor).hex() })
+  emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.groundColor).hex() : chroma(params.lightMoonColor).hex() })
 
   //hide tweakpane sections
   if (pane) {

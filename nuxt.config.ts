@@ -4,7 +4,10 @@ import { defineNuxtConfig } from 'nuxt'
 export default defineNuxtConfig({
   telemetry: false,
   target: 'static',
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/image-edge',
+  ],
   buildModules: [
     '@nuxtjs/google-fonts'
   ],
@@ -39,5 +42,8 @@ export default defineNuxtConfig({
     families: {
       'Varela Round': true,
     }
+  },
+  image: {
+    // Options
   }
 })

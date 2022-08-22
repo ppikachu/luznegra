@@ -10,7 +10,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
   const createClientFunc = process.env.NODE_ENV === 'development' ? createClient : contentful.createClient
   const client = createClientFunc({
-    //#FIXME: use space: config.private.SPACE_ID, accessToken: config.private.ACCESS_TOKEN instead of hardcoded value
+    //#WARN: use config.private?
     space: config.public.SPACE_ID,
     accessToken: config.public.ACCESS_TOKEN,
   })
