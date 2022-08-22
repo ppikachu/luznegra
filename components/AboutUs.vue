@@ -10,7 +10,7 @@ const props = defineProps<{
   <section :class="heroTypeColor" :style="`background-color: ${heroBgColor}`">
     <div class="hero pt-8 lg:pt-16 max-w-5xl mx-auto">
       <div class="hero-content flex-col lg:flex-row">
-        <nuxt-img
+        <img
           src="/images/et1.gif"
           loading="lazy"
           class="max-w-sm w-full rounded-lg"
@@ -42,7 +42,7 @@ const props = defineProps<{
 
     <div class="hero max-w-5xl mx-auto">
       <div class="hero-content flex-col lg:flex-row-reverse">
-        <nuxt-img
+        <img
           src="/images/bety.gif"
           loading="lazy"
           class="max-w-sm w-full rounded-lg"
