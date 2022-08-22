@@ -6,13 +6,13 @@ import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLigh
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass.js'
 //import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
 
-const route = useRoute()
 
 const params = {
   mouseFollow: true,
@@ -21,13 +21,15 @@ const params = {
   mass: 0.05,
   dayOrNight: "night",
   dayNightSpeed: 0.25,
-  dayNightDelay: 0.5,
+  dayNightDelay: 1,
   fx: false,
   exposure: 1,
   emissiveIntensity: 0.5,
+  bloomOn: false,
   bloomStrength: 0.6,
   bloomThreshold: 0.25,
   bloomRadius: 0.1,
+  saoOn: true,
 
   daySkyColor: 0xaaeeff,
   nightSkyColor: 0x010924,
@@ -38,11 +40,12 @@ const params = {
   lightPlaneSize: 6,
   lightPlaneOffset: 4,
   lightSunColor: 0xffebdb,
-  lightSunIntensity: 1,
-  lightSunPosition: new THREE.Vector3(-1.4, 4, 6),
+  lightSunIntensity: 1.0,
+  lightSunPosition: new THREE.Vector3(-1.4, 5, 6),
   lightMoonColor: 0x660103,
-  lightMoonIntensity: 1,
-  lightMoonPosition: new THREE.Vector3(-11, 4, -1),
+  //lightMoonColor: 'rgb(102, 1, 3)',
+  lightMoonIntensity: 1.0,
+  lightMoonPosition: new THREE.Vector3(-10, 5, -1),
   ambientLightSunIntensity: 0.1,
   ambientLightMoonIntensity: 0.1,
 
@@ -57,8 +60,6 @@ const SHADOW_SIZE = 2048
 
 const hdrimgUrl = '/images/Studio_80s.hdr'
 const clock = new THREE.Clock()
-const loader = new GLTFLoader()
-let mouseX = 0
 const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
 const turntableLimitY = Math.PI*0.1
 const cameraOrthoPos = {
@@ -68,7 +69,6 @@ const cameraOrthoPos = {
 }
 const frustumDesktopSize = 4
 const frustumMobileSize = 6
-const emit = defineEmits(['bgColor'])
 
 const debug = {
   showGround: true,
@@ -77,20 +77,37 @@ const debug = {
   showAmbientLight: true,
   showLights: true,
 }
-let windowHalfX, container, amIMobile,
-scene, camera, frustumSize, previousX, deltaY=0, vx = 0, renderer, composer, bloomPass,
-lightSun, lightShadow, ambientLight, rectLight, lightHelperSun, lightHelperShadow,
+let container,scene, camera, frustumSize, renderer, composer, bloomPass, saoPass,
+lightSun, lightMoon, lightAreaSun, lightAreaMoon, rectLightHelper, rectLightHelperB, rectLight, rectLightB, lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon,
+groundGeometry, ground, modelPanchera, modelPantalla, groundMaterial, telonMaterial,
+driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 },
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
-groundGeometry, ground,
-modelPanchera, modelPantalla,
-groundMaterial, telonMaterial,
-driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 }
+amIMobile, windowHalfX, previousX, deltaY = 0, vx = 0, mouseX = 0
+
+const route = useRoute()
+const emit = defineEmits(['bgColor'])
+const loadedModels = ref(false)
 
 onMounted(() => {
+  //Tell parent component default background color
+  emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.lightSunColor).hex() : chroma(params.lightMoonColor).hex() })
+  //Setup
+  init()
+  //Models, lights, fog, etc
+  props()
+  //Listeners
+  document.addEventListener( 'mousemove', onDocumentMouseMove )
+  window.addEventListener( 'resize', onWindowResize )
+  onWindowResize()
+  //Tweakepane
+  if(route.name == 'onoff' || route.name == 'test') makeTweak()
+  //Animation
+  animate()
+})
+
+function init() {
   amIMobile = isMobile().any
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
-  emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.lightSunColor).hex() : chroma(params.lightMoonColor).hex() })
-
   //#region sceneSetup
   container = document.getElementById( 'container' )
   windowHalfX = container.clientWidth / 2
@@ -117,9 +134,13 @@ onMounted(() => {
     frustumSize / 2, frustumSize / -2,
     0, 50
   )
-  scene.position.set(0, 0, -5)
   camera.position.set(cameraOrthoPos.x, cameraOrthoPos.y, cameraOrthoPos.z)
-  camera.updateProjectionMatrix()
+  //lighthelper layer
+  camera.layers.enable(1)
+
+  //Mueve la escena para que se vea con el angulo elegido
+  scene.position.set(0, 0, -5)
+  scene.rotation.x = initialSceneRotation.x
   //#endregion sceneSetup
   
   //#region environmentSetup
@@ -137,66 +158,91 @@ onMounted(() => {
   //#region postprocessing
   if (!amIMobile) {
     const renderScene = new RenderPass( scene, camera )
-    bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
-    bloomPass.threshold = params.bloomThreshold
-    bloomPass.strength = params.bloomStrength
-    bloomPass.radius = params.bloomRadius
-
     composer = new EffectComposer( renderer )
     composer.addPass( renderScene )
-    composer.addPass( bloomPass )
+
+    if (params.bloomOn) {
+      bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
+      bloomPass.threshold = params.bloomThreshold
+      bloomPass.strength = params.bloomStrength
+      bloomPass.radius = params.bloomRadius
+      composer.addPass( bloomPass )
+    }
+    if (params.saoOn) { 
+      saoPass = new SAOPass( scene, camera, false, true )
+      //saoPass.output = THREE.SAOPass.OUTPUT.Beauty
+      saoPass.saoMinResolution = 0
+      saoPass.saoKernelRadius = 50
+      saoPass.saoIntensity = 0.01
+      composer.addPass( saoPass )
+    }
   }
   //#endregion postprocessing
-  
-  document.addEventListener( 'mousemove', onDocumentMouseMove )
-  window.addEventListener( 'resize', onWindowResize )
-  props()
-  animate()
-  if(route.name == 'onoff' || route.name == 'test') makeTweak()
-})
+}
 
-function props() {
+async function props() {
   //#region Lights
-  ambientLight = new THREE.AmbientLight()
-  ambientLight.intensity = params.dayOrNight === 'day' ? params.ambientLightSunIntensity : params.ambientLightMoonIntensity
-  ambientLight.color = params.dayOrNight === 'day' ? new THREE.Color(params.lightSunColor) : new THREE.Color(params.lightMoonColor)
-  ambientLight.visible = debug.showAmbientLight
-  scene.add( ambientLight )
-
-  lightSun = new THREE.RectAreaLight()
-  lightSun.color.set( params.dayOrNight === 'day' ? params.lightSunColor : params.lightMoonColor )
-  lightSun.intensity = params.dayOrNight === 'day' ? params.lightSunIntensity : params.lightMoonIntensity
-  lightSun.width = lightSun.height = params.lightPlaneSize
-  lightSun.position.set( 0, params.dayOrNight === 'day' ? params.lightSunPosition.y : params.lightMoonPosition.y, 0 )
+  lightSun = new THREE.DirectionalLight()
+  lightSun.color.set( params.lightSunColor )
+  lightSun.intensity = params.dayOrNight === 'day' ? params.lightSunIntensity : 0
+  lightSun.position.set( params.lightSunPosition.x, params.lightSunPosition.y, params.lightSunPosition.z )
   lightSun.lookAt( 0, 0, 0 )
-  scene.add( lightSun )
+  lightSun.castShadow = true
+  lightSun.shadow.mapSize.width = SHADOW_SIZE
+  lightSun.shadow.mapSize.height = SHADOW_SIZE
+  lightSun.shadow.camera.near = 0.05
+  lightSun.shadow.camera.far = 50
+  lightSun.shadow.camera.left = -params.lightPlaneSize
+  lightSun.shadow.camera.right = params.lightPlaneSize
+  lightSun.shadow.camera.top = params.lightPlaneSize
+  lightSun.shadow.camera.bottom = -params.lightPlaneSize
 
-  lightHelperSun = new RectAreaLightHelper( lightSun )
-  lightHelperSun.visible = params.showLightsHelpers
-  lightSun.add( lightHelperSun )
+  lightMoon = new THREE.DirectionalLight()
+  lightMoon.color.set( params.lightMoonColor )
+  lightMoon.intensity = params.dayOrNight === 'day' ? 0 : params.lightMoonIntensity
+  lightMoon.position.set( params.lightMoonPosition.x, params.lightMoonPosition.y, params.lightMoonPosition.z )
+  lightMoon.lookAt( 0, 0, 0 )
+  lightMoon.castShadow = true
+  lightMoon.shadow.mapSize.width = SHADOW_SIZE
+  lightMoon.shadow.mapSize.height = SHADOW_SIZE
+  lightMoon.shadow.camera.near = 0.05
+  lightMoon.shadow.camera.far = 50
+  lightMoon.shadow.camera.left = -params.lightPlaneSize
+  lightMoon.shadow.camera.right = params.lightPlaneSize
+  lightMoon.shadow.camera.top = params.lightPlaneSize
+  lightMoon.shadow.camera.bottom = -params.lightPlaneSize
+  
+  //arealights
+  lightAreaSun = new THREE.RectAreaLight()
+  lightAreaSun.color.set( params.lightSunColor )
+  lightAreaSun.intensity = params.dayOrNight === 'day' ? params.lightSunIntensity : 0
+  lightAreaSun.width = lightSun.height = params.lightPlaneSize
+  lightAreaSun.position.set( 0, params.lightSunPosition.y, 0 )
+  lightAreaSun.lookAt( 0, 0, 0 )
 
-  lightShadow = new THREE.DirectionalLight()
-  lightShadow.color.set( params.dayOrNight === 'day' ? params.lightSunColor : params.lightMoonColor )
-  lightShadow.intensity = params.dayOrNight === 'day' ? params.lightSunIntensity : params.lightMoonIntensity
-  lightShadow.position.set( params.dayOrNight === 'day' ? params.lightSunPosition.x : params.lightMoonPosition.x, params.dayOrNight === 'day' ? params.lightSunPosition.y : params.lightMoonPosition.y, params.dayOrNight === 'day' ? params.lightSunPosition.z : params.lightMoonPosition.z )
-  lightShadow.lookAt( 0, 0, 0 )
-  lightShadow.castShadow = true
-  lightShadow.shadow.mapSize.width = SHADOW_SIZE
-  lightShadow.shadow.mapSize.height = SHADOW_SIZE
-  lightShadow.shadow.camera.near = 0.05
-  lightShadow.shadow.camera.far = 20
-  lightShadow.shadow.camera.left = -params.lightPlaneSize
-  lightShadow.shadow.camera.right = params.lightPlaneSize
-  lightShadow.shadow.camera.top = params.lightPlaneSize
-  lightShadow.shadow.camera.bottom = -params.lightPlaneSize
-  scene.add( lightShadow )
-  lightHelperShadow = new THREE.DirectionalLightHelper( lightShadow )
-  lightHelperShadow.visible = params.showLightsHelpers
-  scene.add( lightHelperShadow )
+  lightAreaMoon = new THREE.RectAreaLight()
+  lightAreaMoon.color.set( params.lightMoonColor )
+  lightAreaMoon.intensity = params.dayOrNight === 'day' ? 0 : params.lightMoonIntensity
+  lightAreaMoon.width = lightSun.height = params.lightPlaneSize
+  lightAreaMoon.position.set( 0, params.lightMoonPosition.y, 0 )
+  lightAreaMoon.lookAt( 0, 0, 0 )
+
+  //lighthelpers
+  lightHelperSun = new THREE.DirectionalLightHelper( lightSun )
+  lightHelperMoon = new THREE.DirectionalLightHelper( lightMoon )
+  lightHelperAreaSun = new RectAreaLightHelper( lightAreaSun )
+  lightHelperAreaMoon = new RectAreaLightHelper( lightAreaMoon )
+  //lighthelper layers
+  lightHelperSun.layers.set( 1 )
+  lightHelperMoon.layers.set( 1 )
+  lightHelperAreaSun.layers.set( 1 )
+  lightHelperAreaMoon.layers.set( 1 )
+  scene.add( lightSun, lightMoon, lightAreaSun, lightAreaMoon )
+  //scene.add( lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon ) //can't hide last two so... next line is a hack
+  scene.add( lightHelperAreaSun, lightHelperAreaMoon )
   //#endregion Lights
   
   //#region GROUND
-
   if (debug.showGround) {
     groundGeometry = new THREE.PlaneGeometry( GROUND_SIZE, GROUND_SIZE )
     groundMaterial = new THREE.MeshStandardMaterial( { color: params.groundColor } )
@@ -206,36 +252,45 @@ function props() {
     //ground.castShadow = true
     scene.add( ground )
   }
-  if (debug.showGLTFs) {
-    loader.load( '/gltf/pantalla.gltf', function ( gltf ) {
-      modelPantalla = gltf.scene.children[0].children[0].children[0]
-      modelPantalla.scale.set( 15, 15, 15)
-      modelPantalla.material.emissiveIntensity = params.dayOrNight === 'day' ? 0 : params.emissiveIntensity
-      //modelPantalla.receiveShadow = true
-      modelPantalla.castShadow = true
-      //modelPantalla.material.envMap = envMap
-      scene.add( modelPantalla )
-    }, undefined, function ( e ) { console.error( e ) })
 
-    loader.load( '/gltf/panchera.gltf', function ( gltf ) {
-      modelPanchera = gltf.scene.children[0].children[0].children[0]
-      modelPanchera.position.set( 0, 0, 1.7 )
-      modelPanchera.scale.set( 10, 10, 10)
-      modelPanchera.material.emissiveIntensity = params.dayOrNight === 'day' ? 0 : params.emissiveIntensity
-      modelPanchera.castShadow = true
-      //modelPanchera.material.envMap = envMap
-      scene.add( modelPanchera )
-    }, undefined, function ( e ) { console.error( e ) })
+  if (debug.showGLTFs) {
+    const models = await loadModels()
+    scene.add( models.modelPanchera, models.modelPantalla )
   }
+
   scene.fog = params.dayOrNight === 'day' ? new THREE.FogExp2(params.daySkyColor, params.fogDensityDay ) : new THREE.FogExp2(params.nightSkyColor, params.fogDensityNight )
   //#endregion GROUND
-
-  //Gira la escena para que se vea con el angulo elegido
-  scene.rotation.x = initialSceneRotation.x
-  scene.rotation.y = initialSceneRotation.y
+  
   //Inicia proyector
   if(debug.showPantalla) initProjector()
-  //console.log(scene)
+  if (!params.showLightsHelpers) camera.layers.disable( 1 )
+}
+
+async function loadModels() {
+  const loader = new GLTFLoader()
+
+  const [pancheraData, pantallaData] = await Promise.all([
+    loader.loadAsync('/gltf/panchera.gltf'),
+    loader.loadAsync('/gltf/pantalla.gltf'),
+  ])
+
+  modelPanchera = setupModel(pancheraData)
+  modelPanchera.scale.set( 10, 10, 10)
+  modelPanchera.position.set( 0, 0, 1.7 )
+
+  modelPantalla = setupModel(pantallaData)
+  modelPantalla.scale.set( 15, 15, 15)
+  loadedModels.value = true
+  return { modelPanchera, modelPantalla }
+}
+
+function setupModel(modelData) {
+  const model = modelData.scene.children[0].children[0].children[0]
+  model.material.emissiveIntensity = params.dayOrNight === 'day' ? 0 : params.emissiveIntensity
+  model.castShadow = true
+  //model.material.envMap = envMap
+  //console.log(model)
+  return model
 }
 
 function initProjector() {
@@ -246,71 +301,69 @@ function initProjector() {
   const telonTexture = new THREE.VideoTexture( video )
   telonTexture.encoding = THREE.sRGBEncoding
   //telonTexture.minFilter = THREE.LinearFilter
-  telonMaterial = new THREE.MeshLambertMaterial(
-    {
-      color: 0x000000,
-      emissive: 0xffffff,
-      //transparent: true,
-      emissiveMap: telonTexture,
-      alphaMap: telonTexture,
-    }
-  )
+  telonMaterial = new THREE.MeshBasicMaterial({ map: telonTexture })
   const telon = new THREE.Mesh( telonGeometry, telonMaterial )
   const telonPosition = new THREE.Vector3(0, 0.9, -0.001 )
   telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
   scene.add( telon )
   video.play()
 
-  //proyector light
+  //proyector light to front
   rectLight = new THREE.RectAreaLight( 0xffff55, params.screenIntensity, telonSize.x, telonSize.y )
   rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
   rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
-  scene.add( rectLight )
+  //proyector light to self
+  rectLightB = new THREE.RectAreaLight( 0x111111, params.screenIntensity, telonSize.x, telonSize.y )
+  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.1 )
+  rectLightB.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
 
-  const rectLightHelper = new RectAreaLightHelper( rectLight )
-  rectLight.add( rectLightHelper )
+  scene.add( rectLight, rectLightB )
+
+  rectLightHelper = new RectAreaLightHelper( rectLight )
+  rectLightHelperB = new RectAreaLightHelper( rectLightB )
+  rectLightHelper.layers.set( 1 )
+  rectLightHelperB.layers.set( 1 )
+  scene.add( rectLightHelper, rectLightHelperB )
 }
 
 function swapDayNight() {
-
+  const previousSunPosition = params.lightSunPosition
+  const previousMoonPosition = params.lightMoonPosition
   if (params.dayOrNight === 'night') {
-    emit('bgColor', { which: params.dayOrNight, color: chroma(params.lightSunColor).hex()})
+    //DAY:
     params.dayOrNight = 'day'
-    //move lightShadow position
-    gsap.to(lightShadow.position, { x: params.lightSunPosition.x, y: params.lightSunPosition.y, z: params.lightSunPosition.z, duration: params.dayNightSpeed })
-    //turn off modelPanchera inner emissive
-    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3, delay: 1 })
-    gsap.to([ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, onComplete: () => {
+    var tlday = gsap.timeline()
+    //move lightShadows position
+    tlday.to(lightMoon.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed })
+    tlday.to(lightSun.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed }, '<')
+    tlday.to([ lightMoon, lightAreaMoon ], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
       //stepped:
       scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
-      ambientLight.color.set( params.lightSunColor )
-      lightSun.position.y = params.lightSunPosition.y
-      lightSun.color.set( params.lightSunColor )
-      lightShadow.color.set( params.lightSunColor )
-      driverLuzPantalla.intensity = params.screenIntensity/2
-      //fade in:
-      gsap.to([ ambientLight ], { intensity: params.ambientLightSunIntensity, duration: params.dayNightSpeed })
-      gsap.to([ lightSun, lightShadow], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed })
-    }})
+      pane.refresh()
+    } }, '<')
+    //fade in:
+    tlday.to([ lightSun, lightAreaSun], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed }, '<')
+    //turn off modelPanchera inner emissive
+    tlday.to(modelPanchera.material, { emissiveIntensity: 0, duration: params.dayNightSpeed, delay: params.dayNightDelay })
+    driverLuzPantalla.intensity = params.screenIntensity/2
+    tlday.play()
   } else {
     //NIGHT:
     params.dayOrNight = 'night'
+    var tlnight = gsap.timeline()
     //move lightShadow position
-    gsap.to(lightShadow.position, { x: params.lightMoonPosition.x, y: params.lightMoonPosition.y, z: params.lightMoonPosition.z, duration: params.dayNightSpeed })
-    //turn on modelPanchera inner emissive
-    if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, delay: 1, ease: "back.out(4)" })
-    gsap.to([ ambientLight, lightSun, lightShadow], { intensity: 0, duration: params.dayNightSpeed, delay: 0, onComplete: () => {
+    tlnight.to(lightSun.position, { x: previousMoonPosition.x, y: previousMoonPosition.y, z: previousMoonPosition.z, duration: params.dayNightSpeed })
+    tlnight.to(lightMoon.position, { x: previousMoonPosition.x, y: previousMoonPosition.y, z: previousMoonPosition.z, duration: params.dayNightSpeed }, '<')
+    tlnight.to([ lightSun, lightAreaSun], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
       //stepped:
       scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
-      ambientLight.color.set( params.lightMoonColor )
-      lightSun.position.y = params.lightMoonPosition.y
-      lightSun.color.set( params.lightMoonColor )
-      lightShadow.color.set( params.lightMoonColor )
-      //fade in:
-      gsap.to([ ambientLight ], { intensity: params.ambientLightMoonIntensity, duration: params.dayNightSpeed, delay: 0 })
-      gsap.to([ lightSun, lightShadow], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed, delay: 0 })
-      gsap.to([ driverLuzPantalla], { intensity: params.screenIntensity, duration: params.dayNightSpeed*3, delay: 1 })
-    }})
+      pane.refresh()
+    } }, '<')
+    tlnight.to([ lightMoon, lightAreaMoon], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
+    //turn on modelPanchera inner emissive
+    tlnight.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, ease: "back.out(4)", delay: params.dayNightDelay })
+    tlnight.to([ driverLuzPantalla], { intensity: params.screenIntensity, duration: params.dayNightSpeed*3 })
+    tlnight.play()
   }
   
   emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.lightSunColor).hex() : chroma(params.lightMoonColor).hex() })
@@ -323,33 +376,28 @@ function swapDayNight() {
 }
 
 function updateScene() {
-  lightSun.width = lightSun.height = params.lightPlaneSize
-  lightHelperSun.visible = params.showLightsHelpers
-  groundMaterial.color.set(params.groundColor)
-  bloomPass.threshold = params.bloomThreshold
-  bloomPass.strength = params.bloomStrength
-  bloomPass.radius = params.bloomRadius
+  lightAreaSun.width = lightSun.height = params.lightPlaneSize
+  lightAreaMoon.width = lightMoon.height = params.lightPlaneSize
+  //lighthelpers
+  if (params.showLightsHelpers) camera.layers.enable( 1 )
+  else camera.layers.disable( 1 )
+
+  if (params.bloomOn) {
+    bloomPass.threshold = params.bloomThreshold
+    bloomPass.strength = params.bloomStrength
+    bloomPass.radius = params.bloomRadius
+  }
   //Actualiza el ambiente
   if (params.dayOrNight === 'day') {
-    lightSun.color.set( params.lightSunColor )
-    lightSun.intensity = params.lightSunIntensity
-    lightSun.position.y = params.lightSunPosition.y
-    lightShadow.color.set( params.lightSunColor )
-    lightShadow.intensity = params.lightSunIntensity
-    lightShadow.position.set( params.lightSunPosition.x, params.lightSunPosition.y, params.lightSunPosition.z )
-    ambientLight.color.set( params.lightSunColor )
-    ambientLight.intensity = params.ambientLightSunIntensity
+    lightAreaSun.color.set( lightSun.color )
+    lightAreaSun.intensity = lightSun.intensity
+    lightAreaSun.position.set( 0, params.lightSunPosition.y, 0 )
     scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
   } else {
-    lightSun.color.set( params.lightMoonColor )
-    lightSun.intensity = params.lightMoonIntensity
-    lightSun.position.y = params.lightMoonPosition.y
-    lightShadow.color.set( params.lightMoonColor )
-    lightShadow.intensity = params.lightMoonIntensity
-    lightShadow.position.set( params.lightMoonPosition.x, params.lightMoonPosition.y, params.lightMoonPosition.z )
-    ambientLight.color.set( params.lightMoonColor )
-    ambientLight.intensity = params.ambientLightMoonIntensity
+    lightAreaMoon.color.set( lightMoon.color )
+    lightAreaMoon.intensity = lightMoon.intensity
+    lightAreaMoon.position.set( 0, params.lightMoonPosition.y, 0 )
     scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
   }
 }
@@ -358,7 +406,10 @@ function animate() {
   requestAnimationFrame(animate)
   //projector flickering
   const flick = Math.sin(performance.now() / 20)*0.1  + 0.9
-  rectLight.intensity = params.screenIntensity * flick
+  if (rectLight && rectLightB) {
+    rectLight.intensity = params.screenIntensity * flick
+    rectLightB.intensity = params.screenIntensity * flick
+  }
   //luz negra screen flickering
   if (modelPantalla && params.dayOrNight == 'night') modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
   //mouse follow?
@@ -386,39 +437,51 @@ function makeTweak() {
     presetDebug.hidden = true
   })
   //PARAMETROS
-  pane.addInput(params, 'groundColor', { view: 'color', label: 'color piso' })
+  pane.addInput(groundMaterial, 'color', { color: { type: 'float' }, label: 'color piso' })
   pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 3, step: 0.1 })
   pane.addSeparator()
   pane.addInput(params, 'lightPlaneSize', {label: 'tamaño luz', min: 0.1, max: 10, step: 0.01})
+  //MOVEMENT
+  const motionFolder = pane.addFolder({ title: 'MOVIMIENTO', expanded: false })
+  motionFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
+  motionFolder.addInput(params, 'spring', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'spring' })
+  motionFolder.addInput(params, 'friction', { type: 'number', min: 0.9, max: 1, step: 0.01, label: 'friction' })
+  motionFolder.addInput(params, 'mass', { type: 'number', min: 0, max: 0.1, step: 0.01, label: 'mass' })
+  //DAY
   dayFolder = pane.addFolder({ title: 'DIA', expanded: true, hidden: params.dayOrNight === 'day' ? false : true })
-  dayFolder.addInput(params, 'lightSunColor', { view: 'color', label: 'color sol' })
-  dayFolder.addInput(params, 'lightSunIntensity', { type: 'number', min: 0, max: 5, step: 0.1, label: 'power sol' })
-  dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', min: -10, max: 10, step: 0.1 })
+  dayFolder.addInput(lightSun, 'color', { color: { type: 'float' }, label: 'color sol' })
+  dayFolder.addInput(lightSun, 'intensity', { type: 'number', min: 0, max: 5, step: 0.1, label: 'power sol' })
+  dayFolder.addInput(lightSun, 'position', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 4, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   dayFolder.addSeparator()
-  dayFolder.addInput(params, 'daySkyColor', { view: 'color', label: 'cielo dia' })
+  dayFolder.addInput(params, 'daySkyColor', { color: { type: 'float' }, label: 'cielo dia' })
   dayFolder.addInput(params, 'fogDensityDay', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'niebla dia' })
-  
+  //NIGHT
   nightFolder = pane.addFolder({ title: 'NOCHE', expanded: true, hidden: params.dayOrNight === 'night' ? false : true })
-  nightFolder.addInput(params, 'lightMoonColor', { view: 'color', label: 'color luna' })
-  nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 5, step: 0.1, label: 'power luna' })
-  nightFolder.addInput(params, 'lightMoonPosition', { label: 'posición luna', min: -10, max: 10, step: 0.1 })
+  nightFolder.addInput(lightMoon, 'color', { color: { type: 'float' }, label: 'color luna' })
+  nightFolder.addInput(lightMoon, 'intensity', { type: 'number', min: 0, max: 5, step: 0.1, label: 'power luna' })
+  nightFolder.addInput(lightMoon, 'position', { label: 'posición luna', x: { min: -10, max: 10, step: 0.1 }, y: { min: 4, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   nightFolder.addSeparator()
-  nightFolder.addInput(params, 'nightSkyColor', { view: 'color', label: 'cielo noche' })
+  nightFolder.addInput(params, 'nightSkyColor', { color: { type: 'float' }, label: 'cielo noche' })
   nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'niebla noche' })
   
-  const fxFolder = pane.addFolder({ title: 'FX', expanded: false })
+  const fxFolder = pane.addFolder({ title: 'FX* OJO', expanded: false })
   fxFolder.addInput(params, 'fx', { type: 'checkbox', label: 'fx' })
-  fxFolder.addInput(params, 'bloomThreshold', { type: 'number', min: 0, max: 1, step: 0.01, label: 'threshold' })
-  fxFolder.addInput(params, 'bloomStrength', { type: 'number', min: 0, max: 3, step: 0.01, label: 'strength' })
-  fxFolder.addInput(params, 'bloomRadius', { type: 'number', min: 0, max: 1, step: 0.01, label: 'radius' })
-
+  //BLOOM
+  //fxFolder.addInput(params, 'bloomThreshold', { type: 'number', min: 0, max: 1, step: 0.01, label: 'threshold' })
+  //fxFolder.addInput(params, 'bloomStrength', { type: 'number', min: 0, max: 3, step: 0.01, label: 'strength' })
+  //fxFolder.addInput(params, 'bloomRadius', { type: 'number', min: 0, max: 1, step: 0.01, label: 'radius' })
+  //SAO
+  fxFolder.addInput(saoPass.params, 'saoBias',              { type:'number', min: - 1, max: 1   })
+	fxFolder.addInput(saoPass.params, 'saoIntensity',         { type:'number', min: 0,   max: 1   })
+	fxFolder.addInput(saoPass.params, 'saoScale',             { type:'number', min: 0,   max: 10  })
+	fxFolder.addInput(saoPass.params, 'saoKernelRadius',      { type:'number', min: 1,   max: 100 })
+	fxFolder.addInput(saoPass.params, 'saoMinResolution',     { type:'number', min: 0,   max: 1   })
+	fxFolder.addInput(saoPass.params, 'saoBlurRadius',        { type:'number', min: 0,   max: 200 })
+	fxFolder.addInput(saoPass.params, 'saoBlurStdDev',        { type:'number', min: 0.5, max: 150 })
+	fxFolder.addInput(saoPass.params, 'saoBlurDepthCutoff',   { type:'number', min: 0.0, max: 0.1 })
+	fxFolder.addInput(saoPass.params, 'saoBlur' )
   //DEBUG
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
-  debugFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
-  debugFolder.addInput(params, 'spring', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'spring' })
-  debugFolder.addInput(params, 'friction', { type: 'number', min: 0.9, max: 1, step: 0.01, label: 'friction' })
-  debugFolder.addInput(params, 'mass', { type: 'number', min: 0, max: 0.1, step: 0.01, label: 'mass' })
-  debugFolder.addSeparator()
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
   const btn = debugFolder.addButton({
     title: 'export',
@@ -450,7 +513,8 @@ function onWindowResize() {
   camera.top = frustumSize / 2;
   camera.bottom = - frustumSize / 2;
   camera.updateProjectionMatrix()
-  renderer.setSize(container.clientWidth, container.clientHeight )
+  renderer.setSize( container.clientWidth, container.clientHeight )
+  if (!amIMobile) composer.setSize( container.clientWidth, container.clientHeight )
 }
 
 function smoothstep (min, max, value) {
@@ -461,11 +525,18 @@ function smoothstep (min, max, value) {
 onUnmounted(() => {
   renderer.dispose()
   if (debug.showLights) {
-    ambientLight.dispose()
+    //ambientLightSun.dispose()
+    //ambientLightMoon.dispose()
     lightSun.dispose()
+    lightMoon.dispose()
   }
   if (debug.showLightsHelpers) {
+    lightHelperAreaSun.dispose()
+    lightHelperAreaMoon.dispose()
     lightHelperSun.dispose()
+    lightHelperMoon.dispose()
+    rectLightHelper.dispose()
+    rectLightHelperB.dispose()
   }
   //get rid of makeTweak
   if (pane) pane.dispose()
@@ -486,6 +557,11 @@ onUnmounted(() => {
     >
       <source src="/images/experimental.mp4" type="video/mp4">
     </video>
+    <div v-if="!loadedModels">
+      <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-base-100">
+        <img src="/images/tubos_loop_ani.png" alt="loading...">
+      </div>
+    </div>
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
       <label class="swap swap-rotate">
         <!-- this hidden checkbox controls the state -->
