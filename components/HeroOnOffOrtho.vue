@@ -81,7 +81,8 @@ rectLightHelper, rectLightHelperB, lightHelperAreaSun, lightHelperAreaMoon, ligh
 groundGeometry, ground, modelPanchera, modelPantalla, groundMaterial, telonMaterial,
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 },
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
-amIMobile, windowHalfX, previousX, deltaY = 0, vx = 0, mouseX = 0, timer
+amIMobile, windowHalfX, previousX, deltaY = 0, vx = 0, mouseX = 0, timer,
+alpha = 0, beta = 90, gamma = 0, previousGamma = 0, deltaGamma, finalRotation
 
 const route = useRoute()
 const emit = defineEmits(['bgColor'])
@@ -99,7 +100,9 @@ onMounted(() => {
   window.addEventListener( 'resize', onWindowResize )
   onWindowResize()
 
-  document.addEventListener('scroll', handleScroll)
+  document.addEventListener( 'scroll', handleScroll )
+  window.addEventListener( 'deviceorientation', handleOrientation )
+
   //Tweakepane
   if(route.name == 'onoff' || route.name == 'test') makeTweak()
 })
@@ -112,6 +115,11 @@ function handleScroll() {
       //disable animation in scene past scrolling
       debug.animate = lastKnownScrollPosition > container.clientHeight ? false : true
     }, 100)
+}
+
+function handleOrientation(event) {
+  //const absolute = event.absolute
+  gamma    = event.gamma
 }
 
 function init() {
@@ -422,10 +430,12 @@ function updateScene() {
 function animate() {                                
   requestAnimationFrame(animate)
   if (!debug.animate) return
+
   //projector flickering
   const flick = Math.sin(clock.getElapsedTime()*59.4)*0.1  + 0.9
   rectLight.intensity = params.screenIntensity * flick
   rectLightB.intensity = params.screenIntensity * flick
+  
   //luz negra screen flickering
   if (params.dayOrNight == 'night') modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
   
@@ -438,10 +448,17 @@ function animate() {
     deltaY = (vx - previousX)*params.mass
     previousX = vx
     scene.rotation.y = deltaY + initialSceneRotation.y //rotación (encuadre) inicial
-    //limit camera rotation:
-    //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
+  } else {
+    deltaGamma = (gamma - previousGamma)
+    ax = deltaGamma * params.spring
+    vx += ax
+    vx *= params.friction
+    finalRotation = (vx - previousGamma) * params.mass
+    if (Math.abs(finalRotation)>0.001) scene.rotation.y = finalRotation + initialSceneRotation.y //rotación (encuadre) inicial
+    previousGamma = vx
   }
-  
+  //limit camera rotation:
+  //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
   renderer.render( scene, camera )
 }
 
@@ -541,6 +558,9 @@ onUnmounted(() => {
   //get rid of listeners
   document.removeEventListener('mousemove', onDocumentMouseMove)
   window.removeEventListener('resize', onWindowResize)
+  document.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('deviceorientation', handleOrientation)
+
 })
 </script>
 
