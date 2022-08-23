@@ -288,7 +288,7 @@ async function loadModels() {
   ])
 
   modelPanchera = setupModel(pancheraData)
-  modelPanchera.scale.set( 10, 10, 10)
+  modelPanchera.scale.set( 15, 15, 15)
   modelPanchera.position.set( 0, 0, 1.7 )
   modelPanchera.updateMatrix()
 
