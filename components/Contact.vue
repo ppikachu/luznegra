@@ -7,7 +7,8 @@
       </div>
       <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <div class="card-body">
-          <form action="https://app.headlessforms.cloud/api/v1/form-submission/awfCcRTUJ4" method="POST">
+          <!--<form action="https://app.headlessforms.cloud/api/v1/form-submission/awfCcRTUJ4" method="POST">-->
+          <form action="https://formspree.io/f/mwkzplkb" method="POST">
             <div class="form-control">
               <label class="label">
                 <span class="label-text">Email</span>
