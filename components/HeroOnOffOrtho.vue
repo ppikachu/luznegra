@@ -13,10 +13,9 @@ import gsap from 'gsap'
 import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
 
-
 const params = {
   mouseFollow: true,
-  spring: 0.02,
+  spring: 0.03,
   friction: 0.97,
   mass: 0.05,
   dayOrNight: "night",
@@ -46,10 +45,9 @@ const params = {
   //lightMoonColor: 'rgb(102, 1, 3)',
   lightMoonIntensity: 1.0,
   lightMoonPosition: new THREE.Vector3(-10, 5, -1),
-  ambientLightSunIntensity: 0.1,
-  ambientLightMoonIntensity: 0.1,
 
-  screenIntensity: 0.8,
+  screenIntensity: 3,
+  screenLightColor: 0x111133,
   groundColor: 0x3f5628,
 }
 
@@ -99,7 +97,7 @@ onMounted(() => {
   //Tweakepane
   if(route.name == 'onoff' || route.name == 'test') makeTweak()
   //Animation
-  animate()
+  //animate()
 })
 
 function init() {
@@ -113,13 +111,12 @@ function init() {
 
   renderer = new THREE.WebGLRenderer({
     antialias: amIMobile ? false : true,
-    powerPreference: "high-performance"
   })
-  renderer.setPixelRatio( window.devicePixelRatio )
+  //renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
   renderer.outputEncoding = THREE.sRGBEncoding
   renderer.shadowMap.enabled = true
-  renderer.shadowMap.type = THREE.PCFShadowMap
+  //renderer.shadowMap.type = THREE.PCFShadowMap
   THREE.ColorManagement.legacyMode = true
   //renderer.toneMapping = THREE.ReinhardToneMapping
   //renderer.toneMappingExposure = 1
@@ -142,6 +139,7 @@ function init() {
   //Mueve la escena para que se vea con el angulo elegido
   scene.position.set(0, 0, -5)
   scene.rotation.x = initialSceneRotation.x
+  scene.rotation.y = initialSceneRotation.y
   //#endregion sceneSetup
   
   //#region environmentSetup
@@ -298,7 +296,7 @@ function setupModel(modelData) {
 }
 
 function initProjector() {
-  RectAreaLightUniformsLib.init()
+  //RectAreaLightUniformsLib.init()
   const video = document.getElementById( 'video' )
   const telonSize = new THREE.Vector2( 2.12, 1.25 )
   const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
@@ -313,12 +311,12 @@ function initProjector() {
   video.play()
 
   //proyector light to front
-  rectLight = new THREE.RectAreaLight( 0xffff55, params.screenIntensity, telonSize.x, telonSize.y )
+  rectLight = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x, telonSize.y )
   rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
   rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
   //proyector light to self
-  rectLightB = new THREE.RectAreaLight( 0x111111, params.screenIntensity, telonSize.x, telonSize.y )
-  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.1 )
+  rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x, telonSize.y )
+  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.2 )
   rectLightB.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
 
   scene.add( rectLight, rectLightB )
@@ -328,6 +326,8 @@ function initProjector() {
   rectLightHelper.layers.set( 1 )
   rectLightHelperB.layers.set( 1 )
   scene.add( rectLightHelper, rectLightHelperB )
+  //Animation
+  animate()
 }
 
 function swapDayNight() {
@@ -409,13 +409,12 @@ function updateScene() {
 function animate() {
   requestAnimationFrame(animate)
   //projector flickering
-  const flick = Math.sin(performance.now() / 20)*0.1  + 0.9
-  if (rectLight && rectLightB) {
-    rectLight.intensity = params.screenIntensity * flick
-    rectLightB.intensity = params.screenIntensity * flick
-  }
+  const flick = Math.sin(clock.getElapsedTime()*59.4)*0.1  + 0.9
+  rectLight.intensity = params.screenIntensity * flick
+  rectLightB.intensity = params.screenIntensity * flick
   //luz negra screen flickering
-  if (modelPantalla && params.dayOrNight == 'night') modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
+  if (params.dayOrNight == 'night') modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
+  
   //mouse follow?
   if (params.mouseFollow && !amIMobile) {
     var dx = mouseX - scene.rotation.x,
@@ -428,10 +427,8 @@ function animate() {
     //limit camera rotation:
     //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
   }
-  //time = doCycle ? clock.getElapsedTime() / DAYNIGHT_CYCLE_SPEED + WAKE_UP_TIME : WAKE_UP_TIME
-
-  if(!amIMobile && params.fx) composer.render()
-  else renderer.render( scene, camera )
+  
+  renderer.render( scene, camera )
 }
 
 function makeTweak() {
@@ -442,7 +439,7 @@ function makeTweak() {
   })
   //PARAMETROS
   pane.addInput(groundMaterial, 'color', { color: { type: 'float' }, label: 'color piso' })
-  pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 3, step: 0.1 })
+  pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
   pane.addSeparator()
   pane.addInput(params, 'lightPlaneSize', {label: 'tamaño luz', min: 0.1, max: 10, step: 0.01})
   //MOVEMENT
@@ -467,23 +464,6 @@ function makeTweak() {
   nightFolder.addSeparator()
   nightFolder.addInput(params, 'nightSkyColor', { color: { type: 'float' }, label: 'cielo noche' })
   nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'niebla noche' })
-  
-  const fxFolder = pane.addFolder({ title: 'FX* OJO', expanded: false })
-  fxFolder.addInput(params, 'fx', { type: 'checkbox', label: 'fx' })
-  //BLOOM
-  //fxFolder.addInput(params, 'bloomThreshold', { type: 'number', min: 0, max: 1, step: 0.01, label: 'threshold' })
-  //fxFolder.addInput(params, 'bloomStrength', { type: 'number', min: 0, max: 3, step: 0.01, label: 'strength' })
-  //fxFolder.addInput(params, 'bloomRadius', { type: 'number', min: 0, max: 1, step: 0.01, label: 'radius' })
-  //SAO
-  fxFolder.addInput(saoPass.params, 'saoBias',              { type:'number', min: - 1, max: 1   })
-	fxFolder.addInput(saoPass.params, 'saoIntensity',         { type:'number', min: 0,   max: 1   })
-	fxFolder.addInput(saoPass.params, 'saoScale',             { type:'number', min: 0,   max: 10  })
-	fxFolder.addInput(saoPass.params, 'saoKernelRadius',      { type:'number', min: 1,   max: 100 })
-	fxFolder.addInput(saoPass.params, 'saoMinResolution',     { type:'number', min: 0,   max: 1   })
-	fxFolder.addInput(saoPass.params, 'saoBlurRadius',        { type:'number', min: 0,   max: 200 })
-	fxFolder.addInput(saoPass.params, 'saoBlurStdDev',        { type:'number', min: 0.5, max: 150 })
-	fxFolder.addInput(saoPass.params, 'saoBlurDepthCutoff',   { type:'number', min: 0.0, max: 0.1 })
-	fxFolder.addInput(saoPass.params, 'saoBlur' )
   //DEBUG
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
@@ -559,11 +539,11 @@ onUnmounted(() => {
       playsinline
       style="display:none"
     >
-      <source src="/images/experimental.mp4" type="video/mp4">
+      <source src="/images/pantalla.mp4" type="video/mp4">
     </video>
     <div v-if="!loadedModels">
       <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-base-100">
-        <img src="/images/tubos_loop_ani.png" alt="loading...">
+        <img src="/images/iso.png" alt="loading..." class="w-32">
       </div>
     </div>
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
