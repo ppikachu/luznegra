@@ -1,13 +1,5 @@
-<script setup lang="ts">
-/* Define props */
-const props = defineProps<{
-  heroTypeColor?: string,
-  heroBgColor?: string
-}>()
-
-</script>
 <template>
-  <section :class="heroTypeColor" :style="`background-color: ${heroBgColor}`">
+  <section>
     <div class="hero pt-8 lg:pt-16 max-w-5xl mx-auto">
       <div class="hero-content flex-col lg:flex-row">
         <img

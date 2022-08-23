@@ -51,12 +51,8 @@ const params = {
   groundColor: 0x3f5628,
 }
 
-const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
-
-const hdrimgUrl = '/images/Studio_80s.hdr'
-const clock = new THREE.Clock()
 const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
-const turntableLimitY = Math.PI*0.1
+//const turntableLimitY = Math.PI*0.1
 const cameraOrthoPos = {
   x: 0,
   y: 0.5,
@@ -64,7 +60,12 @@ const cameraOrthoPos = {
 }
 const frustumDesktopSize = 4
 const frustumMobileSize = 6
-const heroBgColor = params.dayOrNight === 'day' ? chroma(params.groundColor).brighten(1.9) : chroma(params.lightMoonColor).darken(0.8)//HACK: hardcoded
+
+//const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
+const clock = new THREE.Clock()
+
+//HACK: hardcoded
+const heroBgColor = ref( params.dayOrNight === 'day' ? chroma(params.groundColor).brighten(1.9) : chroma(params.lightMoonColor).darken(0.8) )
 
 const debug = {
   showGround: true,
@@ -72,6 +73,7 @@ const debug = {
   showPantalla: true,
   showAmbientLight: true,
   showLights: true,
+  animate: true
 }
 let container,scene, camera, SHADOW_SIZE, GROUND_SIZE = 25, frustumSize, renderer, composer, bloomPass, saoPass,
 lightSun, lightMoon, lightAreaSun, lightAreaMoon, rectLight, rectLightB,
@@ -79,7 +81,7 @@ rectLightHelper, rectLightHelperB, lightHelperAreaSun, lightHelperAreaMoon, ligh
 groundGeometry, ground, modelPanchera, modelPantalla, groundMaterial, telonMaterial,
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 },
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
-amIMobile, windowHalfX, previousX, deltaY = 0, vx = 0, mouseX = 0
+amIMobile, windowHalfX, previousX, deltaY = 0, vx = 0, mouseX = 0, timer
 
 const route = useRoute()
 const emit = defineEmits(['bgColor'])
@@ -96,11 +98,21 @@ onMounted(() => {
   document.addEventListener( 'mousemove', onDocumentMouseMove )
   window.addEventListener( 'resize', onWindowResize )
   onWindowResize()
+
+  document.addEventListener('scroll', handleScroll)
   //Tweakepane
   if(route.name == 'onoff' || route.name == 'test') makeTweak()
-  //Animation
-  //animate()
 })
+
+function handleScroll() {
+    if(timer) window.clearTimeout(timer)
+
+    timer = window.setTimeout(() => {
+      const lastKnownScrollPosition = window.scrollY
+      //disable animation in scene past scrolling
+      debug.animate = lastKnownScrollPosition > container.clientHeight ? false : true
+    }, 100)
+}
 
 function init() {
   amIMobile = isMobile().any
@@ -278,11 +290,11 @@ async function loadModels() {
   modelPanchera = setupModel(pancheraData)
   modelPanchera.scale.set( 10, 10, 10)
   modelPanchera.position.set( 0, 0, 1.7 )
-  //modelPanchera.matrixAutoUpdate = false
+  modelPanchera.updateMatrix()
 
   modelPantalla = setupModel(pantallaData)
   modelPantalla.scale.set( 15, 15, 15)
-  //modelPantalla.matrixAutoUpdate = false
+  modelPantalla.updateMatrix()
 
   loadedModels.value = true
   return { modelPanchera, modelPantalla }
@@ -292,8 +304,7 @@ function setupModel(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.emissiveIntensity = params.dayOrNight === 'day' ? 0 : params.emissiveIntensity
   model.castShadow = true
-  //model.material.envMap = envMap
-  //console.log(model)
+  model.matrixAutoUpdate = false
   return model
 }
 
@@ -345,7 +356,7 @@ function swapDayNight() {
     tlday.to([ lightMoon, lightAreaMoon ], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
       //stepped:
       scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
-      pane.refresh()
+      if (pane) pane.refresh()
     } }, '<')
     //fade in:
     tlday.to([ lightSun, lightAreaSun], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed }, '<')
@@ -363,7 +374,7 @@ function swapDayNight() {
     tlnight.to([ lightSun, lightAreaSun], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
       //stepped:
       scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
-      pane.refresh()
+      if (pane) pane.refresh()
     } }, '<')
     tlnight.to([ lightMoon, lightAreaMoon], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
     //turn on modelPanchera inner emissive
@@ -372,7 +383,7 @@ function swapDayNight() {
     tlnight.play()
   }
   
-  emit('bgColor', { which: params.dayOrNight, color: params.dayOrNight === 'day' ? chroma(params.groundColor).hex() : chroma(params.lightMoonColor).hex() })
+  heroBgColor.value = params.dayOrNight === 'day' ? chroma(params.groundColor).hex() : chroma(params.lightMoonColor).hex()
 
   //hide tweakpane sections
   if (pane) {
@@ -408,8 +419,9 @@ function updateScene() {
   }
 }
 
-function animate() {
+function animate() {                                
   requestAnimationFrame(animate)
+  if (!debug.animate) return
   //projector flickering
   const flick = Math.sin(clock.getElapsedTime()*59.4)*0.1  + 0.9
   rectLight.intensity = params.screenIntensity * flick
@@ -533,33 +545,35 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="container" class="hero block relative overflow-hidden">
-    <video id="video"
-      loop
-      muted
-      crossOrigin="anonymous"
-      playsinline
-      style="display:none"
-    >
-      <source src="/images/pantalla.mp4" type="video/mp4">
-    </video>
+  <div class="relative">
+    <div id="container" class="hero block relative overflow-hidden">
+      <video id="video"
+        loop
+        muted
+        crossOrigin="anonymous"
+        playsinline
+        style="display:none"
+      >
+        <source src="/images/pantalla.mp4" type="video/mp4">
+      </video>
+      <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
+        <label class="animate-bounce swap swap-rotate">
+          <!-- this hidden checkbox controls the state -->
+          <input @click="swapDayNight" type="checkbox" />
+          <!-- sun icon -->
+          <svg class="swap-on fill-slate-800 w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
+          <!-- moon icon -->
+          <svg class="swap-off fill-slate-100 w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
+        </label>
+      </div>
+      <div id="debugger" class="absolute w-80 right-0 p-4 grid gap-4">
+        <div id="parameters"></div>
+      </div>
+    </div>
 
-    <div v-if="!loadedModels" class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
+    <AboutUs :style="`background-color: ${heroBgColor}`" />
+    <div v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32">
-    </div>
-
-    <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
-      <label class="animate-bounce swap swap-rotate">
-        <!-- this hidden checkbox controls the state -->
-        <input @click="swapDayNight" type="checkbox" />
-        <!-- sun icon -->
-        <svg class="swap-on fill-slate-800 w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
-        <!-- moon icon -->
-        <svg class="swap-off fill-slate-100 w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
-      </label>
-    </div>
-    <div id="debugger" class="absolute w-80 right-0 p-4 grid gap-4">
-      <div id="parameters"></div>
     </div>
   </div>
 </template>
