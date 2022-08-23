@@ -64,6 +64,7 @@ const cameraOrthoPos = {
 }
 const frustumDesktopSize = 4
 const frustumMobileSize = 6
+const heroBgColor = params.dayOrNight === 'day' ? chroma(params.groundColor).brighten(1.9) : chroma(params.lightMoonColor).darken(0.8)//HACK: hardcoded
 
 const debug = {
   showGround: true,
@@ -73,7 +74,8 @@ const debug = {
   showLights: true,
 }
 let container,scene, camera, SHADOW_SIZE, GROUND_SIZE = 20, frustumSize, renderer, composer, bloomPass, saoPass,
-lightSun, lightMoon, lightAreaSun, lightAreaMoon, rectLightHelper, rectLightHelperB, rectLight, rectLightB, lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon,
+lightSun, lightMoon, lightAreaSun, lightAreaMoon, rectLight, rectLightB,
+rectLightHelper, rectLightHelperB, lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon,
 groundGeometry, ground, modelPanchera, modelPantalla, groundMaterial, telonMaterial,
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 },
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
@@ -541,11 +543,11 @@ onUnmounted(() => {
     >
       <source src="/images/pantalla.mp4" type="video/mp4">
     </video>
-    <div v-if="!loadedModels">
-      <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-base-100">
-        <img src="/images/iso.png" alt="loading..." class="w-32">
-      </div>
+
+    <div v-if="!loadedModels" class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
+      <img src="/images/iso.png" alt="loading..." class="w-32">
     </div>
+
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
       <label class="animate-bounce swap swap-rotate">
         <!-- this hidden checkbox controls the state -->
