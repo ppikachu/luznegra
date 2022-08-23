@@ -73,7 +73,7 @@ const debug = {
   showAmbientLight: true,
   showLights: true,
 }
-let container,scene, camera, SHADOW_SIZE, GROUND_SIZE = 20, frustumSize, renderer, composer, bloomPass, saoPass,
+let container,scene, camera, SHADOW_SIZE, GROUND_SIZE = 25, frustumSize, renderer, composer, bloomPass, saoPass,
 lightSun, lightMoon, lightAreaSun, lightAreaMoon, rectLight, rectLightB,
 rectLightHelper, rectLightHelperB, lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon,
 groundGeometry, ground, modelPanchera, modelPantalla, groundMaterial, telonMaterial,
@@ -105,7 +105,7 @@ onMounted(() => {
 function init() {
   amIMobile = isMobile().any
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
-  SHADOW_SIZE = amIMobile ? 512 : 1024
+  SHADOW_SIZE = amIMobile ? 512 : 2048
   //#region sceneSetup
   container = document.getElementById( 'container' )
   windowHalfX = container.clientWidth / 2
@@ -191,7 +191,7 @@ async function props() {
   lightSun.castShadow = true
   lightSun.shadow.mapSize.width = SHADOW_SIZE
   lightSun.shadow.mapSize.height = SHADOW_SIZE
-  lightSun.shadow.camera.near = 0.05
+  lightSun.shadow.camera.near = 2
   lightSun.shadow.camera.far = 50
   lightSun.shadow.camera.left = -params.lightPlaneSize
   lightSun.shadow.camera.right = params.lightPlaneSize
@@ -206,7 +206,7 @@ async function props() {
   lightMoon.castShadow = true
   lightMoon.shadow.mapSize.width = SHADOW_SIZE
   lightMoon.shadow.mapSize.height = SHADOW_SIZE
-  lightMoon.shadow.camera.near = 0.05
+  lightMoon.shadow.camera.near = 2
   lightMoon.shadow.camera.far = 50
   lightMoon.shadow.camera.left = -params.lightPlaneSize
   lightMoon.shadow.camera.right = params.lightPlaneSize
