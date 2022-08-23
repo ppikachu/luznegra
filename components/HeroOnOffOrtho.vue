@@ -545,7 +545,7 @@ onUnmounted(() => {
     </video>
 
     <div v-if="!loadedModels" class="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
-      <img src="/images/iso.png" alt="loading..." class="w-32">
+      <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32">
     </div>
 
     <div class="absolute bottom-8 text-xl cursor-pointer flex justify-center w-full">
