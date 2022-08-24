@@ -54,7 +54,7 @@ const params = {
 const debug = {
   showGround: true,
   showGLTFs: true,
-  showPantalla: true,
+  showPantalla: false,
   showAmbientLight: true,
   showLights: true,
   animate: true
@@ -108,8 +108,11 @@ onMounted(() => {
   document.addEventListener( 'scroll', handleScroll )
   window.addEventListener( 'deviceorientation', handleOrientation )
 
-  //Tweakepane
+  //Tweakpane
   if(route.name == 'onoff' || route.name == 'test') makeTweak()
+
+  //Animation
+  animate()
 })
 
 function swapHeroBgColor() {
@@ -356,8 +359,6 @@ function initProjector() {
   rectLightHelper.layers.set( 1 )
   rectLightHelperB.layers.set( 1 )
   scene.add( rectLightHelper, rectLightHelperB )
-  //Animation
-  animate()
 }
 
 function swapDayNight() {
@@ -440,13 +441,15 @@ function animate() {
   requestAnimationFrame(animate)
   if (!debug.animate) return
 
-  //projector flickering
   const flick = Math.sin(clock.getElapsedTime()*59.4)*0.1  + 0.9
-  rectLight.intensity = params.screenIntensity * flick
-  rectLightB.intensity = params.screenIntensity * flick
+  //projector flickering
+  if (debug.showPantalla) {
+    rectLight.intensity = params.screenIntensity * flick
+    rectLightB.intensity = params.screenIntensity * flick
+  }
 
   //luz negra screen flickering
-  if (params.dayOrNight == 'night') modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
+  if (params.dayOrNight == 'night' && modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
   
   //mouse follow?
   if (params.mouseFollow && !amIMobile) {
@@ -575,9 +578,9 @@ onUnmounted(() => {
 
 <template>
   <div class="relative">
-    <div id="container" class="hero block relative overflow-hidden h-screen">
+    <div id="container" class="hero relative">
       <!--video for threejs-->
-      <video id="video"
+      <video v-if="debug.showPantalla" id="video"
         loop
         muted
         crossOrigin="anonymous"
@@ -592,7 +595,7 @@ onUnmounted(() => {
         :style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, transparent 100%);`"
       ></div>
       <!--SWITCH-->
-      <div class="absolute bottom-16 text-xl cursor-pointer flex justify-center w-full">
+      <div class="absolute bottom-16 md:bottom-0 text-xl cursor-pointer flex justify-center w-full">
         <!--<label class="animate-bounce swap swap-rotate">
           <input @click="swapDayNight" type="checkbox" />
           <svg class="swap-on fill-slate-100 w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
@@ -616,3 +619,8 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+<style scoped>
+#container {
+  height: 95vh;
+}
+</style>
