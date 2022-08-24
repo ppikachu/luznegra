@@ -42,7 +42,9 @@ const filtered = computed(() => {
               <div class="mb-4" id="content" v-html="openProyect.fields.content ? documentToHtmlString(openProyect.fields.content) : ''"></div>
             </div>
             <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
-            <p class="text-xs text-zinc-400">link para compartir proyecto: <a :href="config.APP_URL+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a></p>
+            <p class="text-xs text-zinc-400">
+              link para compartir proyecto: <a :href="config.APP_URL+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
+            </p>
             <div class="modal-action">
               <!--<button @click="openProyect = false" class="btn btn-secondary">Cerrar</button>-->
             </div>
@@ -77,7 +79,6 @@ const filtered = computed(() => {
               <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
               <div class="card-actions">
                 <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
-                <span v-if="!post.fields.content" class="badge badge-error">⚠️ content</span>
                 <a
                   :href="`/proyecto/${post.fields.slug}`"
                   class="absolute inset-0"
