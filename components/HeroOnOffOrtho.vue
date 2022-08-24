@@ -54,7 +54,7 @@ const params = {
 const debug = {
   showGround: true,
   showGLTFs: true,
-  showPantalla: false,
+  showPantalla: true,
   showAmbientLight: true,
   showLights: true,
   animate: true
@@ -84,11 +84,11 @@ const loadedModels = ref(false)
 const dayNight = ref(params.dayOrNight)
 const heroBgColor = ref( params.dayOrNight === 'day' ? heroColor.day : heroColor.night )
 
-let container,scene, camera, SHADOW_SIZE, GROUND_SIZE = 25, frustumSize, renderer, composer, bloomPass, saoPass,
+let container,scene, camera, SHADOW_SIZE, GROUND_SIZE = 30, frustumSize, renderer, composer, bloomPass, saoPass,
 lightSun, lightMoon, lightAreaSun, lightAreaMoon, rectLight, rectLightB,
-rectLightHelper, rectLightHelperB, lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon,
+rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon,
 groundGeometry, ground, modelPanchera, modelPantalla, groundMaterial, telonMaterial,
-driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? params.screenIntensity : 0 },
+driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? 2 : 0 },
 pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
 amIMobile, windowHalfX, previousX, deltaY = 0, vx = 0, mouseX = 0, timer,
 gamma = 0, previousGamma = 0, deltaGamma, finalRotation
@@ -110,9 +110,6 @@ onMounted(() => {
 
   //Tweakpane
   if(route.name == 'onoff' || route.name == 'test') makeTweak()
-
-  //Animation
-  animate()
 })
 
 function swapHeroBgColor() {
@@ -245,34 +242,18 @@ async function props() {
   lightMoon.shadow.camera.top = params.lightPlaneSize
   lightMoon.shadow.camera.bottom = -params.lightPlaneSize
   
-  //arealights
-  lightAreaSun = new THREE.RectAreaLight()
+  //ambient
+  lightAreaSun = new THREE.AmbientLight()
   lightAreaSun.color.set( params.lightSunColor )
   lightAreaSun.intensity = params.dayOrNight === 'day' ? params.lightSunIntensity : 0
-  lightAreaSun.width = lightSun.height = params.lightPlaneSize
-  lightAreaSun.position.set( 0, params.lightSunPosition.y, 0 )
-  lightAreaSun.lookAt( 0, 0, 0 )
-
-  lightAreaMoon = new THREE.RectAreaLight()
-  lightAreaMoon.color.set( params.lightMoonColor )
-  lightAreaMoon.intensity = params.dayOrNight === 'day' ? 0 : params.lightMoonIntensity
-  lightAreaMoon.width = lightSun.height = params.lightPlaneSize
-  lightAreaMoon.position.set( 0, params.lightMoonPosition.y, 0 )
-  lightAreaMoon.lookAt( 0, 0, 0 )
 
   //lighthelpers
   lightHelperSun = new THREE.DirectionalLightHelper( lightSun )
   lightHelperMoon = new THREE.DirectionalLightHelper( lightMoon )
-  lightHelperAreaSun = new RectAreaLightHelper( lightAreaSun )
-  lightHelperAreaMoon = new RectAreaLightHelper( lightAreaMoon )
   //lighthelper layers
   lightHelperSun.layers.set( 1 )
   lightHelperMoon.layers.set( 1 )
-  lightHelperAreaSun.layers.set( 1 )
-  lightHelperAreaMoon.layers.set( 1 )
-  scene.add( lightSun, lightMoon, lightAreaSun, lightAreaMoon )
-  //scene.add( lightHelperAreaSun, lightHelperAreaMoon, lightHelperSun, lightHelperMoon ) //can't hide last two so... next line is a hack
-  scene.add( lightHelperAreaSun, lightHelperAreaMoon )
+  scene.add( lightSun, lightMoon, lightAreaSun )
   //#endregion Lights
   
   //#region GROUND
@@ -297,6 +278,9 @@ async function props() {
   //Inicia proyector
   if(debug.showPantalla) initProjector()
   if (!params.showLightsHelpers) camera.layers.disable( 1 )
+  //Animation
+  animate()
+
 }
 
 async function loadModels() {
@@ -353,12 +337,14 @@ function initProjector() {
   rectLightB.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
 
   scene.add( rectLight, rectLightB )
+  //scene.add( rectLight )
 
   rectLightHelper = new RectAreaLightHelper( rectLight )
   rectLightHelperB = new RectAreaLightHelper( rectLightB )
   rectLightHelper.layers.set( 1 )
   rectLightHelperB.layers.set( 1 )
   scene.add( rectLightHelper, rectLightHelperB )
+  //scene.add( rectLightHelperB )
 }
 
 function swapDayNight() {
@@ -380,7 +366,7 @@ function swapDayNight() {
     tlday.to([ lightSun, lightAreaSun], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed }, '<')
     //turn off modelPanchera inner emissive
     tlday.to(modelPanchera.material, { emissiveIntensity: 0, duration: params.dayNightSpeed, delay: params.dayNightDelay })
-    driverLuzPantalla.intensity = params.screenIntensity/2
+    driverLuzPantalla.intensity = 2
     tlday.play()
   } else {
     //NIGHT:
@@ -397,7 +383,7 @@ function swapDayNight() {
     tlnight.to([ lightMoon, lightAreaMoon], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
     //turn on modelPanchera inner emissive
     tlnight.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, ease: "back.out(4)", delay: params.dayNightDelay })
-    tlnight.to([ driverLuzPantalla], { intensity: params.screenIntensity, duration: params.dayNightSpeed*3 })
+    tlnight.to([ driverLuzPantalla], { intensity: 2, duration: params.dayNightSpeed*3 })
     tlnight.play()
   }
 
@@ -411,8 +397,6 @@ function swapDayNight() {
 }
 
 function updateScene() {
-  lightAreaSun.width = lightSun.height = params.lightPlaneSize
-  lightAreaMoon.width = lightMoon.height = params.lightPlaneSize
   //lighthelpers
   if (params.showLightsHelpers) camera.layers.enable( 1 )
   else camera.layers.disable( 1 )
@@ -426,13 +410,11 @@ function updateScene() {
   if (params.dayOrNight === 'day') {
     lightAreaSun.color.set( lightSun.color )
     lightAreaSun.intensity = lightSun.intensity
-    lightAreaSun.position.set( 0, params.lightSunPosition.y, 0 )
     scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
     if (modelPanchera) gsap.to(modelPanchera.material, { emissiveIntensity: 0, duration: 0.3 })
   } else {
-    lightAreaMoon.color.set( lightMoon.color )
-    lightAreaMoon.intensity = lightMoon.intensity
-    lightAreaMoon.position.set( 0, params.lightMoonPosition.y, 0 )
+    lightAreaSun.color.set( lightMoon.color )
+    lightAreaSun.intensity = lightMoon.intensity
     scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
   }
 }
@@ -440,14 +422,15 @@ function updateScene() {
 function animate() {                                
   requestAnimationFrame(animate)
   if (!debug.animate) return
-
-  const flick = Math.sin(clock.getElapsedTime()*59.4)*0.1  + 0.9
+  const clock = Math.round(performance.now()*0.021)
+  const flick = clock % 2 == 0 ? 0.6 : 1
+  const flickB = clock % 4 == 0 ? 0.7 : 1
   //projector flickering
-  if (debug.showPantalla) {
-    rectLight.intensity = params.screenIntensity * flick
-    rectLightB.intensity = params.screenIntensity * flick
+  if (debug.showPantalla && !amIMobile) {
+    rectLight.intensity = params.screenIntensity - flick
+    rectLightB.intensity = params.screenIntensity - flickB
+    console.log(flick)
   }
-
   //luz negra screen flickering
   if (params.dayOrNight == 'night' && modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
   
@@ -558,8 +541,6 @@ onUnmounted(() => {
     lightMoon.dispose()
   }
   if (debug.showLightsHelpers) {
-    lightHelperAreaSun.dispose()
-    lightHelperAreaMoon.dispose()
     lightHelperSun.dispose()
     lightHelperMoon.dispose()
     rectLightHelper.dispose()
