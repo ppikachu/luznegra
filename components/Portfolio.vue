@@ -9,6 +9,7 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   })
 })
 const posts = data
+const config = useRuntimeConfig()
 /* Default tags */
 const currentTag = ref()
 const openProyect = ref(null)
@@ -41,6 +42,7 @@ const filtered = computed(() => {
               <div class="mb-4" id="content" v-html="openProyect.fields.content ? documentToHtmlString(openProyect.fields.content) : ''"></div>
             </div>
             <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
+            <p class="text-xs text-zinc-400">link para compartir proyecto: <a :href="config.APP_URL+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a></p>
             <div class="modal-action">
               <!--<button @click="openProyect = false" class="btn btn-secondary">Cerrar</button>-->
             </div>

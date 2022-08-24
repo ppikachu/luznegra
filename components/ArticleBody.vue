@@ -19,15 +19,13 @@ if (!data) {
 }
 
 /* Define article data */
-const project = data
-const articleBody = project.value.items[0].fields.content ? documentToHtmlString(project.value.items[0].fields.content) : ''
-const articleTitle = project.value.items[0].fields.title
-const articleVideos = project.value.items[0].fields.video
-const img = project.value.items[0].fields.imageFeatured ? project.value.items[0].fields.imageFeatured.fields.file.url : '/images/no-image.png'
-const articleTags = project.value.items[0].metadata.tags
-//const createdAt = new Date(project.value.items[0].sys.createdAt)
-const imgGallery = project.value.items[0].fields.imgGallery
-const articleContenido = project.value.items[0].fields.contenido ? project.value.items[0].fields.contenido : ''
+const project           = data
+const imgGallery        = project.value.items[0].fields.imgGallery
+const articleVideos     = project.value.items[0].fields.video
+const articleTitle      = project.value.items[0].fields.title
+const articleTags       = project.value.items[0].metadata.tags
+const articleBody       = project.value.items[0].fields.content ? documentToHtmlString(project.value.items[0].fields.content) : ''
+const articleContenido  = project.value.items[0].fields.contenido ? project.value.items[0].fields.contenido : ''
 </script>
 
 <template>
