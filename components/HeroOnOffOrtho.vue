@@ -380,7 +380,7 @@ function swapDayNight() {
       scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
       if (pane) pane.refresh()
     } }, '<')
-    tlnight.to([ lightMoon, lightAreaMoon], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
+    tlnight.to([ lightMoon, lightAreaSun], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
     //turn on modelPanchera inner emissive
     tlnight.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, ease: "back.out(4)", delay: params.dayNightDelay })
     tlnight.to([ driverLuzPantalla], { intensity: 2, duration: params.dayNightSpeed*3 })
@@ -429,7 +429,6 @@ function animate() {
   if (debug.showPantalla && !amIMobile) {
     rectLight.intensity = params.screenIntensity - flick
     rectLightB.intensity = params.screenIntensity - flickB
-    console.log(flick)
   }
   //luz negra screen flickering
   if (params.dayOrNight == 'night' && modelPantalla) modelPantalla.material.emissiveIntensity = driverLuzPantalla.intensity * flick
