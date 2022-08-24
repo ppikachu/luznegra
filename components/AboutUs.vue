@@ -3,7 +3,7 @@
     <div class="hero pt-8 lg:pt-16 max-w-5xl mx-auto">
       <div class="hero-content flex-col lg:flex-row">
         <img
-          src="/images/et1.gif"
+          src="/images/ET_en_nave_transparente.gif"
           loading="lazy"
           class="max-w-sm w-full rounded-lg"
           width="540"
