@@ -4,6 +4,9 @@ import { defineNuxtConfig } from 'nuxt'
 export default defineNuxtConfig({
   telemetry: false,
   target: 'static',
+  server: {
+    host: '0' // default: localhost
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/image-edge',
