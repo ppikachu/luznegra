@@ -292,6 +292,7 @@ async function loadModels() {
 
   modelPantalla = setupModel(pantallaData)
   modelPantalla.scale.set( 15, 15, 15)
+  modelPantalla.material.side = THREE.DoubleSide
   modelPantalla.updateMatrix()
 
   loadedModels.value = true
