@@ -42,7 +42,7 @@
     }
   ],
   "asset": {
-    "generator": "Adobe Substance 3D Painter 8.1.0",
+    "generator": "Adobe Substance 3D Painter 8.1.2",
     "version": "2.0"
   },
   "bufferViews": [
@@ -84,13 +84,13 @@
   ],
   "images": [
     {
-      "uri": "m_panch_baseColor.jpg"
+      "uri": "m_panch_baseColor.png"
     },
     {
-      "uri": "m_panch_occlusionRoughnessMetallic.jpg"
+      "uri": "m_panch_occlusionRoughnessMetallic.png"
     },
     {
-      "uri": "m_panch_emissive.jpg"
+      "uri": "m_panch_emissive.png"
     }
   ],
   "materials": [

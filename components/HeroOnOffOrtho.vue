@@ -280,8 +280,8 @@ async function loadModels() {
   const loader = new GLTFLoader()
 
   const [pancheraData, pantallaData] = await Promise.all([
-    loader.loadAsync('/gltf/panchera.gltf'),
-    loader.loadAsync('/gltf/pantalla.gltf'),
+    loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
+    loader.loadAsync('/gltf/pantalla_v1/pantalla.gltf'),
   ])
 
   modelPanchera = setupModel(pancheraData)
