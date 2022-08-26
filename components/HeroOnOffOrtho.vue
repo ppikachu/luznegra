@@ -1,12 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
-import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
-import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass.js'
 import { ShadowMapViewer } from 'three/examples/jsm/utils/ShadowMapViewer.js'
 //import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import chroma from 'chroma-js'
@@ -50,6 +45,7 @@ const params = {
 }
 
 const debug = {
+  showLightHelpers: false,
   showGround: true,
   showGLTFs: true,
   showPantalla: true,
@@ -58,32 +54,57 @@ const debug = {
   animate: true
 }
 
-const route = useRoute()
 const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
+//const turntableLimitY = Math.PI*0.1
 const cameraOrthoPos = {
   x: 0,
   y: 0.5,
   z: 10
 }
+const modelScale = 15
 const frustumDesktopSize = 4
 const frustumMobileSize = 7
+const telonWidth = .145
+const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
+const telonPosition = { x: 0, y: 0.06, z: -0.001 }
+const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
+const groundSize = 30
 
-//const mixMethod = 'rgb' //opciones: rgb, hsl, lab, lch, lrgb
-//const turntableLimitY = Math.PI*0.1
-
+const route = useRoute()
 const heroBgColor = ref()
 const loadedModels = ref(false)
 const dayNight = ref(params.dayOrNight)
 
-let container,scene, camera, renderer, composer, bloomPass, saoPass,
-lightSun, lightMoon, ambientLight, lightAreaMoon, rectLight, rectLightB,
-rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, dirLightShadowMapViewer, spotLightShadowMapViewer,
-groundGeometry, ground, modelPanchera, modelPantalla,
-groundMaterial, telonMaterial, driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? 2 : 0 },
-shadowSize, groundSize = 30, frustumSize,
-pane, dayFolder, nightFolder, preset = { debug: '' }, presetDebug,
-amIMobile, windowHalfX, previousX, deltaY = 0, vx = 0, mouseX = 0, timer,
-gamma = 0, previousGamma = 0, deltaGamma, finalRotation
+const
+groundMaterial = new THREE.MeshStandardMaterial( { color: params.groundColor } ),
+ambientLight = new THREE.AmbientLight(),
+lightSun = new THREE.DirectionalLight(),
+lightMoon = new THREE.DirectionalLight(),
+rectLight = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
+rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
+scene = new THREE.Scene(),
+groundGeometry = new THREE.PlaneBufferGeometry( groundSize, groundSize ),
+ground = new THREE.Mesh( groundGeometry, groundMaterial ),
+//ground.castShadow = true,
+pantallaGroup = new THREE.Group()
+
+let
+driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? 2 : 0 },
+
+modelPanchera, modelPantalla,
+container: HTMLElement, camera, renderer,
+lightAreaMoon,
+rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, dirLightShadowMapViewer, dirLightShadowMapViewerB,
+telonMaterial, telon, telonTexture,
+
+shadowSize, frustumSize,
+pane, dayFolder, nightFolder, motionFolder, preset = { debug: '' }, presetDebug,
+mouseX = 0, deltaY = 0, vx = 0,
+amIMobile, windowHalfX, previousX, timer,
+gamma = 0, previousGamma = 0,
+deltaGamma, finalRotation
+
+swapHeroBgColor()
 
 onMounted(() => {
   //Setup
@@ -130,11 +151,9 @@ function init() {
   amIMobile = isMobile().any
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
   shadowSize = amIMobile ? 512 : 2048
-  swapHeroBgColor()
   //#region sceneSetup
   container = document.getElementById( 'container' )
   windowHalfX = container.clientWidth / 2
-  scene = new THREE.Scene()
 
   renderer = new THREE.WebGLRenderer({
     antialias: amIMobile ? false : true,
@@ -164,7 +183,6 @@ function init() {
   camera.layers.enable(1)
 
   //#region Lights
-  lightSun = new THREE.DirectionalLight()
   lightSun.color.set( params.lightSunColor )
   lightSun.intensity = params.dayOrNight === 'day' ? params.lightSunIntensity : 0
   lightSun.position.set( params.lightSunPosition.x, params.lightSunPosition.y, params.lightSunPosition.z )
@@ -179,7 +197,6 @@ function init() {
   lightSun.shadow.camera.top = params.shadowPlaneSize
   lightSun.shadow.camera.bottom = -params.shadowPlaneSize
 
-  lightMoon = new THREE.DirectionalLight()
   lightMoon.color.set( params.lightMoonColor )
   lightMoon.intensity = params.dayOrNight === 'day' ? 0 : params.lightMoonIntensity
   lightMoon.position.set( params.lightMoonPosition.x, params.lightMoonPosition.y, params.lightMoonPosition.z )
@@ -195,7 +212,6 @@ function init() {
   lightMoon.shadow.camera.bottom = -params.shadowPlaneSize
   
   //ambient
-  ambientLight = new THREE.AmbientLight()
   ambientLight.color.set( params.dayOrNight === 'day' ? params.lightSunColor : params.lightMoonColor )
   //lighthelpers
   lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera )
@@ -223,54 +239,29 @@ function init() {
     scene.environment.needsUpdate = true
   })*/
   //#endregion environmentSetup
-
-  //#region postprocessing
-  /*if (!amIMobile) {
-    const renderScene = new RenderPass( scene, camera )
-    composer = new EffectComposer( renderer )
-    composer.addPass( renderScene )
-
-    if (params.bloomOn) {
-      bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1, 0.4, 0.85 )
-      bloomPass.threshold = params.bloomThreshold
-      bloomPass.strength = params.bloomStrength
-      bloomPass.radius = params.bloomRadius
-      composer.addPass( bloomPass )
-    }
-    if (params.saoOn) { 
-      saoPass = new SAOPass( scene, camera, false, true )
-      saoPass.saoMinResolution = 0
-      saoPass.saoKernelRadius = 50
-      saoPass.saoIntensity = 0.01
-      composer.addPass( saoPass )
-    }
-  }*/
-  //#endregion postprocessing
 }
 
 async function props() {
   //#region GROUND
-  if (debug.showGround) {
-    groundGeometry = new THREE.PlaneBufferGeometry( groundSize, groundSize )
-    groundMaterial = new THREE.MeshStandardMaterial( { color: params.groundColor } )
-    ground = new THREE.Mesh( groundGeometry, groundMaterial )
-    ground.rotation.x = -Math.PI / 2
-    ground.receiveShadow = true
-    //ground.castShadow = true
-    scene.add( ground )
-  }
+  ground.rotation.x = -Math.PI / 2
+  ground.receiveShadow = true
+  if (debug.showGround) scene.add( ground )
 
   if (debug.showGLTFs) {
     const models = await loadModels()
-    scene.add( models.modelPanchera, models.modelPantalla )
-    console.log(scene);
+
+    modelPanchera.position.set( 0, 0, 1.7 )
+    pantallaGroup.position.set( 0, -0.005, 0 )
+    pantallaGroup.scale.set( modelScale, modelScale, modelScale )
+
+    pantallaGroup.add( models.modelPantalla )
+    scene.add( models.modelPanchera, pantallaGroup )
+    modelPanchera.updateMatrix()
   }
 
   scene.fog = params.dayOrNight === 'day' ? new THREE.FogExp2(params.daySkyColor, params.fogDensityDay ) : new THREE.FogExp2(params.nightSkyColor, params.fogDensityNight )
   //#endregion GROUND
   
-  //Inicia proyector
-  if(debug.showPantalla) initProjector()
   if (!params.showLightsHelpers) camera.layers.disable( 1 )
   //Animation
   animate()
@@ -278,22 +269,19 @@ async function props() {
 
 async function loadModels() {
   const loader = new GLTFLoader()
-
   const [pancheraData, pantallaData] = await Promise.all([
     loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
     loader.loadAsync('/gltf/pantalla_v1/pantalla.gltf'),
   ])
 
   modelPanchera = setupModel(pancheraData)
-  modelPanchera.scale.set( 15, 15, 15)
-  modelPanchera.position.set( 0, 0, 1.7 )
   modelPanchera.material.emissiveIntensity = 1
-  modelPanchera.updateMatrix()
+  modelPanchera.scale.set( modelScale, modelScale, modelScale)
 
   modelPantalla = setupModel(pantallaData)
-  modelPantalla.scale.set( 15, 15, 15)
-  modelPantalla.material.side = THREE.DoubleSide
-  modelPantalla.updateMatrix()
+
+  //Inicia proyector
+  if(debug.showPantalla) initProjector()
 
   loadedModels.value = true
   return { modelPanchera, modelPantalla }
@@ -301,7 +289,7 @@ async function loadModels() {
 
 function setupModel(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
-  model.material.emissiveIntensity = params.dayOrNight === 'day' ? 0 : params.emissiveIntensity
+  model.material.side = THREE.DoubleSide
   model.castShadow = true
   model.matrixAutoUpdate = false
   return model
@@ -310,28 +298,26 @@ function setupModel(modelData) {
 function initProjector() {
   //RectAreaLightUniformsLib.init()
   const video = document.getElementById( 'video' )
-  const telonSize = new THREE.Vector2( 2.12, 1.25 )
-  const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
-  const telonTexture = new THREE.VideoTexture( video )
+  telonTexture = new THREE.VideoTexture( video )
   telonTexture.encoding = THREE.sRGBEncoding
   //telonTexture.minFilter = THREE.LinearFilter
   telonMaterial = new THREE.MeshBasicMaterial({ map: telonTexture })
-  const telon = new THREE.Mesh( telonGeometry, telonMaterial )
-  const telonPosition = new THREE.Vector3(0, 0.9, -0.001 )
+
+  telon = new THREE.Mesh( telonGeometry, telonMaterial )
+
   telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
-  scene.add( telon )
+  pantallaGroup.add( telon )
+  // @ts-ignore
   video.play()
 
   //proyector light to front
-  rectLight = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x, telonSize.y )
   rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
   rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
   //proyector light to self
-  rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x, telonSize.y )
-  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.2 )
+  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.015 )
   rectLightB.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
 
-  scene.add( rectLight, rectLightB )
+  pantallaGroup.add( rectLight, rectLightB )
 
   rectLightHelper = new RectAreaLightHelper( rectLight )
   rectLightHelperB = new RectAreaLightHelper( rectLightB )
@@ -395,12 +381,7 @@ function updateScene() {
   //lighthelpers
   if (params.showLightsHelpers) camera.layers.enable( 1 )
   else camera.layers.disable( 1 )
-  //FX
-  if (params.bloomOn) {
-    bloomPass.threshold = params.bloomThreshold
-    bloomPass.strength = params.bloomStrength
-    bloomPass.radius = params.bloomRadius
-  }
+
   if (params.dayOrNight === 'day') {
     //Actualiza el ambiente
     ambientLight.color.set( lightSun.color )
@@ -460,14 +441,14 @@ function animate() {
     vx *= params.friction
     deltaY = (vx - previousX)*params.mass
     previousX = vx
-    scene.rotation.y = deltaY + initialSceneRotation.y //rotación (encuadre) inicial
+    if (Math.abs(deltaY) > 0.001) scene.rotation.y = deltaY + initialSceneRotation.y //rotación (encuadre) inicial
   } else {
     deltaGamma = (gamma - previousGamma)
     ax = deltaGamma * params.spring
     vx += ax
     vx *= params.friction
     finalRotation = (vx - previousGamma) * params.mass
-    if (Math.abs(finalRotation)>0.001) scene.rotation.y = finalRotation + initialSceneRotation.y //rotación (encuadre) inicial
+    if (Math.abs(finalRotation) > 0.001) scene.rotation.y = finalRotation + initialSceneRotation.y //rotación (encuadre) inicial
     previousGamma = vx
   }
   //limit camera rotation:
@@ -477,40 +458,37 @@ function animate() {
 
 function makeTweak() {
   pane = new Pane({ container: document.getElementById('parameters') })
-  pane.on('change', (ev) => {
+  pane.on('change', () => {
     updateScene()
     presetDebug.hidden = true
   })
-  //PARAMETROS
-  pane.addInput(params, 'groundColor', { view:'color', label: 'color piso' })
-  pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
-  pane.addSeparator()
-  pane.addInput(params, 'shadowPlaneSize', {label: 'tamaño luz', min: 0.1, max: 10, step: 0.01})
   //MOVEMENT
-  const motionFolder = pane.addFolder({ title: 'MOVIMIENTO', expanded: false })
+  motionFolder = pane.addFolder({ title: 'MOVIMIENTO', expanded: false })
   motionFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
   motionFolder.addInput(params, 'spring', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'spring' })
   motionFolder.addInput(params, 'friction', { type: 'number', min: 0.9, max: 1, step: 0.01, label: 'friction' })
   motionFolder.addInput(params, 'mass', { type: 'number', min: 0, max: 0.1, step: 0.01, label: 'mass' })
   //DAY
   dayFolder = pane.addFolder({ title: 'DIA', expanded: true, hidden: params.dayOrNight === 'day' ? false : true })
+  dayFolder.addInput(params, 'fogDensityDay', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla dia' })
+  dayFolder.addInput(params, 'daySkyColor', { label: 'cielo dia' })
   dayFolder.addInput(params, 'lightSunColor', { label: 'color sol' })
   dayFolder.addInput(params, 'lightSunIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power sol' })
   dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
-  dayFolder.addSeparator()
-  dayFolder.addInput(params, 'daySkyColor', { label: 'cielo dia' })
-  dayFolder.addInput(params, 'fogDensityDay', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla dia' })
   //NIGHT
   nightFolder = pane.addFolder({ title: 'NOCHE', expanded: true, hidden: params.dayOrNight === 'night' ? false : true })
+  nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla noche' })
+  nightFolder.addInput(params, 'nightSkyColor', { label: 'cielo noche' })
   nightFolder.addInput(params, 'lightMoonColor', {  label: 'color luna' })
   nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power luna' })
   nightFolder.addInput(params, 'lightMoonPosition', { label: 'posición luna', x: { min: -10, max: 10, step: 0.1 }, y: { min: 5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
-  nightFolder.addSeparator()
-  nightFolder.addInput(params, 'nightSkyColor', { label: 'cielo noche' })
-  nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla noche' })
+  //PARAMETROS
+  pane.addInput(params, 'groundColor', { view:'color', label: 'color piso' })
+  if(!amIMobile) pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
   //DEBUG
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
+  debugFolder.addInput(params, 'shadowPlaneSize', { min: 0.1, max: 10, step: 0.01 })
   const btn = debugFolder.addButton({
     title: 'export',
   })
@@ -523,14 +501,15 @@ function makeTweak() {
     lineCount: 10,
     hidden: true,
   })
+
+  function exportPreset() {
+    preset.debug = JSON.stringify(pane.exportPreset(), null, 1)
+    presetDebug.hidden = false
+  }
+
 }
 
-function exportPreset() {
-  preset.debug = JSON.stringify(pane.exportPreset(), null, 1)
-  presetDebug.hidden = false
-}
-
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: { clientX: number; }) {
   mouseX = ( event.clientX - windowHalfX )
 }
 
@@ -545,20 +524,26 @@ function onWindowResize() {
   //if (!amIMobile) composer.setSize( container.clientWidth, container.clientHeight )
 }
 
-function smoothstep (min, max, value) {
+function smoothstep (min:number, max:number, value:number) {
   var x = Math.max(0, Math.min(1, (value-min)/(max-min)))
   return x*x*(3 - 2*x)
 }
 
 onUnmounted(() => {
   renderer.dispose()
+  camera.removeFromParent()
+  groundGeometry.dispose()
+  ground.removeFromParent()
+  modelPanchera.removeFromParent()
+  pantallaGroup.removeFromParent()
+  telonMaterial.dispose()
+  telonTexture.dispose()
+
   if (debug.showLights) {
-    //ambientLightSun.dispose()
-    //ambientLightMoon.dispose()
     lightSun.dispose()
     lightMoon.dispose()
   }
-  if (debug.showLightsHelpers) {
+  if (debug.showLightHelpers) {
     lightHelperSun.dispose()
     lightHelperMoon.dispose()
     rectLightHelper.dispose()
@@ -577,7 +562,7 @@ onUnmounted(() => {
 
 <template>
   <div class="relative">
-    <div id="container" class="hero relative overflow-hidden pb-16">
+    <div id="container" class="relative overflow-hidden pb-16">
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
         loop
@@ -603,9 +588,8 @@ onUnmounted(() => {
           </label>
         </div>
       </div>
-      <div v-if="route.name == 'onoff' || route.name == 'test'" id="debugger" class="absolute w-80 right-0 top-0 p-4">
-        <div id="parameters"></div>
-      </div>
+      <!--Tweakpane-->
+      <div id="parameters" v-if="route.name == 'onoff' || route.name == 'test'" class="absolute w-96 left-0 bottom-16 p-4"></div>
     </div>
     <AboutUs :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
     <div v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
