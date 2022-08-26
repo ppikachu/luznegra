@@ -448,7 +448,7 @@ function animate() {
     if (Math.abs(deltaY) > 0.001) scene.rotation.y = deltaY + initialSceneRotation.y //rotación (encuadre) inicial
   } else {
     deltaGamma = (gamma - previousGamma)
-    ax = deltaGamma * params.spring
+    ax = deltaGamma * params.spring*2
     vx += ax
     vx *= params.friction
     finalRotation = (vx - previousGamma) * params.mass
