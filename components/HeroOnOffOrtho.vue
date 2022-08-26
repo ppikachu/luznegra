@@ -125,6 +125,10 @@ onMounted(() => {
   if(route.name == 'onoff' || route.name == 'test') makeTweak()
 })
 
+function fadeScene(time:number) {
+  gsap.to( document.getElementById('fader'), { opacity: 0, duration: time, onComplete: ()=> { loadedModels.value = true} })
+}
+
 function swapHeroBgColor() {
   heroBgColor.value = params.dayOrNight === 'day'?
   //HACK: hardcoded hero colors:
@@ -283,7 +287,7 @@ async function loadModels() {
   //Inicia proyector
   if(debug.showPantalla) initProjector()
 
-  loadedModels.value = true
+  fadeScene(1)
   return { modelPanchera, modelPantalla }
 }
 
@@ -592,7 +596,8 @@ onUnmounted(() => {
       <div id="parameters" v-if="route.name == 'onoff' || route.name == 'test'" class="absolute w-96 left-0 bottom-16 p-4"></div>
     </div>
     <AboutUs :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
-    <div v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
+    <!--fadeScene-->
+    <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32">
     </div>
   </div>
