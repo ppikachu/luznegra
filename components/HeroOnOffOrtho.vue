@@ -226,7 +226,7 @@ function setupModelB(modelData) {
   model.material.emissiveIntensity = 1
   model.rotation.z = -Math.PI/2
   model.updateMatrix()
-  model.scale.set( 2, 2, 2)
+  model.scale.set( 1.5, 1.5, 1.5)
   model.position.set( 0, 0.1, 1.7 )
   model.castShadow = true
   model.updateMatrix()
