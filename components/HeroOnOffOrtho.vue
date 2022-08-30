@@ -80,7 +80,7 @@ const loadedModels = ref(false)
 const dayNight = ref(params.dayOrNight)
 
 //CLICK
-const clickVolume = ref(0.5)
+const clickVolume = ref(0.25)
 const { play } = useSound(buttonSfx,{ clickVolume })
 //console.log(play)
 
@@ -163,14 +163,14 @@ function handleOrientation(event) {
 async function loadModels() {
   const loader = new GLTFLoader()
   const [pancheraData, pantallaData] = await Promise.all([
-    //loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
-    loader.loadAsync('/gltf/panchos2_v1/panchos2.gltf'),
+    loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
+    //loader.loadAsync('/gltf/panchos2_v1/panchos2.gltf'),
     loader.loadAsync('/gltf/pantalla_v1/pantalla.gltf'),
   ])
 
   modelPanchera = setupModel(pancheraData)
   modelPanchera.material.emissiveIntensity = 1
-  modelPanchera.scale.set( modelScale*2, modelScale*2, modelScale*2)
+  modelPanchera.scale.set( modelScale, modelScale, modelScale)
 
   modelPantalla = setupModel(pantallaData)
 
