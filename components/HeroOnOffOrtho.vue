@@ -211,14 +211,17 @@ function setupModel(modelData) {
 
 function setupModelB(modelData) {
   const model = modelData.scene.children[0]
+  console.log(model)
+  
   model.material.side = THREE.DoubleSide
   model.material.emissiveIntensity = 1
   model.rotation.z = -Math.PI/2
   model.updateMatrix()
-  model.scale.set( 1.5, 1.5, 1.5)
-  model.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
+  model.scale.set( 2, 2, 2)
+  model.position.set( 0, 0.1, 1.7 )
   model.castShadow = true
-  //model.matrixAutoUpdate = false
+  model.updateMatrix()
+  model.matrixAutoUpdate = false
   return model
 }
 
@@ -395,14 +398,11 @@ async function props() {
 
   if (debug.showGLTFs) {
     const models = await loadModels()
-
-    modelPanchera.position.set( 0, 0, 1.7 )
+    //TODO: reordenar
     pantallaGroup.position.set( 0, -0.005, 0 )
     pantallaGroup.scale.set( modelScale, modelScale, modelScale )
-
     pantallaGroup.add( models.modelPantalla )
     scene.add( models.modelPanchera, pantallaGroup )
-    modelPanchera.updateMatrix()
   }
 
   scene.fog = params.dayOrNight === 'day' ? new THREE.FogExp2(params.daySkyColor, params.fogDensityDay ) : new THREE.FogExp2(params.nightSkyColor, params.fogDensityNight )
