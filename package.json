@@ -9,6 +9,7 @@
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^15.13.1",
     "@troisjs/components": "^0.0.4",
+    "@vueuse/sound": "^1.1.7",
     "chroma-js": "^2.4.2",
     "contentful": "^10.0.0-beta-v10.8",
     "gsap": "^3.11.0",
@@ -25,6 +26,8 @@
     "@nuxtjs/google-fonts": "^3.0.0-0",
     "@nuxtjs/tailwindcss": "^5.3.2",
     "@tailwindcss/typography": "^0.5.4",
+    "@vueuse/core": "^9.1.1",
+    "@vueuse/nuxt": "^9.1.1",
     "daisyui": "^2.24.0",
     "nuxt": "3.0.0-rc.8"
   }
