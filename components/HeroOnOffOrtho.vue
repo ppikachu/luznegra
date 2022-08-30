@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
 import { ShadowMapViewer } from 'three/examples/jsm/utils/ShadowMapViewer.js'
+
+import { useSound } from '@vueuse/sound'
+import buttonSfx from '/audio/Click02.mp3'
+
 //import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import chroma from 'chroma-js'
 import gsap from 'gsap'
@@ -75,6 +79,11 @@ const heroBgColor = ref()
 const loadedModels = ref(false)
 const dayNight = ref(params.dayOrNight)
 
+//CLICK
+const clickVolume = ref(0.25)
+const { play } = useSound(buttonSfx,{ clickVolume })
+//console.log(play)
+
 const
 groundMaterial = new THREE.MeshStandardMaterial( { color: params.groundColor } ),
 ambientLight = new THREE.AmbientLight(),
@@ -124,7 +133,7 @@ onMounted(() => {
   //Tweakpane
   if(route.name == 'onoff' || route.name == 'test') makeTweak()
 })
-
+//#region FUNCTIONS
 function fadeScene(time:number) {
   gsap.to( document.getElementById('fader'), { opacity: 0, duration: time, onComplete: ()=> { loadedModels.value = true} })
 }
@@ -150,6 +159,137 @@ function handleOrientation(event) {
   //const absolute = event.absolute
   gamma    = event.gamma
 }
+
+async function loadModels() {
+  const loader = new GLTFLoader()
+  const [pancheraData, pantallaData] = await Promise.all([
+    loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
+    //loader.loadAsync('/gltf/panchos2_v1/panchos2.gltf'),
+    loader.loadAsync('/gltf/pantalla_v1/pantalla.gltf'),
+  ])
+
+  modelPanchera = setupModel(pancheraData)
+  modelPanchera.material.emissiveIntensity = 1
+  modelPanchera.scale.set( modelScale, modelScale, modelScale)
+
+  modelPantalla = setupModel(pantallaData)
+
+  //Inicia proyector
+  if(debug.showPantalla) initProjector()
+
+  fadeScene(1)
+  return { modelPanchera, modelPantalla }
+}
+
+function initProjector() {
+  //RectAreaLightUniformsLib.init()
+  const video = document.getElementById( 'video' )
+  telonTexture = new THREE.VideoTexture( video )
+  telonTexture.encoding = THREE.sRGBEncoding
+  //telonTexture.minFilter = THREE.LinearFilter
+  telonMaterial = new THREE.MeshBasicMaterial({ map: telonTexture })
+
+  telon = new THREE.Mesh( telonGeometry, telonMaterial )
+
+  telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
+  pantallaGroup.add( telon )
+  // @ts-ignore
+  video.play()
+
+  //proyector light to front
+  rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
+  rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
+  //proyector light to self
+  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.015 )
+  rectLightB.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
+
+  pantallaGroup.add( rectLight, rectLightB )
+
+  rectLightHelper = new RectAreaLightHelper( rectLight )
+  rectLightHelperB = new RectAreaLightHelper( rectLightB )
+  rectLightHelper.layers.set( 1 )
+  rectLightHelperB.layers.set( 1 )
+  scene.add( rectLightHelper, rectLightHelperB )
+}
+
+function setupModel(modelData) {
+  const model = modelData.scene.children[0].children[0].children[0]
+  model.material.side = THREE.DoubleSide
+  model.castShadow = true
+  model.matrixAutoUpdate = false
+  return model
+}
+
+function swapDayNight() {
+  const previousSunPosition = params.lightSunPosition
+  const previousMoonPosition = params.lightMoonPosition
+  if (params.dayOrNight === 'night') {
+    //DAY:
+    params.dayOrNight = dayNight.value = 'day'
+    var tlday = gsap.timeline()
+    //move lightShadows position
+    tlday.to(lightMoon.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed })
+    tlday.to(lightSun.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed }, '<')
+    tlday.to([ lightMoon, lightAreaMoon ], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
+      //STEPPED:
+      ambientLight.color.set( params.lightSunColor )
+      //swap bg color de seccion nosotros
+      swapHeroBgColor()
+      scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
+    } }, '<')
+    //fade in:
+    tlday.to([ lightSun, ambientLight], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed }, '<')
+    //turn off modelPanchera inner emissive
+    tlday.to(modelPanchera.material, { emissiveIntensity: 0, duration: params.dayNightSpeed, delay: params.dayNightDelay })
+    driverLuzPantalla.intensity = 0
+    tlday.play()
+  } else {
+    //NIGHT:
+    params.dayOrNight = dayNight.value = 'night'
+    var tlnight = gsap.timeline()
+    //move lightShadow position
+    tlnight.to(lightSun.position, { x: previousMoonPosition.x, y: previousMoonPosition.y, z: previousMoonPosition.z, duration: params.dayNightSpeed })
+    tlnight.to(lightMoon.position, { x: previousMoonPosition.x, y: previousMoonPosition.y, z: previousMoonPosition.z, duration: params.dayNightSpeed }, '<')
+    tlnight.to([ lightSun, ambientLight], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
+      //STEPPED:
+      ambientLight.color.set( params.lightMoonColor )
+      //swap bg color de seccion nosotros
+      swapHeroBgColor()
+      scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
+    } }, '<')
+    tlnight.to([ lightMoon, ambientLight], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
+    //turn on modelPanchera inner emissive
+    tlnight.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, ease: "back.out(4)", delay: params.dayNightDelay })
+    tlnight.to([ driverLuzPantalla], { intensity: params.pantallaEmissive, duration: params.dayNightSpeed*3 })
+    tlnight.play()
+  }
+  //hide tweakpane sections
+  if (pane) {
+    dayFolder.hidden = params.dayOrNight === 'day' ? false : true
+    nightFolder.hidden = params.dayOrNight === 'night' ? false : true
+  }
+}
+
+function onDocumentMouseMove(event: { clientX: number; }) {
+  mouseX = ( event.clientX - windowHalfX )
+}
+
+function onWindowResize() {
+  const aspect = container.clientWidth / container.clientHeight
+  camera.left = - 0.5 * frustumSize * aspect
+  camera.right = 0.5 * frustumSize * aspect
+  camera.top = frustumSize / 2;
+  camera.bottom = - frustumSize / 2;
+  camera.updateProjectionMatrix()
+  renderer.setSize( container.clientWidth, container.clientHeight )
+  //if (!amIMobile) composer.setSize( container.clientWidth, container.clientHeight )
+}
+
+function smoothstep (min:number, max:number, value:number) {
+  var x = Math.max(0, Math.min(1, (value-min)/(max-min)))
+  return x*x*(3 - 2*x)
+}
+//#endregion
 
 function init() {
   amIMobile = isMobile().any
@@ -269,116 +409,6 @@ async function props() {
   if (!params.showLightsHelpers) camera.layers.disable( 1 )
   //Animation
   animate()
-}
-
-async function loadModels() {
-  const loader = new GLTFLoader()
-  const [pancheraData, pantallaData] = await Promise.all([
-    loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
-    loader.loadAsync('/gltf/pantalla_v1/pantalla.gltf'),
-  ])
-
-  modelPanchera = setupModel(pancheraData)
-  modelPanchera.material.emissiveIntensity = 1
-  modelPanchera.scale.set( modelScale, modelScale, modelScale)
-
-  modelPantalla = setupModel(pantallaData)
-
-  //Inicia proyector
-  if(debug.showPantalla) initProjector()
-
-  fadeScene(1)
-  return { modelPanchera, modelPantalla }
-}
-
-function setupModel(modelData) {
-  const model = modelData.scene.children[0].children[0].children[0]
-  model.material.side = THREE.DoubleSide
-  model.castShadow = true
-  model.matrixAutoUpdate = false
-  return model
-}
-
-function initProjector() {
-  //RectAreaLightUniformsLib.init()
-  const video = document.getElementById( 'video' )
-  telonTexture = new THREE.VideoTexture( video )
-  telonTexture.encoding = THREE.sRGBEncoding
-  //telonTexture.minFilter = THREE.LinearFilter
-  telonMaterial = new THREE.MeshBasicMaterial({ map: telonTexture })
-
-  telon = new THREE.Mesh( telonGeometry, telonMaterial )
-
-  telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
-  pantallaGroup.add( telon )
-  // @ts-ignore
-  video.play()
-
-  //proyector light to front
-  rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
-  rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
-  //proyector light to self
-  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.015 )
-  rectLightB.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
-
-  pantallaGroup.add( rectLight, rectLightB )
-
-  rectLightHelper = new RectAreaLightHelper( rectLight )
-  rectLightHelperB = new RectAreaLightHelper( rectLightB )
-  rectLightHelper.layers.set( 1 )
-  rectLightHelperB.layers.set( 1 )
-  scene.add( rectLightHelper, rectLightHelperB )
-}
-
-function swapDayNight() {
-  const previousSunPosition = params.lightSunPosition
-  const previousMoonPosition = params.lightMoonPosition
-  if (params.dayOrNight === 'night') {
-    //DAY:
-    params.dayOrNight = dayNight.value = 'day'
-    var tlday = gsap.timeline()
-    //move lightShadows position
-    tlday.to(lightMoon.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed })
-    tlday.to(lightSun.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed }, '<')
-    tlday.to([ lightMoon, lightAreaMoon ], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
-      //STEPPED:
-      ambientLight.color.set( params.lightSunColor )
-      //swap bg color de seccion nosotros
-      swapHeroBgColor()
-      scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
-    } }, '<')
-    //fade in:
-    tlday.to([ lightSun, ambientLight], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed }, '<')
-    //turn off modelPanchera inner emissive
-    tlday.to(modelPanchera.material, { emissiveIntensity: 0, duration: params.dayNightSpeed, delay: params.dayNightDelay })
-    driverLuzPantalla.intensity = 0
-    tlday.play()
-  } else {
-    //NIGHT:
-    params.dayOrNight = dayNight.value = 'night'
-    var tlnight = gsap.timeline()
-    //move lightShadow position
-    tlnight.to(lightSun.position, { x: previousMoonPosition.x, y: previousMoonPosition.y, z: previousMoonPosition.z, duration: params.dayNightSpeed })
-    tlnight.to(lightMoon.position, { x: previousMoonPosition.x, y: previousMoonPosition.y, z: previousMoonPosition.z, duration: params.dayNightSpeed }, '<')
-    tlnight.to([ lightSun, ambientLight], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
-      //STEPPED:
-      ambientLight.color.set( params.lightMoonColor )
-      //swap bg color de seccion nosotros
-      swapHeroBgColor()
-      scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
-    } }, '<')
-    tlnight.to([ lightMoon, ambientLight], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
-    //turn on modelPanchera inner emissive
-    tlnight.to(modelPanchera.material, { emissiveIntensity: 1, duration: params.dayNightSpeed, ease: "back.out(4)", delay: params.dayNightDelay })
-    tlnight.to([ driverLuzPantalla], { intensity: params.pantallaEmissive, duration: params.dayNightSpeed*3 })
-    tlnight.play()
-  }
-
-  //hide tweakpane sections
-  if (pane) {
-    dayFolder.hidden = params.dayOrNight === 'day' ? false : true
-    nightFolder.hidden = params.dayOrNight === 'night' ? false : true
-  }
 }
 
 function updateScene() {
@@ -513,26 +543,6 @@ function makeTweak() {
 
 }
 
-function onDocumentMouseMove(event: { clientX: number; }) {
-  mouseX = ( event.clientX - windowHalfX )
-}
-
-function onWindowResize() {
-  const aspect = container.clientWidth / container.clientHeight
-  camera.left = - 0.5 * frustumSize * aspect
-  camera.right = 0.5 * frustumSize * aspect
-  camera.top = frustumSize / 2;
-  camera.bottom = - frustumSize / 2;
-  camera.updateProjectionMatrix()
-  renderer.setSize( container.clientWidth, container.clientHeight )
-  //if (!amIMobile) composer.setSize( container.clientWidth, container.clientHeight )
-}
-
-function smoothstep (min:number, max:number, value:number) {
-  var x = Math.max(0, Math.min(1, (value-min)/(max-min)))
-  return x*x*(3 - 2*x)
-}
-
 onUnmounted(() => {
   renderer.dispose()
   camera.removeFromParent()
@@ -584,7 +594,7 @@ onUnmounted(() => {
       ></div>
       <!--SWITCH-->
       <div class="absolute bottom-16 md:bottom-0 text-xl flex justify-center w-full">
-        <div class="form-control">
+        <div class="form-control" @click="play">
           <label class="label cursor-pointer space-x-2">
             <svg :class="{'opacity-25': dayNight === 'day'}" class="swap-off fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
             <input type="checkbox" @click="swapDayNight" class="toggle toggle-lg " />
