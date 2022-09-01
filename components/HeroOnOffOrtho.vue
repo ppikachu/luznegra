@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+//import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
-import { ShadowMapViewer } from 'three/examples/jsm/utils/ShadowMapViewer.js'
+//import { ShadowMapViewer } from 'three/examples/jsm/utils/ShadowMapViewer.js'
 
 import { useSound } from '@vueuse/sound'
-
-//import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
@@ -57,8 +56,6 @@ const debug = {
   animate: true
 }
 
-const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
-//const turntableLimitY = Math.PI*0.1
 const cameraOrthoPos = {
   x: 0,
   y: 0.5,
@@ -72,6 +69,8 @@ const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
 const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
 const groundSize = 30
+const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
+const sound = useSound('/audio/Click02.mp3',{ volume: 0.25 })
 
 const route = useRoute()
 const heroBgColor = ref()
@@ -104,12 +103,6 @@ amIMobile: boolean, windowHalfX: number, previousX: number, timer: number,
 gamma = 0, previousGamma = 0,
 deltaGamma: number, finalRotation: number
 
-//CLICK
-const sound = useSound('/audio/Click02.mp3',{ volume: 0.25 })
-function doDayNightCycle () {
-  sound.play()
-  swapDayNight()
-}
 swapHeroBgColor()
 
 onMounted(() => {
@@ -128,8 +121,9 @@ onMounted(() => {
   window.addEventListener( 'deviceorientation', handleOrientation )
 
   //Tweakpane
-  if(route.name == 'onoff' || route.name == 'test') makeTweak()
+  if( route.name == 'test') makeTweak()
 })
+
 //#region FUNCTIONS
 function fadeScene(time:number) {
   gsap.to( document.getElementById('fader'), { opacity: 0, duration: time, onComplete: ()=> { loadedModels.value = true} })
@@ -157,6 +151,11 @@ function handleOrientation(event) {
   gamma    = event.gamma
 }
 
+function doDayNightCycle () {
+  sound.play()
+  swapDayNight()
+}
+
 async function loadModels() {
   const loader = new GLTFLoader()
   const [pancheraData, pantallaData] = await Promise.all([
@@ -169,10 +168,6 @@ async function loadModels() {
   modelPanchera = setupModelB(pancheraData)
   modelPantalla = setupModel(pantallaData)
 
-  //Inicia proyector
-  if(debug.showPantalla) initProjector()
-
-  fadeScene(1)
   return { modelPanchera, modelPantalla }
 }
 
@@ -217,14 +212,11 @@ function setupModel(modelData) {
 
 function setupModelB(modelData) {
   const model = modelData.scene.children[0]
-  console.log(model)
-  
   model.material.side = THREE.DoubleSide
   model.material.emissiveIntensity = 1
   model.rotation.z = -Math.PI/2
-  model.updateMatrix()
   model.scale.set( 1.5, 1.5, 1.5)
-  model.position.set( 0, 0.1, 1.7 )
+  model.position.set( 0, 0.08, 1.7 )
   model.castShadow = true
   model.updateMatrix()
   model.matrixAutoUpdate = false
@@ -409,6 +401,12 @@ async function props() {
     pantallaGroup.scale.set( modelScale, modelScale, modelScale )
     pantallaGroup.add( models.modelPantalla )
     scene.add( models.modelPanchera, pantallaGroup )
+
+    //Inicia proyector
+    if(debug.showPantalla) initProjector()
+
+    fadeScene(1)
+
   }
 
   scene.fog = params.dayOrNight === 'day' ? new THREE.FogExp2(params.daySkyColor, params.fogDensityDay ) : new THREE.FogExp2(params.nightSkyColor, params.fogDensityNight )
@@ -611,8 +609,8 @@ onUnmounted(() => {
         </div>
       </div>
       <!--Tweakpane-->
-      <div class="absolute flex justify-center w-full p-4">
-        <div id="parameters" v-if="route.name == 'onoff' || route.name == 'test'" class="w-80 md:w-96"></div>
+      <div v-if="route.name == 'test'" class="absolute flex justify-center w-full p-4">
+        <div id="parameters" class="w-80 md:w-96"></div>
       </div>
     </div>
     <AboutUs :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
@@ -622,6 +620,7 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
 <style scoped>
 #container {
   height: 95vh;
