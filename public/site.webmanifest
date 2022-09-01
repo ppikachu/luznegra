@@ -16,8 +16,6 @@
       "purpose": "any"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
   "display": "standalone",
   "start_url": "/?source=pwa",
   "scope": "/",
@@ -25,7 +23,7 @@
     {
       "src": "/images/PWA_thumb.png",
       "type": "image/png",
-      "sizes": "480x258"
+      "sizes": "360x640"
     }
   ]
 }

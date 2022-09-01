@@ -23,9 +23,10 @@ export default defineNuxtConfig({
       SPACE_ID: process.env.SPACE_ID,
       ACCESS_TOKEN: process.env.ACCESS_TOKEN,
       DEFAULT_LANGUAGE: 'es-AR',
-      HOST: process.env.NODE_ENV === 'production' ? 'https://luznegra-nuxt.vercel.app' : 'http://localhost:3000',// WARN cambiar al deploy final 
+      //WARN cambiar al deploy final:
+      HOST: process.env.NODE_ENV === 'production' ? 'https://luznegra.vercel.app' : 'http://localhost:3000',
       APP_NAME: 'LuzNegra',
-      APP_URL: 'https://luznegra-nuxt.vercel.app',
+      APP_URL: 'https://luznegra.vercel.app',
       SITE_TITLE: 'LuzNegra - Diseño y animación',
       SITE_TOP_DESCRIPTION: 'Diseño y animación',
       TEAM_NAME: 'LuzNegra',
