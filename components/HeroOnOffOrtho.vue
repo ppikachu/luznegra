@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+//import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
-import { ShadowMapViewer } from 'three/examples/jsm/utils/ShadowMapViewer.js'
+//import { ShadowMapViewer } from 'three/examples/jsm/utils/ShadowMapViewer.js'
 
 import { useSound } from '@vueuse/sound'
-import buttonSfx from '/audio/Click02.mp3'
-
-//import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
@@ -58,8 +56,6 @@ const debug = {
   animate: true
 }
 
-const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
-//const turntableLimitY = Math.PI*0.1
 const cameraOrthoPos = {
   x: 0,
   y: 0.5,
@@ -73,6 +69,8 @@ const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
 const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
 const groundSize = 30
+const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
+const sound = useSound('/audio/Click02.mp3',{ volume: 0.25 })
 
 const route = useRoute()
 const heroBgColor = ref()
@@ -99,19 +97,16 @@ pantallaGroup = new THREE.Group()
 
 let
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? 2 : 0 },
-
 modelPanchera, modelPantalla,
 container: HTMLElement, camera, renderer,
-lightAreaMoon,
 rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, dirLightShadowMapViewer, dirLightShadowMapViewerB,
 telonMaterial, telon, telonTexture,
-
-shadowSize, frustumSize,
-pane, dayFolder, nightFolder, motionFolder, preset = { debug: '' }, presetDebug,
+shadowSize: number, frustumSize: number,
+pane, dayFolder, nightFolder, motionFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
 mouseX = 0, deltaY = 0, vx = 0,
-amIMobile, windowHalfX, previousX, timer,
+amIMobile: boolean, windowHalfX: number, previousX: number, timer: number,
 gamma = 0, previousGamma = 0,
-deltaGamma, finalRotation
+deltaGamma: number, finalRotation: number
 
 swapHeroBgColor()
 
@@ -131,8 +126,9 @@ onMounted(() => {
   window.addEventListener( 'deviceorientation', handleOrientation )
 
   //Tweakpane
-  if(route.name == 'onoff' || route.name == 'test') makeTweak()
+  if(route.name == 'test') makeTweak()
 })
+
 //#region FUNCTIONS
 function fadeScene(time:number) {
   gsap.to( document.getElementById('fader'), { opacity: 0, duration: time, onComplete: ()=> { loadedModels.value = true} })
@@ -160,24 +156,23 @@ function handleOrientation(event) {
   gamma    = event.gamma
 }
 
+function doDayNightCycle () {
+  sound.play()
+  swapDayNight()
+}
+
 async function loadModels() {
   const loader = new GLTFLoader()
   const [pancheraData, pantallaData] = await Promise.all([
-    loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
+    //loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
     //loader.loadAsync('/gltf/panchos2_v1/panchos2.gltf'),
+    loader.loadAsync('/gltf/autoB/autocine_v02.gltf'),
     loader.loadAsync('/gltf/pantalla_v1/pantalla.gltf'),
   ])
 
-  modelPanchera = setupModel(pancheraData)
-  modelPanchera.material.emissiveIntensity = 1
-  modelPanchera.scale.set( modelScale, modelScale, modelScale)
-
+  modelPanchera = setupModelB(pancheraData)
   modelPantalla = setupModel(pantallaData)
 
-  //Inicia proyector
-  if(debug.showPantalla) initProjector()
-
-  fadeScene(1)
   return { modelPanchera, modelPantalla }
 }
 
@@ -220,6 +215,19 @@ function setupModel(modelData) {
   return model
 }
 
+function setupModelB(modelData) {
+  const model = modelData.scene.children[0]
+  model.material.side = THREE.DoubleSide
+  model.material.emissiveIntensity = 1
+  model.rotation.z = -Math.PI/2
+  model.scale.set( 1.5, 1.5, 1.5)
+  model.position.set( 0, 0.08, 1.7 )
+  model.castShadow = true
+  model.updateMatrix()
+  model.matrixAutoUpdate = false
+  return model
+}
+
 function swapDayNight() {
   const previousSunPosition = params.lightSunPosition
   const previousMoonPosition = params.lightMoonPosition
@@ -230,7 +238,7 @@ function swapDayNight() {
     //move lightShadows position
     tlday.to(lightMoon.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed })
     tlday.to(lightSun.position, { x: previousSunPosition.x, y: previousSunPosition.y, z: previousSunPosition.z, duration: params.dayNightSpeed }, '<')
-    tlday.to([ lightMoon, lightAreaMoon ], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
+    tlday.to([ lightMoon ], { intensity: 0, duration: params.dayNightSpeed, onComplete: function () {
       //STEPPED:
       ambientLight.color.set( params.lightSunColor )
       //swap bg color de seccion nosotros
@@ -393,14 +401,17 @@ async function props() {
 
   if (debug.showGLTFs) {
     const models = await loadModels()
-
-    modelPanchera.position.set( 0, 0, 1.7 )
+    //TODO: reordenar
     pantallaGroup.position.set( 0, -0.005, 0 )
     pantallaGroup.scale.set( modelScale, modelScale, modelScale )
-
     pantallaGroup.add( models.modelPantalla )
     scene.add( models.modelPanchera, pantallaGroup )
-    modelPanchera.updateMatrix()
+
+    //Inicia proyector
+    if(debug.showPantalla) initProjector()
+
+    fadeScene(1)
+
   }
 
   scene.fog = params.dayOrNight === 'day' ? new THREE.FogExp2(params.daySkyColor, params.fogDensityDay ) : new THREE.FogExp2(params.nightSkyColor, params.fogDensityNight )
@@ -596,14 +607,20 @@ onUnmounted(() => {
       <div class="absolute bottom-16 md:bottom-0 text-xl flex justify-center w-full">
         <div class="form-control" @click="play">
           <label class="label cursor-pointer space-x-2">
-            <svg :class="{'opacity-25': dayNight === 'day'}" class="swap-off fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
-            <input type="checkbox" @click="swapDayNight" class="toggle toggle-lg " />
-            <svg :class="{'opacity-25': dayNight === 'night'}" class="swap-on fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
+            <svg :class="{'opacity-25': dayNight === 'day'}" class="swap-off fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/>
+            </svg>
+            <input type="checkbox" @click="doDayNightCycle" class="toggle toggle-lg" />
+            <svg :class="{'opacity-25': dayNight === 'night'}" class="swap-on fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
+            </svg>
           </label>
         </div>
       </div>
       <!--Tweakpane-->
-      <div id="parameters" v-if="route.name == 'onoff' || route.name == 'test'" class="absolute w-96 left-0 bottom-16 p-4"></div>
+      <div v-if="route.name == 'test'" class="absolute flex justify-center w-full p-4">
+        <div id="parameters" class="w-80 md:w-96"></div>
+      </div>
     </div>
     <AboutUs :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
     <!--fadeScene-->
@@ -612,6 +629,7 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
 <style scoped>
 #container {
   height: 95vh;
