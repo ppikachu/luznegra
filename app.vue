@@ -2,9 +2,8 @@
 const config = useRuntimeConfig()
 useHead({
   titleTemplate: `${config.SITE_TITLE}`,
-  htmlAttrs: {
-    lang: 'es-AR',
-  },
+  htmlAttrs: { lang: 'es-AR' },
+  link: { rel: 'manifest', href: '/site.webmanifest' },
   meta: [
     { hid: 'description', name: 'description', content: config.public.SITE_TOP_DESCRIPTION },
     { hid: 'og:type', property: 'og:type', content: 'website' },
