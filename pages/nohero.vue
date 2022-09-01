@@ -1,7 +1,5 @@
 <template>
   <main class="block">
-    <AboutUs />
-    <Portfolio />
-    <Contact />
+    <PickedPortfolio />
   </main>
 </template>

@@ -13,7 +13,7 @@ if (props.videos) {
 
 <template>
   <ClientOnly>
-    <aside v-if="videoId.length>0" class="space-y-2 my-4 carousel mt-8 items-center rounded-lg">
+    <aside v-if="videoId.length>0" class="space-y-2 carousel items-center rounded-lg">
       <div v-for="(video, i) in videoId" class="carousel-item w-full" :id="i">
         <VuePlyr class="w-full">
           <iframe v-if="provider[i] == 'youtube'"
