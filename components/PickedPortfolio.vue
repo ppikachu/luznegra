@@ -65,19 +65,22 @@ const filtered = computed(() => {
 
     <h1 class="text-5xl font-bold text-center my-8">Destacados</h1>
     
-    <ul class="grid md:grid-cols-3 gap-4">
-      <li v-for="(post, i) in pickedPortfolioItems" :key="post" class="card bg-secondary shadow-lg">
+    <ul class="grid md:grid-rows-3 gap-4 md:gap-8">
+      <li v-for="(post, i) in pickedPortfolioItems"
+        :key="post"
+        class="card card-side bg-indigo-900 shadow-lg"
+      >
         <figure>
           <img v-if="post.fields.imageFeatured"
-            :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=400&h=280`"
+            :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=340&h=340`"
             :alt="post.fields.imageFeatured.fields.title"
             :loading="i > 0 ? 'lazy' : undefined"
             class="w-full"
           />
           <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
         </figure>
-        <div class="card-body">
-          <h2 class="card-title">{{ post.fields.title }}</h2>
+        <div class="card-body self-center w-96 md:w-16">
+          <h2 class="card-title md:text-2xl">{{ post.fields.title }}</h2>
           <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
           <div class="card-actions">
             <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
