@@ -13,7 +13,7 @@ useHead({
     {
       hid: 'og:image',
       property: 'og:image',
-      content: `${config.public.HOST}${config.public.TEAM_LOGO_BLACK}`,
+      content: `${config.public.HOST}${config.public.OG_IMAGE}`,
     },
     { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
   ],

@@ -1,5 +1,5 @@
 <template>
-  <main class="block">
+  <main>
     <PickedPortfolio />
   </main>
 </template>

@@ -19,21 +19,22 @@ export default defineNuxtConfig({
     private: {
     },
     public: {
+      //WARN cambiar al deploy final:
       CONTENT_KEY: process.env.CONTENT_KEY,
       SPACE_ID: process.env.SPACE_ID,
       ACCESS_TOKEN: process.env.ACCESS_TOKEN,
       DEFAULT_LANGUAGE: 'es-AR',
-      //WARN cambiar al deploy final:
       HOST: process.env.NODE_ENV === 'production' ? 'https://luznegra.vercel.app' : 'http://localhost:3000',
-      APP_NAME: 'LuzNegra',
+      APP_NAME: 'LUZ NEGRA',
       APP_URL: 'https://luznegra.vercel.app',
-      SITE_TITLE: 'LuzNegra - Diseño y animación',
+      SITE_TITLE: 'LUZ NEGRA - Diseño y animación',
       SITE_TOP_DESCRIPTION: 'Diseño y animación',
-      TEAM_NAME: 'LuzNegra',
+      TEAM_NAME: 'LUZ NEGRA',
       TEAM_WEBSITE_URL: 'https://luz-negra.com',
       TEAM_STATEMENT: 'Utilizamos diversas técnicas y apostamos a la experimentación. Logramos una resolución original para cada proyecto.',
       TEAM_LOGO_IMAGE_ON_FOOTER: '/images/iso.png',
       TEAM_LOGO_BLACK: '/images/tubos_loader_a.png',
+      OG_IMAGE: '/OG.png',
       //GITHUB_ORGANIZATION_URL: 'https://github.com/longrun',
       //GA_ID: process.env.GA_ID,
       //GA_APP_NAME: 'LongRun Blog',
@@ -45,6 +46,7 @@ export default defineNuxtConfig({
   ],
   googleFonts: {
     families: {
+      'Open Sans': true,
       'Varela Round': true,
     }
   },

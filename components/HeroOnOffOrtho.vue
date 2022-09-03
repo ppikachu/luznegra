@@ -85,7 +85,7 @@ lightMoon = new THREE.DirectionalLight(),
 rectLight = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
 rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
 scene = new THREE.Scene(),
-groundGeometry = new THREE.PlaneBufferGeometry( groundSize, groundSize ),
+groundGeometry = new THREE.PlaneGeometry( groundSize, groundSize ),
 ground = new THREE.Mesh( groundGeometry, groundMaterial ),
 //ground.castShadow = true,
 pantallaGroup = new THREE.Group()
@@ -159,10 +159,8 @@ function doDayNightCycle () {
 async function loadModels() {
   const loader = new GLTFLoader()
   const [pancheraData, pantallaData] = await Promise.all([
-    //loader.loadAsync('/gltf/panchera_v1/panchera.gltf'),
-    //loader.loadAsync('/gltf/panchos2_v1/panchos2.gltf'),
-    loader.loadAsync('/gltf/autoB/autocine_v02.gltf'),
-    loader.loadAsync('/gltf/pantalla_v1/pantalla.gltf'),
+    loader.loadAsync('/gltf/autoIne/auto_ine.gltf'),
+    loader.loadAsync('/gltf/pantalla_v2/pantalla.gltf'),
   ])
 
   modelPanchera = setupModelB(pancheraData)
@@ -211,12 +209,12 @@ function setupModel(modelData) {
 }
 
 function setupModelB(modelData) {
-  const model = modelData.scene.children[0]
+  const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveIntensity = 1
-  model.rotation.z = -Math.PI/2
+  model.rotation.y = -Math.PI/2
   model.scale.set( 1.5, 1.5, 1.5)
-  model.position.set( 0, 0.08, 1.7 )
+  model.position.set( 0, 0, 1.7 )
   model.castShadow = true
   model.updateMatrix()
   model.matrixAutoUpdate = false
@@ -628,5 +626,8 @@ onUnmounted(() => {
 <style scoped>
 #container {
   height: 95vh;
+}
+.toggle {
+  background-color: white;
 }
 </style>

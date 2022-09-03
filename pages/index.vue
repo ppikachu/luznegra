@@ -17,7 +17,7 @@ function onSwapScene(bgColor) {
 
     <HeroOnOffOrtho />
 
-    <Portfolio />
+    <PickedPortfolio />
 
     <Contact />
 
