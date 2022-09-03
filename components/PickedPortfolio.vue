@@ -10,6 +10,7 @@ const posts = data
 
 const config = useRuntimeConfig()
 const openProyect = ref(null)
+const destacadoTodos = ref(true)
 
 /* Default tags */
 const currentTag = ref()
@@ -52,72 +53,83 @@ const filtered = computed(() => {
               <div class="mb-4" id="content" v-html="openProyect.fields.content ? documentToHtmlString(openProyect.fields.content) : ''"></div>
             </div>
             <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
-            <p class="text-xs text-zinc-400">
-              link para compartir proyecto: <a :href="config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
-            </p>
             <div class="modal-action">
-              <!--<button @click="openProyect = false" class="btn btn-secondary">Cerrar</button>-->
+              <p class="text-xs text-zinc-400">
+                link para compartir proyecto: <a :href="config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
+              </p>
             </div>
           </div>
         </div>
       </Teleport>
     </ClientOnly>
 
-    <h1 class="text-5xl font-bold text-center my-8">Destacados</h1>
-    
-    <ul class="grid md:grid-rows-3 gap-4 md:gap-8">
-      <li v-for="(post, i) in pickedPortfolioItems"
-        :key="post"
-        class="card card-side bg-indigo-900 shadow-lg"
-      >
-        <figure>
-          <img v-if="post.fields.imageFeatured"
-            :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=340&h=340`"
-            :alt="post.fields.imageFeatured.fields.title"
-            :loading="i > 0 ? 'lazy' : undefined"
-            class="w-full"
-          />
-          <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
-        </figure>
-        <div class="card-body self-center w-96 md:w-16">
-          <h2 class="card-title md:text-2xl">{{ post.fields.title }}</h2>
-          <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
-          <div class="card-actions">
-            <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
-            <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0" @click.prevent="openProyect = post" ></a>
-          </div>
-        </div>
-      </li>
-    </ul>
+    <!--SWITCH-->
+    <div class="text-xl flex justify-center w-full my-8">
+      <div class="form-control">
+        <label class="label cursor-pointer space-x-2 font-bold">
+          <span :class="{'opacity-25': !destacadoTodos }" >Destacados</span>
+          <input type="checkbox" @click="destacadoTodos =! destacadoTodos" class="toggle toggle-lg" />  
+          <span :class="{'opacity-25':   destacadoTodos }"  >Portfolio</span>
+        </label>
+      </div>
+    </div>
 
-    <h1 class="text-5xl font-bold text-center my-8">Portfolio</h1>
-    <ProjectTags @tag="onTag" :initTag="currentTag" />
-    <TransitionGroup name="list" tag="ul" class="grid md:grid-cols-4 lg:grid-cols-5 gap-4">
-      <li v-for="(post, i) in filtered" :key="post" class="card card-compact bg-base-300 shadow-lg">
-        <figure>
-          <img v-if="post.fields.imageFeatured"
-            :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=300&h=300`"
-            :alt="post.fields.imageFeatured.fields.title"
-            :loading="i > 0 ? 'lazy' : undefined"
-            class="w-full"
-          />
-          <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
-        </figure>
-        <div class="card-body">
-          <h2 class="card-title">{{ post.fields.title }}</h2>
-          <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
-          <div class="card-actions">
-            <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
-            <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0" @click.prevent="openProyect = post" ></a>
+    <div v-show="destacadoTodos">
+      <ul class="grid md:grid-rows-3 gap-4 md:gap-8">
+        <li v-for="(post, i) in pickedPortfolioItems"
+          :key="post"
+          class="card card-side bg-indigo-900 shadow-lg"
+        >
+          <figure>
+            <img v-if="post.fields.imageFeatured"
+              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=340&h=340`"
+              :alt="post.fields.imageFeatured.fields.title"
+              :loading="i > 0 ? 'lazy' : undefined"
+              class="w-full"
+            />
+            <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
+          </figure>
+          <div class="card-body self-center w-96 md:w-16">
+            <h2 class="card-title md:text-2xl">{{ post.fields.title }}</h2>
+            <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
+            <div class="card-actions">
+              <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
+              <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0" @click.prevent="openProyect = post" ></a>
+            </div>
           </div>
-        </div>
-      </li>
-    </TransitionGroup>
+        </li>
+      </ul>
+    </div>
+    
+    <div v-show="!destacadoTodos">
+      <ProjectTags @tag="onTag" :initTag="currentTag" />
+      <TransitionGroup name="list" tag="ul" class="grid md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <li v-for="(post, i) in filtered" :key="post" class="card card-compact bg-base-300 shadow-lg">
+          <figure>
+            <img v-if="post.fields.imageFeatured"
+              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=300&h=300`"
+              :alt="post.fields.imageFeatured.fields.title"
+              :loading="i > 0 ? 'lazy' : undefined"
+              class="w-full"
+            />
+            <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">{{ post.fields.title }}</h2>
+            <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
+            <div class="card-actions">
+              <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
+              <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0" @click.prevent="openProyect = post" ></a>
+            </div>
+          </div>
+        </li>
+      </TransitionGroup>
+    </div>
 
   </section>
 </template>
 
-<style>
+<style scoped>
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
@@ -126,5 +138,9 @@ const filtered = computed(() => {
 .list-leave-to {
   opacity: 0;
   transform: scale(0.1);
+}
+
+.toggle {
+  background-color: white;
 }
 </style>

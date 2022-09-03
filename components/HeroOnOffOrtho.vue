@@ -627,4 +627,7 @@ onUnmounted(() => {
 #container {
   height: 95vh;
 }
+.toggle {
+  background-color: white;
+}
 </style>
