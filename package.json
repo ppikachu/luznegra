@@ -12,7 +12,7 @@
     "@vueuse/sound": "^1.1.7",
     "chroma-js": "^2.4.2",
     "contentful": "^10.0.0-beta-v10.8",
-    "gsap": "^3.11.0",
+    "gsap": "^3.11.1",
     "ismobilejs": "^1.1.1",
     "lodash.startcase": "^4.4.0",
     "lodash.upperfirst": "^4.3.1",
@@ -22,13 +22,13 @@
     "vue-plyr": "^7.0.0"
   },
   "devDependencies": {
-    "@nuxt/image-edge": "^1.0.0-27657146.da85542",
+    "@nuxt/image-edge": "^1.0.0-27703825.db0934c",
     "@nuxtjs/google-fonts": "^3.0.0-0",
     "@nuxtjs/tailwindcss": "^5.3.2",
     "@tailwindcss/typography": "^0.5.7",
     "@vueuse/core": "^9.1.1",
     "@vueuse/nuxt": "^9.1.1",
-    "daisyui": "^2.24.0",
+    "daisyui": "^2.24.2",
     "nuxt": "3.0.0-rc.8"
   }
 }

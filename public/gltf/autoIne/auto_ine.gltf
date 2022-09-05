@@ -9,35 +9,35 @@
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 584,
+      "count": 666,
       "max": [
-        0.401322960853577,
-        0.450195014476776,
-        0.202243998646736
+        0.203331992030144,
+        0.450194984674454,
+        0.40023398399353
       ],
       "min": [
-        -0.399999976158142,
-        -0.000745981931686401,
-        -0.203097984194756
+        -0.202009990811348,
+        -0.000745996832847595,
+        -0.401089012622833
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 584,
+      "count": 666,
       "type": "VEC3"
     },
     {
       "bufferView": 3,
       "componentType": 5126,
-      "count": 584,
+      "count": 666,
       "type": "VEC4"
     },
     {
       "bufferView": 4,
       "componentType": 5126,
-      "count": 584,
+      "count": 666,
       "type": "VEC2"
     }
   ],
@@ -53,32 +53,32 @@
     },
     {
       "buffer": 0,
-      "byteLength": 7008,
+      "byteLength": 7992,
       "byteOffset": 6456,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 7008,
-      "byteOffset": 13464,
+      "byteLength": 7992,
+      "byteOffset": 14448,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 9344,
-      "byteOffset": 20472,
+      "byteLength": 10656,
+      "byteOffset": 22440,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 4672,
-      "byteOffset": 29816,
+      "byteLength": 5328,
+      "byteOffset": 33096,
       "target": 34962
     }
   ],
   "buffers": [
     {
-      "byteLength": 34488,
+      "byteLength": 38424,
       "uri": "auto_ine.bin"
     }
   ],
@@ -120,7 +120,7 @@
   ],
   "meshes": [
     {
-      "name": "auto",
+      "name": "auto_ine",
       "primitives": [
         {
           "attributes": {
@@ -141,17 +141,17 @@
       "children": [
         1
       ],
-      "name": "auto_ine.obj"
+      "name": "auto_ine2.obj"
     },
     {
       "children": [
         2
       ],
-      "name": "auto"
+      "name": "auto_ine"
     },
     {
       "mesh": 0,
-      "name": "auto"
+      "name": "auto_ine"
     }
   ],
   "samplers": [

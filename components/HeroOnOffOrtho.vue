@@ -212,7 +212,7 @@ function setupModelB(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveIntensity = 1
-  model.rotation.y = -Math.PI/2
+  //model.rotation.y = -Math.PI/2
   model.scale.set( 1.5, 1.5, 1.5)
   model.position.set( 0, 0, 1.7 )
   model.castShadow = true
