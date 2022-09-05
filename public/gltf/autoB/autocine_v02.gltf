@@ -15,24 +15,13 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "Grid.001",
-            "rotation" : [
-                -0.7071068286895752,
-                0,
-                0,
-                0.7071068286895752
-            ],
-            "translation" : [
-                0,
-                0,
-                0
-            ]
+            "name" : "auto_ine"
         }
     ],
     "materials" : [
         {
             "doubleSided" : true,
-            "name" : "Material.000",
+            "name" : "mat_auto",
             "pbrMetallicRoughness" : {
                 "baseColorTexture" : {
                     "index" : 0
@@ -43,14 +32,16 @@
     ],
     "meshes" : [
         {
-            "name" : "Grid.000",
+            "name" : "mesh_auto",
             "primitives" : [
                 {
                     "attributes" : {
                         "POSITION" : 0,
-                        "TEXCOORD_0" : 1
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2,
+                        "COLOR_0" : 3
                     },
-                    "indices" : 2,
+                    "indices" : 4,
                     "material" : 0
                 }
             ]
@@ -65,68 +56,89 @@
     "images" : [
         {
             "mimeType" : "image/png",
-            "name" : "UV_001",
-            "uri" : "UV_001.png"
+            "name" : "UV_002",
+            "uri" : "UV_002.png"
         }
     ],
     "accessors" : [
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 681,
+            "count" : 731,
             "max" : [
-                0.4013233780860901,
-                0.4030976891517639,
-                0.4001951813697815
+                0.20371678471565247,
+                0.45073559880256653,
+                0.4013097286224365
             ],
             "min" : [
-                -0.4000000059604645,
-                -0.002244172152131796,
-                -0.05074649676680565
+                -0.20162513852119446,
+                -0.0002060679835267365,
+                -0.4000137150287628
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 681,
-            "type" : "VEC2"
+            "count" : 731,
+            "type" : "VEC3"
         },
         {
             "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 731,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 1857,
+            "count" : 731,
+            "normalized" : true,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 1797,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 8172,
+            "byteLength" : 8772,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 5448,
-            "byteOffset" : 8172
+            "byteLength" : 8772,
+            "byteOffset" : 8772
         },
         {
             "buffer" : 0,
-            "byteLength" : 3714,
-            "byteOffset" : 13620
+            "byteLength" : 5848,
+            "byteOffset" : 17544
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 5848,
+            "byteOffset" : 23392
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 3594,
+            "byteOffset" : 29240
         }
     ],
     "samplers" : [
         {
             "magFilter" : 9729,
-            "minFilter" : 9987,
-            "wrapS" : 33071,
-            "wrapT" : 33071
+            "minFilter" : 9987
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 17336,
+            "byteLength" : 32836,
             "uri" : "autocine_v02.bin"
         }
     ]

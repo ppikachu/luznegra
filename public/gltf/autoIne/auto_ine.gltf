@@ -3,41 +3,41 @@
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 1614,
+      "count": 1662,
       "type": "SCALAR"
     },
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 666,
+      "count": 619,
       "max": [
-        0.203331992030144,
-        0.450194984674454,
-        0.40023398399353
+        0.203716978430748,
+        0.450735926628113,
+        0.401309967041016
       ],
       "min": [
-        -0.202009990811348,
-        -0.000745996832847595,
-        -0.401089012622833
+        -0.201624974608421,
+        -0.00020599365234375,
+        -0.400014013051987
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 666,
+      "count": 619,
       "type": "VEC3"
     },
     {
       "bufferView": 3,
       "componentType": 5126,
-      "count": 666,
+      "count": 619,
       "type": "VEC4"
     },
     {
       "bufferView": 4,
       "componentType": 5126,
-      "count": 666,
+      "count": 619,
       "type": "VEC2"
     }
   ],
@@ -48,37 +48,37 @@
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 6456,
+      "byteLength": 6648,
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 7992,
-      "byteOffset": 6456,
+      "byteLength": 7428,
+      "byteOffset": 6648,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 7992,
-      "byteOffset": 14448,
+      "byteLength": 7428,
+      "byteOffset": 14076,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 10656,
-      "byteOffset": 22440,
+      "byteLength": 9904,
+      "byteOffset": 21504,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 5328,
-      "byteOffset": 33096,
+      "byteLength": 4952,
+      "byteOffset": 31408,
       "target": 34962
     }
   ],
   "buffers": [
     {
-      "byteLength": 38424,
+      "byteLength": 36360,
       "uri": "auto_ine.bin"
     }
   ],
@@ -120,7 +120,7 @@
   ],
   "meshes": [
     {
-      "name": "auto_ine",
+      "name": "auto_ine_mesh_auto",
       "primitives": [
         {
           "attributes": {
@@ -141,17 +141,17 @@
       "children": [
         1
       ],
-      "name": "auto_ine2.obj"
+      "name": "autocine_v02.obj"
     },
     {
       "children": [
         2
       ],
-      "name": "auto_ine"
+      "name": "auto_ine_mesh_auto"
     },
     {
       "mesh": 0,
-      "name": "auto_ine"
+      "name": "auto_ine_mesh_auto"
     }
   ],
   "samplers": [
