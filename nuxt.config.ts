@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxtjs/tailwindcss',
-    '@nuxt/image-edge',
+    //'@nuxt/image-edge',
     '@vueuse/nuxt',
   ],
   buildModules: [
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
       'Varela Round': true,
     }
   },
-  image: {
+  //image: {
     // Options
-  }
+  //}
 })
