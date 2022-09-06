@@ -21,12 +21,12 @@ const props = defineProps({
         />
         <div>
           <h1
-            :class="{'text-primary': props.ciclo === 'night', 'text-primary-content': props.ciclo === 'day'}"
+            :class="{'text-primary': props.ciclo === 'night', 'text-neutral': props.ciclo === 'day'}"
             class="text-center lg:text-left my-4 text-5xl font-bold"
           >
             Quienes somos
           </h1>
-          <div class="prose" :class="{'text-primary-content': props.ciclo === 'day'}">
+          <div class="prose" :class="{'text-neutral': props.ciclo === 'day', 'text-neutral-content': props.ciclo === 'night'}">
             <p class="my-4 text-2xl">Luz-negra es un Estudio Multimedia que produce Gráfica Animada.</p>
             <p class="my-4 text-2xl">Cine, tv, publicidad, redes sociales, eventos, Diseño Gráfico, Diseño web, Ilustración.</p>
             <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos y cuenta con un equipo de profesionales con amplia experiencia.</p>
@@ -47,12 +47,12 @@ const props = defineProps({
         />
         <div>
           <h1
-            :class="{'text-primary': props.ciclo === 'night', 'text-primary-content': props.ciclo === 'day'}"
+            :class="{'text-primary': props.ciclo === 'night', 'text-neutral': props.ciclo === 'day'}"
             class="text-center lg:text-right text-5xl font-bold"
           >
             Qué hacemos
           </h1>
-          <div class="prose lg:text-right" :class="{'text-primary-content': props.ciclo === 'day'}">
+          <div class="prose lg:text-right" :class="{'text-neutral': props.ciclo === 'day', 'text-neutral-content': props.ciclo === 'night'}">
             <p class="my-4 text-2xl">Buscamos la mejor manera de COMUNICAR las ideas en forma ORIGINAL y CREATIVA.</p>
             <p class="my-4 text-2xl">Nos especializamos en COMUNICACiÓN CREATIVA, dando vida a las ideas y ofreciendo la mejor imagen para tus proyectos.</p>
           </div>

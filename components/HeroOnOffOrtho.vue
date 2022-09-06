@@ -132,8 +132,8 @@ function fadeScene(time:number) {
 function swapHeroBgColor() {
   heroBgColor.value = params.dayOrNight === 'day'?
   //HACK: hardcoded hero colors:
-  chroma(params.groundColor).brighten(1.9) :
-  chroma(params.lightMoonColor).darken(2)
+  chroma(params.groundColor).brighten(1.8) :
+  chroma(params.lightMoonColor).darken(1.3)
 }
 
 function handleScroll() {
