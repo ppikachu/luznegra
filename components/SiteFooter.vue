@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer items-center bg-neutral text-neutral-content">
+  <footer class="footer items-center bg-neutral text-neutral-content z-50 relative">
     <div class="container mx-auto p-4 md:p-6">
       <div class="flex flex-col items-center justify-center w-full">
         <img :src="$config.TEAM_LOGO_IMAGE_ON_FOOTER" :alt="$config.TEAM_NAME" class="w-10" />

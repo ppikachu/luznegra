@@ -159,7 +159,7 @@ function doDayNightCycle () {
 async function loadModels() {
   const loader = new GLTFLoader()
   const [pancheraData, pantallaData] = await Promise.all([
-    loader.loadAsync('/gltf/autoIne/auto_ine.gltf'),
+    loader.loadAsync('/gltf/autoIneBlender/auto_ine_blender.gltf'),
     loader.loadAsync('/gltf/pantalla_v2/pantalla.gltf'),
   ])
 
@@ -209,7 +209,7 @@ function setupModel(modelData) {
 }
 
 function setupModelB(modelData) {
-  const model = modelData.scene.children[0].children[0].children[0]
+  const model = modelData.scene.children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveIntensity = 1
   //model.rotation.y = -Math.PI/2
@@ -579,7 +579,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative z-30">
     <div id="container" class="relative overflow-hidden pb-16">
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"

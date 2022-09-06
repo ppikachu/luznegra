@@ -16,6 +16,6 @@ function categoryTitle(tagId) {
 
 <template>
   <ul class="flex flex-wrap md:flex-col xl:flex-row gap-2 uppercase font-semibold whitespace-nowrap">
-    <li v-for="tag in props.tags" class="tag badge badge-sm badge-primary drop-shadow font-tag0">{{ categoryTitle(tag.sys.id) }}</li>
+    <li v-for="tag in props.tags" class="tag badge badge-sm bg-secondary-focus drop-shadow font-tag0">{{ categoryTitle(tag.sys.id) }}</li>
   </ul>
 </template>
