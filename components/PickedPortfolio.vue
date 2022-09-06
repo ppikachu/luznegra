@@ -32,6 +32,19 @@ const filtered = computed(() => {
   : posts.value.items
 })
 
+const sound = useSound('/audio/Click03.mp3')
+const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
+
+function swapDestacados () {
+  sound.play()
+  destacadoTodos.value =! destacadoTodos.value
+}
+
+function closeProject() {
+  soundClose.play()
+  openProyect.value = false
+}
+
 function onBeforeEnter(el) {
   el.style.opacity = 0
   //el.style.height = 0
@@ -62,7 +75,7 @@ function onLeave(el, done) {
       <Teleport to="html">
         <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
           <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
-            <label for="modal-proyecto" @click="openProyect = false" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
+            <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
             <PortfolioVideos :videos="openProyect.fields.video" />
             <PortfolioGallery :gallery="openProyect.fields.imgGallery" />
             <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
@@ -83,14 +96,14 @@ function onLeave(el, done) {
       </Teleport>
     </ClientOnly>
     <!--SWITCH-->
-    <div class="text-xl flex justify-center w-full my-8">
+    <div class="text-base md:text-xl flex justify-center items-center space-x-4 my-8 mx-auto">
+      <span class="text-right basis-1/3" :class="{'opacity-25': !destacadoTodos, 'text-primary': destacadoTodos }">Proyectos destacados</span>
       <div class="form-control">
-        <label class="label cursor-pointer space-x-2 font-bold">
-          <span :class="{'opacity-25': !destacadoTodos }" >Destacados</span>
-          <input type="checkbox" @click="destacadoTodos =! destacadoTodos" class="toggle toggle-lg" />  
-          <span :class="{'opacity-25':   destacadoTodos }"  >Portfolio</span>
+        <label class="label leading-tight justify-center cursor-pointer space-x-4 font-bold">
+          <input type="checkbox" @click="swapDestacados" class="toggle toggle-lg" />  
         </label>
       </div>
+      <span class="basis-1/3" :class="{'opacity-25': destacadoTodos, 'text-primary': !destacadoTodos  }">Portfolio</span>
     </div>
 
     <ul v-show="destacadoTodos" class="grid md:grid-rows-3 gap-4 md:gap-8">
@@ -105,7 +118,7 @@ function onLeave(el, done) {
           <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
         </figure>
         <div class="card-body">
-          <h2 class="card-title md:text-2xl text-primary">{{ post.fields.title }}</h2>
+          <h2 class="card-title md:text-2xl text-primary leading-tight">{{ post.fields.title }}</h2>
           <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
           <div class="card-actions">
             <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
@@ -127,15 +140,15 @@ function onLeave(el, done) {
         <li v-for="(post, i) in filtered" :key="post" :data-index="i" class="card card-compact bg-base-300 shadow-lg">
           <figure>
             <img v-if="post.fields.imageFeatured"
-              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=300&h=300`"
+              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=600&h=400`"
               :alt="post.fields.imageFeatured.fields.title"
-              :loading="i > 0 ? 'lazy' : undefined"
+              loading="lazy"
               class="w-full"
             />
             <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
           </figure>
           <div class="card-body">
-            <h2 class="card-title text-primary">{{ post.fields.title }}</h2>
+            <h2 class="card-title text-primary leading-tight">{{ post.fields.title }}</h2>
             <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
             <div class="card-actions">
               <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
@@ -155,26 +168,17 @@ function onLeave(el, done) {
   background-color: white;
 }
 
-.list-enter-active, .list-leave-active {
-  transition: all 0.5s ease;
-}
-.list-enter-from, .list-leave-to {
-  /*opacity: 0;*/
-  /*transform: scale(0);*/
-}
-.list-leave-active {
-  /*transition-delay: 0.2s;*/
-}
-
 .spotlight {
-  background: linear-gradient(40deg, hsl(var(--sf)) 0%, hsl(var(--s)) 100%);
-  filter: blur(10vh);
-  height: 40vh;
-  bottom: -30vh;
+  background: linear-gradient(45deg, hsl(var(--b3)) 0%, hsl(var(--sf)) 100%);
+  filter: blur(2vh);
+  height: 9rem;
+  bottom: -4rem;
+  left: -4rem;
+  right: -4rem;
 }
 
 .spotlight-wrapper {
-  opacity: 0.9;
+  opacity: 1;
   transition: opacity 0.4s ease-in;
   z-index: 0;
 }

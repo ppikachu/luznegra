@@ -1,3 +1,12 @@
+<script setup lang="ts">
+/* Define props */
+const props = defineProps({
+  ciclo: {
+    type: String,
+    required: false,
+  },
+})
+</script>
 <template>
   <section>
     <div class="hero pt-8 lg:pt-16 max-w-5xl mx-auto">
@@ -11,22 +20,16 @@
           alt="Quienes somos"
         />
         <div>
-          <h1 class="my-4 text-5xl font-bold">Quienes somos</h1>
-          <p class="my-4 text-2xl">Luz-negra es un Estudio Multimedia dirigido por Inés Trigub y Santiago Toyos.</p>
-          <p class="my-4 text-2xl">Producimos Animación.</p>
-          <div class="flex flex-col gap-4">
-            <div class="flex gap-2">
-              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-6 w-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              Gráfica animada (cine, tv, publicidad, redes sociales, eventos, internet)</div> 
-            <div class="flex gap-2">
-              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-6 w-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              Diseño Gráfico</div>
-            <div class="flex gap-2">
-              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-6 w-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              Diseño web </div>
-            <div class="flex gap-2">
-              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-6 w-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              Ilustración</div>
+          <h1
+            :class="{'text-primary': props.ciclo === 'night', 'text-primary-content': props.ciclo === 'day'}"
+            class="text-center lg:text-left my-4 text-5xl font-bold"
+          >
+            Quienes somos
+          </h1>
+          <div class="prose" :class="{'text-primary-content': props.ciclo === 'day'}">
+            <p class="my-4 text-2xl">Luz-negra es un Estudio Multimedia que produce Gráfica Animada.</p>
+            <p class="my-4 text-2xl">Cine, tv, publicidad, redes sociales, eventos, Diseño Gráfico, Diseño web, Ilustración.</p>
+            <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos y cuenta con un equipo de profesionales con amplia experiencia.</p>
           </div>
         </div>
       </div>
@@ -43,8 +46,16 @@
           alt="Qué hacemos"
         />
         <div>
-          <h1 class="text-5xl font-bold">Qué hacemos</h1>
-          <p class="my-4 text-2xl">Nuestro objetivo es encontrar una resolución original para cada trabajo, utilizando diversas técnicas y apostando a la experimentación y la combinación de diferentes lenguajes.</p>
+          <h1
+            :class="{'text-primary': props.ciclo === 'night', 'text-primary-content': props.ciclo === 'day'}"
+            class="text-center lg:text-right text-5xl font-bold"
+          >
+            Qué hacemos
+          </h1>
+          <div class="prose lg:text-right" :class="{'text-primary-content': props.ciclo === 'day'}">
+            <p class="my-4 text-2xl">Buscamos la mejor manera de COMUNICAR las ideas en forma ORIGINAL y CREATIVA.</p>
+            <p class="my-4 text-2xl">Nos especializamos en COMUNICACiÓN CREATIVA, dando vida a las ideas y ofreciendo la mejor imagen para tus proyectos.</p>
+          </div>
         </div>
       </div>
     </div>
