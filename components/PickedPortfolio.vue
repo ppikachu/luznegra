@@ -71,16 +71,17 @@ function onLeave(el, done) {
 
 <template>
   <section id="portfolio" class="container mx-auto px-4 md:px-8 my-10 relative">
+    <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
         <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
           <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
             <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
-            <PortfolioVideos :videos="openProyect.fields.video" />
-            <PortfolioGallery :gallery="openProyect.fields.imgGallery" />
+            <ProjectVideos :videos="openProyect.fields.video" />
+            <ProjectGallery :gallery="openProyect.fields.imgGallery" />
             <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
               <h1 class="text-4xl">{{ openProyect.fields.title }}</h1>
-              <ArticleMeta :tags="openProyect.metadata.tags" />
+              <ProjectMeta :tags="openProyect.metadata.tags" />
             </div>
             <div class="prose my-4">
               <div class="mb-4" id="content" v-html="openProyect.fields.content ? documentToHtmlString(openProyect.fields.content) : ''"></div>
@@ -105,29 +106,34 @@ function onLeave(el, done) {
       </div>
       <span class="basis-1/3" :class="{'opacity-25': destacadoTodos, 'text-primary': !destacadoTodos  }">Portfolio</span>
     </div>
-
+    <!--Proyectos destacados-->
     <ul v-show="destacadoTodos" class="grid md:grid-rows-3 gap-4 md:gap-8">
-      <li v-for="(post, i) in pickedPortfolioItems" :key="post">
-        <a :href="`/proyecto/${post.fields.slug}`" class="gradient-border shadow-lg card md:card-side" @click.prevent="openProyect = post" >
-        <figure>
-          <img v-if="post.fields.imageFeatured"
-            :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=520&h=320`"
-            :alt="post.fields.imageFeatured.fields.title"
-            :loading="i > 0 ? 'lazy' : undefined"
-          />
-          <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
-        </figure>
-        <div class="card-body">
-          <h2 class="card-title md:text-2xl text-primary leading-tight">{{ post.fields.title }}</h2>
-          <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
-          <div class="card-actions">
-            <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
+      <li v-for="(post) in pickedPortfolioItems" :key="post">
+        <a
+          :href="`/proyecto/${post.fields.slug}`"
+          @click.prevent="openProyect = post"
+          class="gradient-border card card-compact md:card-normal md:card-side bg-base-300 shadow-lg"
+        >
+          <figure class="basis-3/5">
+            <img v-if="post.fields.imageFeatured"
+              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=520&h=320`"
+              :alt="post.fields.imageFeatured.fields.title"
+              class="w-full"
+              loading="lazy"
+            />
+            <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
+          </figure>
+          <div class="card-body basis-2/5">
+            <h2 class="text-2xl lg:text-4xl text-primary leading-none">{{ post.fields.title }}</h2>
+            <p v-if="post.fields.excerpt">{{ post.fields.excerpt }}</p>
+            <div class="card-actions" v-if="post.metadata.tags[0]">
+              <ProjectMeta :tags="post.metadata.tags" />
+            </div>
           </div>
-        </div>
         </a>
       </li>
     </ul>
-
+    <!--Portfolio-->
     <div v-show="!destacadoTodos" class="">
       <ProjectTags @tag="onTag" :initTag="currentTag" />
       <TransitionGroup
@@ -137,7 +143,12 @@ function onLeave(el, done) {
         @leave="onLeave"
         class="grid md:grid-cols-4 lg:grid-cols-5 gap-4"
       >
-        <li v-for="(post, i) in filtered" :key="post" :data-index="i" class="card card-compact bg-base-300 shadow-lg">
+        <li v-for="(post, i) in filtered" :key="post" :data-index="i">
+          <a
+            :href="`/proyecto/${post.fields.slug}`"
+            @click.prevent="openProyect = post"
+            class="h-full card card-compact bg-base-300 shadow-lg"
+          >
           <figure>
             <img v-if="post.fields.imageFeatured"
               :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=600&h=400`"
@@ -151,14 +162,14 @@ function onLeave(el, done) {
             <h2 class="card-title text-primary leading-tight">{{ post.fields.title }}</h2>
             <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
             <div class="card-actions">
-              <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
-              <a :href="`/proyecto/${post.fields.slug}`" class="absolute inset-0" @click.prevent="openProyect = post" ></a>
+              <ProjectMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
             </div>
           </div>
+          </a>
         </li>
       </TransitionGroup>
     </div>
-    
+    <!--Gradient-->
     <div class="spotlight-wrapper"><div class="fixed z-10 left-0 right-0 spotlight"></div></div>
   </section>
 </template>
@@ -185,7 +196,7 @@ function onLeave(el, done) {
 
 .gradient-border {
   position: relative;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background-color: rgba(20, 20, 20, 0.3);
@@ -199,10 +210,10 @@ function onLeave(el, done) {
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   padding: 4px;
   width: 100%;
-  background: linear-gradient(90deg, hsl(var(--sf)) 0%, hsl(var(--s)) 50%, #5800b0 100%);
+  background: linear-gradient(90deg, hsl(var(--s)) 0%, hsl(var(--p)) 100%);
   background-size: 400% auto;
   background-position: 0 0;
   opacity: 0.5;

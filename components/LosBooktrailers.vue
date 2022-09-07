@@ -32,11 +32,11 @@ const filtered = computed(() => {
         <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
           <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
             <label for="modal-proyecto" @click="openProyect = false" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
-            <PortfolioVideos :videos="openProyect.fields.video" />
-            <PortfolioGallery :gallery="openProyect.fields.imgGallery" />
+            <ProjectVideos :videos="openProyect.fields.video" />
+            <ProjectGallery :gallery="openProyect.fields.imgGallery" />
             <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
               <h1 class="text-4xl">{{ openProyect.fields.title }}</h1>
-              <ArticleMeta :tags="openProyect.metadata.tags" />
+              <ProjectMeta :tags="openProyect.metadata.tags" />
             </div>
             <div class="prose my-4">
               <div class="mb-4" id="content" v-html="openProyect.fields.content ? documentToHtmlString(openProyect.fields.content) : ''"></div>
@@ -75,7 +75,7 @@ const filtered = computed(() => {
               <h2 class="card-title">{{ post.fields.title }}</h2>
               <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
               <div class="card-actions">
-                <ArticleMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
+                <ProjectMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
                 <span v-if="!post.fields.content" class="badge badge-error">⚠️ content</span>
                 <a
                   :href="`/proyecto/${post.fields.slug}`"

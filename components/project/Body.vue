@@ -30,11 +30,11 @@ const articleContenido  = project.value.items[0].fields.contenido ? project.valu
 
 <template>
   <div class="container mx-auto px-4 md:px-8 pb-16">
-    <PortfolioVideos :videos="articleVideos" />
-    <PortfolioGallery :gallery="imgGallery" />
+    <ProjectVideos :videos="articleVideos" />
+    <ProjectGallery :gallery="imgGallery" />
     <div class="flex md:flex-row space-x-4 lg:justify-between items-center my-8">
       <h1 class="text-4xl">{{ articleTitle }}</h1>
-      <ArticleMeta :tags="articleTags" />
+      <ProjectMeta :tags="articleTags" />
     </div>
     <div class="prose my-4">
       <div class="mb-4" id="content" v-html="articleBody"></div>
