@@ -147,7 +147,7 @@ function onLeave(el, done) {
           <a
             :href="`/proyecto/${post.fields.slug}`"
             @click.prevent="openProyect = post"
-            class="h-full card card-compact bg-base-300 shadow-lg"
+            class="h-full card card-compact bg-base-300 shadow-lg transition-shadow duration-300 delay-100 hover:shadow-secondary"
           >
           <figure>
             <img v-if="post.fields.imageFeatured"
