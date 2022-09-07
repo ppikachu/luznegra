@@ -493,7 +493,7 @@ function animateMobile() {
   ax = deltaGamma * params.spring*4
   vx += ax
   vx *= params.friction
-  finalRotation = (vx - previousGamma) * params.mass
+  finalRotation = -(vx - previousGamma) * params.mass
   if (Math.abs(finalRotation) > 0.001) scene.rotation.y = finalRotation + params.initialSceneRotation.y //rotación (encuadre) inicial
   previousGamma = vx
   //limit camera rotation:
