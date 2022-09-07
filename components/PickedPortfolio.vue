@@ -71,6 +71,7 @@ function onLeave(el, done) {
 
 <template>
   <section id="portfolio" class="container mx-auto px-4 md:px-8 my-10 relative">
+    <h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
     <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
@@ -97,10 +98,10 @@ function onLeave(el, done) {
       </Teleport>
     </ClientOnly>
     <!--SWITCH-->
-    <div class="text-base md:text-xl flex justify-center items-center space-x-4 my-8 mx-auto">
+    <div class="text-xl md:text-2xl flex justify-center items-center space-x-4 my-8 mx-auto leading-none">
       <span class="text-right basis-1/3" :class="{'opacity-25': !destacadoTodos, 'text-primary': destacadoTodos }">Proyectos destacados</span>
       <div class="form-control">
-        <label class="label leading-tight justify-center cursor-pointer space-x-4 font-bold">
+        <label class="label cursor-pointer">
           <input type="checkbox" @click="swapDestacados" class="toggle toggle-lg" />  
         </label>
       </div>
@@ -170,7 +171,7 @@ function onLeave(el, done) {
       </TransitionGroup>
     </div>
     <!--Gradient-->
-    <div class="spotlight-wrapper"><div class="fixed z-10 left-0 right-0 spotlight"></div></div>
+    <div class="spotlight-wrapper overflow-hidden"><div class="fixed z-10 spotlight"></div></div>
   </section>
 </template>
 
@@ -186,12 +187,6 @@ function onLeave(el, done) {
   bottom: -4rem;
   left: -4rem;
   right: -4rem;
-}
-
-.spotlight-wrapper {
-  opacity: 1;
-  transition: opacity 0.4s ease-in;
-  z-index: 0;
 }
 
 .gradient-border {
