@@ -45,7 +45,7 @@ const params = {
   lightMoonIntensity: 0.5,
   lightMoonPosition: new THREE.Vector3( -5, 5, -1 ),
   cameraOrthoPos: { x: 0, y: 0.5, z: 10 },
-  initialSceneRotation: { x: Math.PI*0.2, y: Math.PI*0.1 },
+  initialSceneRotation: { x: Math.PI*0.2, y: Math.PI*0.1 },//WARN: estan invertidos
 }
 
 const debug = {
@@ -94,7 +94,7 @@ rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, dirLightShad
 telonMaterial, telon, telonTexture,
 shadowSize: number, frustumSize: number,
 pane, dayFolder, nightFolder, extraFolder, cameraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
-mouseX = 0, deltaY = 0, vx = 0,
+mouseX = 0, deltaY = 0, ax = 0, vx = 0,
 amIMobile: boolean, windowHalfX: number, previousX: number, timer: number,
 gamma = 0, previousGamma = 0,
 deltaGamma: number, finalRotation: number
@@ -395,7 +395,8 @@ async function props() {
   
   if (!params.showLightsHelpers) camera.layers.disable( 1 )
   //Animation
-  animate()
+  if (amIMobile) animateMobile()
+  else animate()
 }
 
 function updateScene() {
@@ -449,16 +450,16 @@ function animate() {
   const flickB = clock % 4 == 0 ? 0.7 : 1
 
   //projector flickering
-  if (debug.showPantalla && !amIMobile) {
-    rectLight.intensity = params.screenIntensity - flick
-    rectLightB.intensity = params.screenIntensity - flickB
-  }
+  //if (debug.showPantalla) {
+  rectLight.intensity = params.screenIntensity - flick
+  rectLightB.intensity = params.screenIntensity - flickB
+  //}
 
   //luz negra screen flickering / 0.3 de dia
-  modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night' && modelPantalla) ? driverLuzPantalla.intensity * flick : 0.3
+  modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flick : 0.3
 
-  //mouse follow?
-  if (params.mouseFollow && !amIMobile) {
+  //mouse follow
+  if (params.mouseFollow) {
     var dx = mouseX - scene.rotation.x,
     ax = dx * params.spring
     vx += ax
@@ -466,15 +467,35 @@ function animate() {
     deltaY = (vx - previousX)*params.mass
     previousX = vx
     if (Math.abs(deltaY) > 0.001) scene.rotation.y = deltaY + params.initialSceneRotation.x //rotación (encuadre) inicial
-  } else {
-    deltaGamma = (gamma - previousGamma)
-    ax = deltaGamma * params.spring*2
-    vx += ax
-    vx *= params.friction
-    finalRotation = (vx - previousGamma) * params.mass
-    if (Math.abs(finalRotation) > 0.001) scene.rotation.y = finalRotation + params.initialSceneRotation.y //rotación (encuadre) inicial
-    previousGamma = vx
-  }
+    //limit camera rotation:
+    //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
+ } 
+  else scene.rotation.y = params.initialSceneRotation.x
+  renderer.render( scene, camera )
+}
+
+function animateMobile() {
+  requestAnimationFrame(animateMobile)
+  if (!debug.animate) return
+  const clock = Math.round(performance.now()*0.021)
+  const flick = clock % 2 == 0 ? 0.6 : 1
+  const flickB = clock % 4 == 0 ? 0.7 : 1
+  
+  //projector flickering
+  rectLight.intensity = params.screenIntensity - flick
+  rectLightB.intensity = params.screenIntensity - flickB
+  
+  //luz negra screen flickering / 0.3 de dia
+  modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flick : 0.3
+  
+  //orientation follow
+  deltaGamma = (gamma - previousGamma)
+  ax = deltaGamma * params.spring*4
+  vx += ax
+  vx *= params.friction
+  finalRotation = (vx - previousGamma) * params.mass
+  if (Math.abs(finalRotation) > 0.001) scene.rotation.y = finalRotation + params.initialSceneRotation.y //rotación (encuadre) inicial
+  previousGamma = vx
   //limit camera rotation:
   //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
   renderer.render( scene, camera )

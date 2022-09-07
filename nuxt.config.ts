@@ -32,7 +32,7 @@ export default defineNuxtConfig({
       TEAM_NAME: 'LUZ NEGRA',
       TEAM_WEBSITE_URL: 'https://luz-negra.com',
       TEAM_STATEMENT: 'Utilizamos diversas técnicas y apostamos a la experimentación. Logramos una resolución original para cada proyecto.',
-      TEAM_LOGO_IMAGE_ON_FOOTER: '/images/iso.png',
+      TEAM_LOGO_IMAGE_ON_FOOTER: '/images/tubos_loop_ani.png',
       TEAM_LOGO_BLACK: '/images/tubos_loader_a.png',
       OG_IMAGE: '/OG.png',
       //GITHUB_ORGANIZATION_URL: 'https://github.com/longrun',
