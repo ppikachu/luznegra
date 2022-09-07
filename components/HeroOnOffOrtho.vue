@@ -278,7 +278,8 @@ function init() {
   windowHalfX = container.clientWidth / 2
 
   renderer = new THREE.WebGLRenderer({
-    antialias: amIMobile ? false : true,
+    //antialias: amIMobile ? false : true,
+    antialias: true,
   })
   //renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
