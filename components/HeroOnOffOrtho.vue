@@ -44,6 +44,8 @@ const params = {
   lightMoonColor: 'rgb(152, 1, 4)',
   lightMoonIntensity: 0.5,
   lightMoonPosition: new THREE.Vector3( -5, 5, -1 ),
+  cameraOrthoPos: { x: 0, y: 0.5, z: 10 },
+  initialSceneRotation: { x: Math.PI*0.2, y: Math.PI*0.1 },
 }
 
 const debug = {
@@ -56,11 +58,6 @@ const debug = {
   animate: true
 }
 
-const cameraOrthoPos = {
-  x: 0,
-  y: 0.5,
-  z: 10
-}
 const modelScale = 15
 const frustumDesktopSize = 4
 const frustumMobileSize = 7
@@ -69,7 +66,6 @@ const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
 const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
 const groundSize = 30
-const initialSceneRotation = { x: Math.PI*0.1, y: Math.PI*0.2 }
 const sound = useSound('/audio/Click02.mp3',{ volume: 0.25 })
 
 const route = useRoute()
@@ -97,7 +93,7 @@ container: HTMLElement, camera, renderer,
 rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, dirLightShadowMapViewer, dirLightShadowMapViewerB,
 telonMaterial, telon, telonTexture,
 shadowSize: number, frustumSize: number,
-pane, dayFolder, nightFolder, motionFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
+pane, dayFolder, nightFolder, extraFolder, cameraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
 mouseX = 0, deltaY = 0, vx = 0,
 amIMobile: boolean, windowHalfX: number, previousX: number, timer: number,
 gamma = 0, previousGamma = 0,
@@ -304,7 +300,7 @@ function init() {
     frustumSize / 2, frustumSize / -2,
     0, 50
   )
-  camera.position.set(cameraOrthoPos.x, cameraOrthoPos.y, cameraOrthoPos.z)
+  camera.position.set(params.cameraOrthoPos.x, params.cameraOrthoPos.y, params.cameraOrthoPos.z)
   //lighthelper layer
   camera.layers.enable(1)
 
@@ -350,8 +346,8 @@ function init() {
   
   //Mueve la escena para que se vea con el angulo elegido
   //scene.position.set(0, 0, -7)
-  scene.rotation.x = initialSceneRotation.x
-  scene.rotation.y = initialSceneRotation.y
+  scene.rotation.x = params.initialSceneRotation.y
+  scene.rotation.y = params.initialSceneRotation.x
   //#endregion sceneSetup
   
   //#region environmentSetup
@@ -405,7 +401,10 @@ function updateScene() {
   //lighthelpers
   if (params.showLightsHelpers) camera.layers.enable( 1 )
   else camera.layers.disable( 1 )
-
+  camera.position.set(params.cameraOrthoPos.x, params.cameraOrthoPos.y, params.cameraOrthoPos.z)
+  scene.rotation.x = params.initialSceneRotation.y
+  scene.rotation.y = params.initialSceneRotation.x
+  
   if (params.dayOrNight === 'day') {
     //Actualiza el ambiente
     ambientLight.color.set( lightSun.color )
@@ -465,14 +464,14 @@ function animate() {
     vx *= params.friction
     deltaY = (vx - previousX)*params.mass
     previousX = vx
-    if (Math.abs(deltaY) > 0.001) scene.rotation.y = deltaY + initialSceneRotation.y //rotación (encuadre) inicial
+    if (Math.abs(deltaY) > 0.001) scene.rotation.y = deltaY + params.initialSceneRotation.x //rotación (encuadre) inicial
   } else {
     deltaGamma = (gamma - previousGamma)
     ax = deltaGamma * params.spring*2
     vx += ax
     vx *= params.friction
     finalRotation = (vx - previousGamma) * params.mass
-    if (Math.abs(finalRotation) > 0.001) scene.rotation.y = finalRotation + initialSceneRotation.y //rotación (encuadre) inicial
+    if (Math.abs(finalRotation) > 0.001) scene.rotation.y = finalRotation + params.initialSceneRotation.y //rotación (encuadre) inicial
     previousGamma = vx
   }
   //limit camera rotation:
@@ -486,29 +485,33 @@ function makeTweak() {
     updateScene()
     presetDebug.hidden = true
   })
-  //MOVEMENT
-  motionFolder = pane.addFolder({ title: 'MOVIMIENTO', expanded: false })
-  motionFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
-  motionFolder.addInput(params, 'spring', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'spring' })
-  motionFolder.addInput(params, 'friction', { type: 'number', min: 0.9, max: 1, step: 0.01, label: 'friction' })
-  motionFolder.addInput(params, 'mass', { type: 'number', min: 0, max: 0.1, step: 0.01, label: 'mass' })
+  //CAMERA
+  cameraFolder = pane.addFolder({ title: 'CAMARA', expanded: false })
+  cameraFolder.addInput(params, 'cameraOrthoPos', { step: 0.01, label: 'pos cam' })
+  cameraFolder.addInput(params, 'initialSceneRotation', { x: {min: -3.1416, max: 3.1416}, y: {min: 0, max: 3.1416/2}, label: 'giro inicial' })
+  cameraFolder.addSeparator()
+  cameraFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
+  cameraFolder.addInput(params, 'spring', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'spring' })
+  cameraFolder.addInput(params, 'friction', { type: 'number', min: 0.9, max: 1, step: 0.01, label: 'friction' })
+  cameraFolder.addInput(params, 'mass', { type: 'number', min: 0, max: 0.1, step: 0.01, label: 'mass' })
   //DAY
-  dayFolder = pane.addFolder({ title: 'DIA', expanded: true, hidden: params.dayOrNight === 'day' ? false : true })
+  dayFolder = pane.addFolder({ title: 'DIA', expanded: false, hidden: params.dayOrNight === 'day' ? false : true })
   dayFolder.addInput(params, 'fogDensityDay', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla dia' })
   dayFolder.addInput(params, 'daySkyColor', { label: 'cielo dia' })
   dayFolder.addInput(params, 'lightSunColor', { label: 'color sol' })
   dayFolder.addInput(params, 'lightSunIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power sol' })
   dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   //NIGHT
-  nightFolder = pane.addFolder({ title: 'NOCHE', expanded: true, hidden: params.dayOrNight === 'night' ? false : true })
+  nightFolder = pane.addFolder({ title: 'NOCHE', expanded: false, hidden: params.dayOrNight === 'night' ? false : true })
   nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla noche' })
   nightFolder.addInput(params, 'nightSkyColor', { label: 'cielo noche' })
   nightFolder.addInput(params, 'lightMoonColor', {  label: 'color luna' })
   nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power luna' })
   nightFolder.addInput(params, 'lightMoonPosition', { label: 'posición luna', x: { min: -10, max: 10, step: 0.1 }, y: { min: 5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   //PARAMETROS
-  pane.addInput(params, 'groundColor', { view:'color', label: 'color piso' })
-  if(!amIMobile) pane.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
+  extraFolder = pane.addFolder({ title: 'EXTRA', expanded: false })
+  extraFolder.addInput(params, 'groundColor', { view:'color', label: 'color piso' })
+  if(!amIMobile) extraFolder.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
   //DEBUG
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
