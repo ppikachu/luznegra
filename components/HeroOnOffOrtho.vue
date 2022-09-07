@@ -155,18 +155,25 @@ function doDayNightCycle () {
   sound.play()
   swapDayNight()
 }
-
-async function loadModels() {
-  const loader = new GLTFLoader()
-  const [pancheraData, pantallaData] = await Promise.all([
-    loader.loadAsync('/gltf/autoIneBlender/auto_ine_blender.gltf'),
-    loader.loadAsync('/gltf/pantalla_v2/pantalla.gltf'),
-  ])
-
-  modelPanchera = setupModelB(pancheraData)
-  modelPantalla = setupModel(pantallaData)
-
-  return { modelPanchera, modelPantalla }
+//pantalla:
+function setupModel(modelData) {
+  const model = modelData.scene.children[0].children[0].children[0]
+  model.material.side = THREE.DoubleSide
+  model.castShadow = true
+  model.matrixAutoUpdate = false
+  return model
+}
+//auto:
+function setupModelB(modelData) {
+  const model = modelData.scene.children[0]
+  model.material.side = THREE.DoubleSide
+  model.material.emissiveIntensity = 1
+  model.scale.set( 1.5, 1.5, 1.5)
+  model.position.set( 0, 0, 1.7 )
+  model.castShadow = true
+  model.updateMatrix()
+  model.matrixAutoUpdate = false
+  return model
 }
 
 function initProjector() {
@@ -198,27 +205,6 @@ function initProjector() {
   rectLightHelper.layers.set( 1 )
   rectLightHelperB.layers.set( 1 )
   scene.add( rectLightHelper, rectLightHelperB )
-}
-
-function setupModel(modelData) {
-  const model = modelData.scene.children[0].children[0].children[0]
-  model.material.side = THREE.DoubleSide
-  model.castShadow = true
-  model.matrixAutoUpdate = false
-  return model
-}
-
-function setupModelB(modelData) {
-  const model = modelData.scene.children[0]
-  model.material.side = THREE.DoubleSide
-  model.material.emissiveIntensity = 1
-  //model.rotation.y = -Math.PI/2
-  model.scale.set( 1.5, 1.5, 1.5)
-  model.position.set( 0, 0, 1.7 )
-  model.castShadow = true
-  model.updateMatrix()
-  model.matrixAutoUpdate = false
-  return model
 }
 
 function swapDayNight() {
@@ -284,11 +270,6 @@ function onWindowResize() {
   camera.updateProjectionMatrix()
   renderer.setSize( container.clientWidth, container.clientHeight )
   //if (!amIMobile) composer.setSize( container.clientWidth, container.clientHeight )
-}
-
-function smoothstep (min:number, max:number, value:number) {
-  var x = Math.max(0, Math.min(1, (value-min)/(max-min)))
-  return x*x*(3 - 2*x)
 }
 //#endregion
 
@@ -393,18 +374,23 @@ async function props() {
   if (debug.showGround) scene.add( ground )
 
   if (debug.showGLTFs) {
-    const models = await loadModels()
-    //TODO: reordenar
+    const loader = new GLTFLoader()
+    const [pancheraData, pantallaData] = await Promise.all([
+      loader.loadAsync('/gltf/autoIneBlender/auto_ine_blender.gltf'),
+      loader.loadAsync('/gltf/pantalla_v2/pantalla.gltf'),
+    ])
+    modelPanchera = setupModelB(pancheraData)
+    modelPantalla = setupModel(pantallaData)
+
     pantallaGroup.position.set( 0, -0.005, 0 )
     pantallaGroup.scale.set( modelScale, modelScale, modelScale )
-    pantallaGroup.add( models.modelPantalla )
-    scene.add( models.modelPanchera, pantallaGroup )
+    pantallaGroup.add( modelPantalla )
 
+    scene.add( modelPanchera, pantallaGroup )
     //Inicia proyector
     if(debug.showPantalla) initProjector()
-
+    //Welcome!
     fadeScene(1)
-
   }
 
   scene.fog = params.dayOrNight === 'day' ? new THREE.FogExp2(params.daySkyColor, params.fogDensityDay ) : new THREE.FogExp2(params.nightSkyColor, params.fogDensityNight )
