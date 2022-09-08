@@ -10,6 +10,8 @@ import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
+import { useDeviceOrientation } from '@vueuse/core'
+
 
 const params = {
   mouseFollow: true,
@@ -67,6 +69,7 @@ const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
 const groundSize = 30
 const sound = useSound('/audio/Click02.mp3',{ volume: 0.25 })
+const { gamma } = useDeviceOrientation()
 
 const route = useRoute()
 const heroBgColor = ref()
@@ -90,13 +93,12 @@ let
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? 2 : 0 },
 modelPanchera, modelPantalla,
 container: HTMLElement, camera, renderer,
-rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, dirLightShadowMapViewer, dirLightShadowMapViewerB,
-telonMaterial, telon, telonTexture,
+rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, telonMaterial, telon, telonTexture,
 shadowSize: number, frustumSize: number,
 pane, dayFolder, nightFolder, extraFolder, cameraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
 mouseX = 0, deltaY = 0, ax = 0, vx = 0,
 amIMobile: boolean, windowHalfX: number, previousX: number, timer: number,
-gamma = 0, previousGamma = 0,
+previousGamma = 0,
 deltaGamma: number, finalRotation: number
 
 swapHeroBgColor()
@@ -114,7 +116,7 @@ onMounted(() => {
   onWindowResize()
 
   document.addEventListener( 'scroll', handleScroll )
-  window.addEventListener( 'deviceorientation', handleOrientation )
+  //window.addEventListener( 'deviceorientation', handleOrientation )
 
   //Tweakpane
   if( route.name == 'test') makeTweak()
@@ -142,10 +144,10 @@ function handleScroll() {
     }, 100)
 }
 
-function handleOrientation(event) {
+/*function handleOrientation(event) {
   //const absolute = event.absolute
   gamma    = event.gamma
-}
+}*/
 
 function doDayNightCycle () {
   sound.play()
@@ -475,8 +477,8 @@ function animate() {
 }
 
 function animateMobile() {
+  if (!params.mouseFollow || !debug.animate) return
   requestAnimationFrame(animateMobile)
-  if (!debug.animate) return
   const clock = Math.round(performance.now()*0.021)
   const flick = clock % 2 == 0 ? 0.6 : 1
   const flickB = clock % 4 == 0 ? 0.7 : 1
@@ -489,7 +491,7 @@ function animateMobile() {
   modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flick : 0.3
   
   //orientation follow
-  deltaGamma = (gamma - previousGamma)
+  deltaGamma = gamma.value - previousGamma
   ax = deltaGamma * params.spring*4
   vx += ax
   vx *= params.friction
@@ -584,7 +586,7 @@ onUnmounted(() => {
   document.removeEventListener('mousemove', onDocumentMouseMove)
   window.removeEventListener('resize', onWindowResize)
   document.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('deviceorientation', handleOrientation)
+  //window.removeEventListener('deviceorientation', handleOrientation)
 
 })
 </script>

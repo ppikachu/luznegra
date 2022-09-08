@@ -13,7 +13,7 @@ required: false,
       <div class="text-center grid grid-cols-1 lg:grid-cols-2 gap-8 place-items-center justify-center">
         <h1
         :class="{'text-primary': props.ciclo === 'night', 'text-neutral': props.ciclo === 'day'}"
-        class="px-4 lg:text-left my-4 text-5xl font-bold max-w-md leading-tight lg:leading-none"
+        class="text-4xl md:text-5xl px-4 lg:text-left my-4 font-bold max-w-md leading-tight lg:leading-none"
         >
         LUZ NEGRA es un Estudio Multimedia que produce Gráfica Animada
         </h1>
@@ -24,7 +24,7 @@ required: false,
           <img
             src="/images/ET_en_nave_transparente.gif"
             loading="lazy"
-            class="absolute -top-1/2 left-1/4 md:left-1/4 md:-top-0 w-1/2 md:w-1/2 lg:w-full lg:-top-8 lg:-left-48"
+            class="absolute -top-1/3 left-1/4 md:left-1/4 md:-top-0 w-1/2 md:w-1/2 lg:w-full lg:-top-8 lg:-left-48"
             width="540"
             height="540"
             alt="Quienes somos"
@@ -44,7 +44,7 @@ required: false,
         <div>
           <h1
             :class="{'text-primary' : props.ciclo === 'night', 'text-neutral' : props.ciclo === 'day'}"
-            class="text-5xl px-4 font-bold mb-16"
+            class="text-4xl md:text-5xl px-4 font-bold mb-16"
           >
             Comunicación creativa y síntesis
           </h1>
