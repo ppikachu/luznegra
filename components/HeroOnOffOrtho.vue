@@ -161,7 +161,7 @@ function setupModel(modelData) {
 }
 //auto:
 function setupModelB(modelData) {
-  const model = modelData.scene.children[0]
+  const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveIntensity = 1
   model.scale.set( 1.5, 1.5, 1.5)
@@ -373,7 +373,7 @@ async function props() {
   if (debug.showGLTFs) {
     const loader = new GLTFLoader()
     const [pancheraData, pantallaData] = await Promise.all([
-      loader.loadAsync('/gltf/autoIneBlender/auto_ine_blender.gltf'),
+      loader.loadAsync('/gltf/autoIneMiUV/auto_ine_miuv.gltf'),
       loader.loadAsync('/gltf/pantalla_v2/pantalla.gltf'),
     ])
     modelPanchera = setupModelB(pancheraData)
