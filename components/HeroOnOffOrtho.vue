@@ -477,8 +477,8 @@ function animate() {
 }
 
 function animateMobile() {
-  if (!params.mouseFollow || !debug.animate) return
   requestAnimationFrame(animateMobile)
+  if (!params.mouseFollow || !debug.animate) return
   const clock = Math.round(performance.now()*0.021)
   const flick = clock % 2 == 0 ? 0.6 : 1
   const flickB = clock % 4 == 0 ? 0.7 : 1
