@@ -29,7 +29,7 @@ required: false,
             height="540"
             alt="Quienes somos"
           />
-          <div>Nos especializamos en COMUNICACiÓN CREATIVA, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.</div>
+          <div>Nos especializamos en <span class="text-primary">comunicación creativa</span>, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.</div>
           <!--<div class="grid justify-items-stretch md:grid-cols-5 lg:grid-cols-1 gap-2">
             <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">Cine</div>
             <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">TV</div>
@@ -46,8 +46,8 @@ required: false,
             class="prose"
             :class="{'text-neutral' : props.ciclo === 'day', 'text-neutral-content' : props.ciclo === 'night'}"
           >
-            <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos VIDEO, ANIMACIÓN, MOTION GRAPHICS, DISEÑO GRÁFICO y DISEÑO WEB, combinando técnicas tradicionales con las nuevas tecnologías.</p>
-            <p class="my-4 text-2xl">Buscamos la síntesis necesaria para comunicar de manera original y efectiva tu mensaje.</p>
+            <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span class="text-primary">Video</span>, <span class="text-primary">Animación</span>, <span class="text-primary">Motion Graphics</span>, <span class="text-primary">Diseño Gráfico</span> y <span class="text-primary">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.</p>
+            <p class="my-4 text-2xl">Buscamos la síntesis <span class="text-primary">necesaria</span> para comunicar de manera <span class="text-primary">original</span> y <span class="text-primary">efectiva</span> tu mensaje.</p>
           </div>
         <img
           src="/images/bety.gif"
