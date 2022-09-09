@@ -44,29 +44,6 @@ function closeProject() {
   soundClose.play()
   openProyect.value = false
 }
-
-function onBeforeEnter(el) {
-  el.style.opacity = 0
-  //el.style.height = 0
-}
-
-function onEnter(el, done) {
-  gsap.to(el, {
-    opacity: 1,
-    scale: 1,
-    delay: el.dataset.index * 0.1,
-    onComplete: done
-  })
-}
-
-function onLeave(el, done) {
-  gsap.to(el, {
-    opacity: 0,
-    scale: 0,
-    delay: el.dataset.index * 0.1,
-    onComplete: done
-  })
-}
 </script>
 
 <template>
@@ -108,24 +85,24 @@ function onLeave(el, done) {
       <span class="basis-1/3" :class="{'opacity-25': destacadoTodos, 'text-primary': !destacadoTodos  }">Portfolio</span>
     </div>
     <!--Proyectos destacados-->
-    <ul v-show="destacadoTodos" class="grid md:grid-rows-3 gap-4 md:gap-8">
+    <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-4 lg:gap-8">
       <li v-for="(post) in pickedPortfolioItems" :key="post">
         <a
           :href="`/proyecto/${post.fields.slug}`"
           @click.prevent="openProyect = post"
-          class="gradient-border card card-compact md:card-normal md:card-side bg-base-300 shadow-lg"
+          class="gradient-border h-full card card-compact md:card-normal bg-base-300 shadow-lg"
         >
-          <figure class="basis-3/5">
+          <figure>
             <img v-if="post.fields.imageFeatured"
-              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=520&h=320`"
+              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=600&h=400`"
               :alt="post.fields.imageFeatured.fields.title"
               class="w-full"
               loading="lazy"
             />
             <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
           </figure>
-          <div class="card-body basis-2/5">
-            <h2 class="text-2xl lg:text-4xl text-primary leading-none">{{ post.fields.title }}</h2>
+          <div class="card-body">
+            <h2 class="text-2xl lg:text-3xl text-primary leading-none">{{ post.fields.title }}</h2>
             <p v-if="post.fields.excerpt">{{ post.fields.excerpt }}</p>
             <div class="card-actions" v-if="post.metadata.tags[0]">
               <ProjectMeta :tags="post.metadata.tags" />
@@ -139,16 +116,13 @@ function onLeave(el, done) {
       <ProjectTags @tag="onTag" :initTag="currentTag" />
       <TransitionGroup
         tag="ul"
-        @beforeEnter="onBeforeEnter"
-        @enter="onEnter"
-        @leave="onLeave"
-        class="grid md:grid-cols-4 lg:grid-cols-5 gap-4"
-      >
+        class="grid md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
         <li v-for="(post, i) in filtered" :key="post" :data-index="i">
           <a
             :href="`/proyecto/${post.fields.slug}`"
             @click.prevent="openProyect = post"
-            class="h-full card card-compact bg-base-300 shadow-lg transition-shadow duration-300 delay-100 hover:shadow-secondary"
+            class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
           >
           <figure>
             <img v-if="post.fields.imageFeatured"
@@ -194,10 +168,8 @@ function onLeave(el, done) {
   border-radius: 1rem;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  background-color: rgba(20, 20, 20, 0.3);
   width: 100%
 }
-
 .gradient-border::before {
   content: "";
   position: absolute;
@@ -206,12 +178,12 @@ function onLeave(el, done) {
   right: 0;
   bottom: 0;
   border-radius: 1rem;
-  padding: 4px;
+  padding: 2px;
   width: 100%;
-  background: linear-gradient(90deg, hsl(var(--s)) 0%, hsl(var(--p)) 100%);
+  background: linear-gradient(90deg, hsl(var(--s)) 0%, hsl(var(--s)) 50%, hsl(var(--p)) 100%);
   background-size: 400% auto;
   background-position: 0 0;
-  opacity: 0.5;
+  /*opacity: 0.5;*/
   transition: background-position 0.3s ease-in-out, opacity 0.2s ease-in-out;
   -webkit-mask: linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -220,7 +192,6 @@ function onLeave(el, done) {
   -webkit-mask-composite: xor;
   mask-composite: exclude
 }
-
 .gradient-border:hover::before {
   background-position: -50% 0;
   opacity: 1
