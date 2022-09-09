@@ -10,8 +10,7 @@ import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
-import { useDeviceOrientation } from '@vueuse/core'
-
+import { useParallax } from '@vueuse/core'
 
 const params = {
   mouseFollow: true,
@@ -61,32 +60,34 @@ const debug = {
 }
 
 const modelScale = 15
-const frustumDesktopSize = 4
-const frustumMobileSize = 7
+const frustumDesktopSize = 4, frustumMobileSize = 7
 const telonWidth = .145
 const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
 const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
-const groundSize = 30
 const sound = useSound('/audio/Click02.mp3',{ volume: 0.25 })
-const { gamma } = useDeviceOrientation()
 
 const route = useRoute()
 const heroBgColor = ref()
 const loadedModels = ref(false)
 const dayNight = ref(params.dayOrNight)
+const target = ref(null)
+const parallax = useParallax(target)
 
 const
+groundSize = 30,
 groundMaterial = new THREE.MeshStandardMaterial( { color: params.groundColor } ),
+groundGeometry = new THREE.PlaneGeometry( groundSize, groundSize ),
+ground = new THREE.Mesh( groundGeometry, groundMaterial )
+
+const
 ambientLight = new THREE.AmbientLight(),
 lightSun = new THREE.DirectionalLight(),
 lightMoon = new THREE.DirectionalLight(),
 rectLight = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
-rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
-scene = new THREE.Scene(),
-groundGeometry = new THREE.PlaneGeometry( groundSize, groundSize ),
-ground = new THREE.Mesh( groundGeometry, groundMaterial ),
-//ground.castShadow = true,
+rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale )
+
+const scene = new THREE.Scene(),
 pantallaGroup = new THREE.Group()
 
 let
@@ -143,11 +144,6 @@ function handleScroll() {
       debug.animate = lastKnownScrollPosition > container.clientHeight ? false : true
     }, 100)
 }
-
-/*function handleOrientation(event) {
-  //const absolute = event.absolute
-  gamma    = event.gamma
-}*/
 
 function doDayNightCycle () {
   sound.play()
@@ -272,10 +268,10 @@ function onWindowResize() {
 //#endregion
 
 function init() {
+  //#region sceneSetup
   amIMobile = isMobile().any
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
   shadowSize = amIMobile ? 512 : 2048
-  //#region sceneSetup
   container = document.getElementById( 'container' )
   windowHalfX = container.clientWidth / 2
 
@@ -491,13 +487,15 @@ function animateMobile() {
   modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flick : 0.3
   
   //orientation follow
-  deltaGamma = gamma.value - previousGamma
-  ax = deltaGamma * params.spring*4
+  deltaGamma = parallax.tilt.value - previousGamma
+  ax = (deltaGamma*500) * params.spring
   vx += ax
   vx *= params.friction
   finalRotation = -(vx - previousGamma) * params.mass
-  if (Math.abs(finalRotation) > 0.001) scene.rotation.y = finalRotation + params.initialSceneRotation.y //rotación (encuadre) inicial
-  previousGamma = vx
+  //finalRotation = parallax.tilt.value
+  //finalRotation = deltaGamma * params.mass
+  scene.rotation.y = finalRotation + params.initialSceneRotation.y //rotación (encuadre) inicial
+  previousGamma = parallax.tilt.value
   //limit camera rotation:
   //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
   renderer.render( scene, camera )
@@ -593,7 +591,8 @@ onUnmounted(() => {
 
 <template>
   <div class="relative z-30">
-    <div id="container" class="relative overflow-hidden pb-16">
+    <div id="container" ref="target" class="relative overflow-hidden pb-16">
+      <!--<dialog class="badge absolute top-2/3">{{ parallax.tilt }}</dialog>-->
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
         loop
@@ -608,7 +607,8 @@ onUnmounted(() => {
       <div
         class =  "absolute bottom-0 h-1/6 w-full"
         :style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, transparent 100%);`"
-      ></div>
+      >
+      </div>
       <!--SWITCH-->
       <div class="absolute bottom-16 md:bottom-0 text-xl flex justify-center w-full">
         <div class="form-control">
@@ -633,7 +633,8 @@ onUnmounted(() => {
     <div
       class =  "h-40 w-full"
       :style = "`background: linear-gradient(180deg, ${heroBgColor} 0%, transparent 100%);`"
-    ></div>
+    >
+    </div>
 
     <!--fadeScene-->
     <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
