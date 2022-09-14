@@ -1,18 +1,23 @@
 <script setup lang="ts">
 /* Define props */
 const props = defineProps({
-ciclo: {
-type: String,
-required: false,
-},
+  ciclo: {
+  type: String,
+  required: false,
+  }
 })
+
+const colorClass = computed(() => {
+  return props.ciclo === 'day' ? 'text-secondary' : 'text-primary'
+})
+
 </script>
 <template>
   <section>
     <div class="hero pt-8 md:pt-32 max-w-5xl mx-auto">
       <div class="text-center grid grid-cols-1 lg:grid-cols-2 gap-8 place-items-center justify-center">
         <h1
-        :class="{'text-primary': props.ciclo === 'night', 'text-neutral': props.ciclo === 'day'}"
+        :class="colorClass"
         class="text-4xl md:text-5xl px-4 lg:text-left my-4 font-bold max-w-md leading-tight lg:leading-none"
         >
         LUZ NEGRA es el Estudio Multimedia que buscabas.
@@ -29,7 +34,7 @@ required: false,
             height="540"
             alt="Quienes somos"
           />
-          <div>Nos especializamos en <span class="text-primary">comunicación creativa</span>, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.</div>
+          <div>Nos especializamos en <span :class="colorClass">comunicación creativa</span>, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.</div>
           <!--<div class="grid justify-items-stretch md:grid-cols-5 lg:grid-cols-1 gap-2">
             <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">Cine</div>
             <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">TV</div>
@@ -46,8 +51,8 @@ required: false,
             class="prose"
             :class="{'text-neutral' : props.ciclo === 'day', 'text-neutral-content' : props.ciclo === 'night'}"
           >
-            <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span class="text-primary">Video</span>, <span class="text-primary">Animación</span>, <span class="text-primary">Motion Graphics</span>, <span class="text-primary">Diseño Gráfico</span> y <span class="text-primary">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.</p>
-            <p class="my-4 text-2xl">Buscamos la síntesis <span class="text-primary">necesaria</span> para comunicar de manera <span class="text-primary">original</span> y <span class="text-primary">efectiva</span> tu mensaje.</p>
+            <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span :class="colorClass">Video</span>, <span :class="colorClass">Animación</span>, <span :class="colorClass">Motion Graphics</span>, <span :class="colorClass">Diseño Gráfico</span> y <span :class="colorClass">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.</p>
+            <p class="my-4 text-2xl">Buscamos la síntesis <span :class="colorClass">necesaria</span> para comunicar de manera <span :class="colorClass">original</span> y <span :class="colorClass">efectiva</span> tu mensaje.</p>
           </div>
         <img
           src="/images/bety.gif"

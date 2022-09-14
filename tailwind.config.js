@@ -5,7 +5,7 @@ module.exports = {
     extend: {},
     fontFamily: {
       sans: ['Varela Round', 'sans-serif'],
-      tag: ['"Open Sans"'],
+      tag: ['"Open Sans"'],//FIXME no carga en los project tags
     },
   },
   plugins: [require('@tailwindcss/typography'), require('daisyui')],

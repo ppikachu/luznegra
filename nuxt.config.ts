@@ -1,5 +1,3 @@
-import { defineNuxtConfig } from 'nuxt'
-
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   telemetry: false,
@@ -47,7 +45,7 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       'Open Sans': true,
-      'Varela Round': true,
+      'Varela Round': true,//FIXME no carga en los project tags
     }
   },
   //image: {
