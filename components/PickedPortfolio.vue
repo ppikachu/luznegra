@@ -55,7 +55,9 @@ function closeProject() {
         <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
           <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
             <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
-            <ProjectVideos :videos="openProyect.fields.video" />
+            <div v-if="openProyect.fields.video" >
+              <ProjectVideos :videos="openProyect.fields.video" />
+            </div>
             <ProjectGallery :gallery="openProyect.fields.imgGallery" />
             <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
               <h1 class="text-4xl">{{ openProyect.fields.title }}</h1>
@@ -98,8 +100,10 @@ function closeProject() {
               :alt="post.fields.imageFeatured.fields.title"
               class="w-full"
               loading="lazy"
+              width="600"
+              height="400"
             />
-            <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
+            <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
             <h2 class="text-2xl lg:text-3xl text-primary leading-none">{{ post.fields.title }}</h2>
@@ -130,8 +134,10 @@ function closeProject() {
               :alt="post.fields.imageFeatured.fields.title"
               loading="lazy"
               class="w-full"
+              width="600"
+              height="400"
             />
-            <img v-else src="/images/no-image2.png" alt="no hay imagen" class="w-full" />
+            <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
             <h2 class="card-title text-primary leading-tight">{{ post.fields.title }}</h2>

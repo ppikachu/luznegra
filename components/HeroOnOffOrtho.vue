@@ -638,7 +638,7 @@ onUnmounted(() => {
 
     <!--fadeScene-->
     <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
-      <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32">
+      <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
     </div>
   </div>
 </template>

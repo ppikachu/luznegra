@@ -64,11 +64,15 @@ const filtered = computed(() => {
               :alt="post.fields.imageFeatured.fields.title"
               :loading="i > 0 ? 'lazy' : undefined"
               class="w-full"
+              width="400"
+              height="300"
             />
             <img v-else
-              src="/images/no-image2.png"
+              src="/images/no-image.png"
               alt="no hay imagen"
               class="w-full"
+              width="400"
+              height="300"
             />
           </figure>
           <div class="card-body">

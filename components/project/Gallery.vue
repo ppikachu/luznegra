@@ -3,10 +3,15 @@
 const props = defineProps({ gallery: Array })
 </script>
 
-<template>
-  <aside v-if="props.gallery" class="carousel mt-8 items-center rounded-lg">
+<template v-if="props.gallery">
+  <aside class="carousel mt-8 items-center rounded-lg">
     <div v-for="(img, i) in props.gallery" class="carousel-item w-full h-fit justify-center">
-      <img :id="i" :src="img.fields.file.url" />
+      <img
+        :id="i"
+        :src="img.fields.file.url"
+        :width="img.fields.file.details.image.width"
+        :height="img.fields.file.details.image.height"
+      />
     </div>
   </aside>
   <div class="justify-center py-2 btn-group">
