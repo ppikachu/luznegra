@@ -28,6 +28,6 @@
     "@vueuse/core": "^9.2.0",
     "@vueuse/nuxt": "^9.2.0",
     "daisyui": "^2.25.0",
-    "nuxt": "3.0.0-rc.9"
+    "nuxt": "^3.0.0-rc.10"
   }
 }
