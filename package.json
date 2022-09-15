@@ -22,12 +22,14 @@
     "vue-plyr": "^7.0.0"
   },
   "devDependencies": {
+    "@kevinmarrec/nuxt-pwa": "^0.4.2",
     "@nuxtjs/google-fonts": "^3.0.0-0",
     "@nuxtjs/tailwindcss": "^5.3.3",
     "@tailwindcss/typography": "^0.5.7",
     "@vueuse/core": "^9.2.0",
     "@vueuse/nuxt": "^9.2.0",
     "daisyui": "^2.25.0",
-    "nuxt": "^3.0.0-rc.10"
+    "nuxt": "^3.0.0-rc.10",
+    "nuxt-icon": "^0.1.5"
   }
 }

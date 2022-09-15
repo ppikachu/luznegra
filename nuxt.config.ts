@@ -9,7 +9,9 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
     '@vueuse/nuxt',
-  ],
+    '@kevinmarrec/nuxt-pwa',
+    'nuxt-icon',
+],
   buildModules: [
     '@nuxtjs/google-fonts'
   ],
@@ -51,4 +53,15 @@ export default defineNuxtConfig({
   //image: {
     // Options
   //}
+  pwa: {
+    manifest: {
+      name: 'LUZ NEGRA - Diseño y animación',
+      short_name: 'LUZ NEGRA',
+      lang: 'es',
+      description: 'Diseño y animación',
+    }
+  },
+  nuxtIcon: {
+    size: '3em' // default <Icon> size applied
+  },
 })
