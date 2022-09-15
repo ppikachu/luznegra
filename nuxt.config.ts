@@ -66,6 +66,7 @@ export default defineNuxtConfig({
       name: 'LUZ NEGRA - Diseño y animación',
       author: 'LUZ NEGRA',
       description: 'Diseño y animación',
+      ogHost: process.env.NODE_ENV === 'production' ? 'https://luznegra.vercel.app' : 'http://localhost:3000',
       ogImage: '/OG.png',
     }
   },
