@@ -1,17 +1,17 @@
 <script setup lang="ts">
-/* Define props */
-const props = defineProps({
-  ciclo: {
-  type: String,
-  required: false,
-  }
-})
+  /* Define props */
+  const props = defineProps({
+    ciclo: {
+    type: String,
+    required: false,
+    }
+  })
 
-const colorClass = computed(() => {
-  return props.ciclo === 'day' ? 'text-secondary' : 'text-primary'
-})
-
+  const colorClass = computed(() => {
+    return props.ciclo === 'day' ? 'text-secondary' : 'text-primary'
+  })
 </script>
+
 <template>
   <section>
     <div class="hero pt-8 md:pt-32 max-w-5xl mx-auto">
@@ -26,26 +26,10 @@ const colorClass = computed(() => {
           class="text-center w-full lg:w-96 relative px-4 lg:px-0 text-3xl leading-none"
           :class="{'text-neutral': props.ciclo === 'day', 'text-neutral-content': props.ciclo === 'night'}"
         >
-          <!--<img
-            src="/images/ET_en_nave_transparente.gif"
-            loading="lazy"
-            class="absolute left-1/4 md:left-1/3 top-40 w-1/2 md:w-1/3 lg:w-2/3 lg:-top-8 lg:-left-1/2"
-            width="540"
-            height="540"
-            alt="Quienes somos"
-          />-->
           <video autoplay loop muted class="absolute left-1/4 md:left-1/3 top-40 w-1/2 md:w-1/3 lg:w-2/3 lg:-top-8 lg:-left-1/2" >
             <source src="/images/ET_en_nave_transparente.webm" type="video/webm">
           </video>
-
           <div>Nos especializamos en <span :class="colorClass">comunicación creativa</span>, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.</div>
-          <!--<div class="grid justify-items-stretch md:grid-cols-5 lg:grid-cols-1 gap-2">
-            <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">Cine</div>
-            <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">TV</div>
-            <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">Redes Sociales</div>
-            <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">Gráfica</div>
-            <div class="flex items-center justify-center rounded-lg bg-primary bg-opacity-10 p-4">Web</div>
-          </div>-->
         </div>
       </div>
     </div>
@@ -58,14 +42,6 @@ const colorClass = computed(() => {
             <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span :class="colorClass">Video</span>, <span :class="colorClass">Animación</span>, <span :class="colorClass">Motion Graphics</span>, <span :class="colorClass">Diseño Gráfico</span> y <span :class="colorClass">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.</p>
             <p class="my-4 text-2xl">Buscamos la síntesis <span :class="colorClass">necesaria</span> para comunicar de manera <span :class="colorClass">original</span> y <span :class="colorClass">efectiva</span> tu mensaje.</p>
           </div>
-        <!--<img
-          src="/images/bety.gif"
-          loading="lazy"
-          class="max-w-sm w-full rounded-lg"
-          width="540"
-          height="540"
-          alt="Qué hacemos"
-        />-->
         <video autoplay loop muted class="max-w-sm w-full" >
           <source src="/images/bety.webm" type="video/webm">
         </video>
