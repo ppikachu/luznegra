@@ -59,9 +59,17 @@ export default defineNuxtConfig({
       short_name: 'LUZ NEGRA',
       lang: 'es',
       description: 'Diseño y animación',
+      background_color: '#212121',
+      theme_color: '#212121',
+    },
+    meta: {
+      name: 'LUZ NEGRA - Diseño y animación',
+      author: 'LUZ NEGRA',
+      description: 'Diseño y animación',
     }
   },
+
   nuxtIcon: {
-    size: '3em' // default <Icon> size applied
+    size: '1em' // default <Icon> size applied
   },
 })
