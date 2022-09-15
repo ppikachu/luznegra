@@ -66,6 +66,7 @@ export default defineNuxtConfig({
       name: 'LUZ NEGRA - Diseño y animación',
       author: 'LUZ NEGRA',
       description: 'Diseño y animación',
+      ogImage: '/OG.png',
     }
   },
 
