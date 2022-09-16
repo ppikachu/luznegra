@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^15.13.1",
-    "@troisjs/components": "^0.0.4",
     "@vueuse/sound": "^1.1.7",
     "chroma-js": "^2.4.2",
     "contentful": "^10.0.0-beta-v10.8",
@@ -17,7 +16,6 @@
     "lodash.startcase": "^4.4.0",
     "lodash.upperfirst": "^4.3.1",
     "three": "^0.144.0",
-    "troisjs": "^0.3.4",
     "tweakpane": "^3.1.0",
     "vue-plyr": "^7.0.0"
   },
