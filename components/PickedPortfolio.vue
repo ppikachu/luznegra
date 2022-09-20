@@ -47,14 +47,16 @@ function closeProject() {
 </script>
 
 <template>
-  <section id="portfolio" class="container mx-auto px-4 md:px-8 my-10 relative">
+  <section id="portfolio" class="container mx-auto px-4 md:px-8 my-16 relative">
     <h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
     <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
         <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
           <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
-            <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute right-6 top-3 font-black">✕</label>
+            <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-3 top-3 font-tag">
+              <Icon name="material-symbols:close" />
+            </label>
             <div v-if="openProyect.fields.video" >
               <ProjectVideos :videos="openProyect.fields.video" />
             </div>

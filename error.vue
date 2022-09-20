@@ -4,8 +4,7 @@
       <h1 v-if="error.statusCode === 404" class="my-4 text-6xl tracking-tighter text-primary">404</h1>
       <h1 v-else class="my-4 text-6xl tracking-tighter">💣 <span class="text-primary">PUM!</span></h1>
       <code class="my-2 text-gray-500">{{ error.statusCode }}: {{ error.message }}</code>
-      <img src="/images/ET_en_nave_transparente.gif" class="my-8 rounded max-w-sm" alt="404" width="540" height="540" />
-      <video autoplay loop muted class="absolute left-1/4 md:left-1/3 top-40 w-1/2 md:w-1/3 lg:w-2/3 lg:-top-8 lg:-left-1/2" >
+      <video autoplay loop muted class="my-8 rounded max-w-sm" >
         <source src="/images/ET_en_nave_transparente.webm" type="video/webm">
       </video>
       <button class="btn btn-error" @click="handleError">Mmmm. Volver al inicio</button>

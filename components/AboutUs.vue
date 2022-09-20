@@ -13,14 +13,14 @@
 </script>
 
 <template>
-  <section>
+  <section class="pb-16">
     <div class="hero pt-8 md:pt-32 max-w-5xl mx-auto">
-      <div class="text-center grid grid-cols-1 lg:grid-cols-2 gap-8 place-items-center justify-center">
+      <div class="text-center grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 place-items-center justify-center">
         <h1
-        :class="colorClass"
-        class="text-4xl md:text-5xl px-4 lg:text-left my-4 font-bold max-w-md leading-tight lg:leading-none"
+          :class="colorClass"
+          class="text-4xl md:text-5xl px-4 lg:text-left my-4 font-bold max-w-md leading-tight lg:leading-none"
         >
-        LUZ NEGRA es el Estudio Multimedia que buscabas.
+          LUZ NEGRA es el Estudio Multimedia que buscabas.
         </h1>
         <div
           class="text-center w-full lg:w-96 relative px-4 lg:px-0 text-3xl leading-none"
@@ -40,7 +40,7 @@
             :class="{'text-neutral' : props.ciclo === 'day', 'text-neutral-content' : props.ciclo === 'night'}"
           >
             <p class="my-4 text-2xl">LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span :class="colorClass">Video</span>, <span :class="colorClass">Animación</span>, <span :class="colorClass">Motion Graphics</span>, <span :class="colorClass">Diseño Gráfico</span> y <span :class="colorClass">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.</p>
-            <p class="my-4 text-2xl">Buscamos la síntesis <span :class="colorClass">necesaria</span> para comunicar de manera <span :class="colorClass">original</span> y <span :class="colorClass">efectiva</span> tu mensaje.</p>
+            <p class="my-4 text-2xl">Buscamos la <span :class="colorClass">síntesis</span> necesaria para comunicar de manera <span :class="colorClass">original</span> y <span :class="colorClass">efectiva</span> tu mensaje.</p>
           </div>
         <video autoplay loop muted class="max-w-sm w-full" >
           <source src="/images/bety.webm" type="video/webm">

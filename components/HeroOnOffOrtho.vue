@@ -629,13 +629,6 @@ onUnmounted(() => {
       </div>
     </div>
     <AboutUs :ciclo="dayNight" :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
-    <!--bottom linear-gradient-->
-    <div
-      class =  "h-40 w-full"
-      :style = "`background: linear-gradient(180deg, ${heroBgColor} 0%, transparent 100%);`"
-    >
-    </div>
-
     <!--fadeScene-->
     <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
