@@ -88,9 +88,9 @@ ambientLight = new THREE.AmbientLight(),
 lightSun = new THREE.DirectionalLight(),
 lightMoon = new THREE.DirectionalLight(),
 rectLight = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
-rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale )
-
-const scene = new THREE.Scene(),
+rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
+origin = new THREE.Vector3( 0, 0, 0 ),
+scene = new THREE.Scene(),
 pantallaGroup = new THREE.Group()
 
 let
@@ -118,7 +118,7 @@ onMounted(() => {
   document.addEventListener( 'scroll', handleScroll )
 
   //Tweakpane
-  if( route.name == 'test') makeTweak()
+  if(route.name == 'test') makeTweak()
 })
 
 //#region FUNCTIONS
@@ -316,9 +316,9 @@ function init() {
   controls.minAzimuthAngle = -Math.PI/3
   controls.maxAzimuthAngle = Math.PI/3
   controls.screenSpacePanning = false
-  controls.enableZoom = false
+  controls.enableZoom = route.name == 'test' ? true : false
   controls.target.y = amIMobile ? 0 : 0.5
-  controls.minZoom = 0.85
+  controls.minZoom = 0.2
   controls.maxZoom = 2
   
   camera.position.set(params.cameraOrthoPos.x, params.cameraOrthoPos.y, params.cameraOrthoPos.z)
@@ -335,7 +335,9 @@ function init() {
   lightSun.shadow.mapSize.width = shadowSize
   lightSun.shadow.mapSize.height = shadowSize
   lightSun.shadow.camera.near = 1
-  lightSun.shadow.camera.far = 50
+  lightSun.shadow.camera.far = lightSun.position.distanceTo( new THREE.Vector3(0,0,0) )
+  console.log(lightSun.shadow.camera.far)
+  
   lightSun.shadow.camera.left = -params.shadowPlaneSize
   lightSun.shadow.camera.right = params.shadowPlaneSize
   lightSun.shadow.camera.top = params.shadowPlaneSize
@@ -358,8 +360,8 @@ function init() {
   //ambient
   ambientLight.color.set( params.dayOrNight === 'day' ? params.lightSunColor : params.lightMoonColor )
   //lighthelpers
-  lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera )
-  lightHelperMoon = new THREE.CameraHelper( lightMoon.shadow.camera )
+  lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera, 0.5 )
+  lightHelperMoon = new THREE.CameraHelper( lightMoon.shadow.camera, 0.5 )
   //lighthelper layers
   lightHelperSun.layers.set( 1 )
   lightHelperMoon.layers.set( 1 )
@@ -400,7 +402,7 @@ async function props() {
     const loader = new GLTFLoader()
     const [pancheraData, pantallaData] = await Promise.all([
       loader.loadAsync('/gltf/autoIneMiUV/auto_ine_miuv.gltf'),
-      loader.loadAsync('/gltf/pantalla_v2/pantalla.gltf'),
+      loader.loadAsync('/gltf/pantalla_v3/pantalla.gltf'),
     ])
     modelPanchera = setupModelB(pancheraData)
     modelPantalla = setupModel(pantallaData)
@@ -435,6 +437,7 @@ function updateScene() {
     ambientLight.intensity = lightSun.intensity
     //luz y sombra
     lightSun.position.set( params.lightSunPosition.x, params.lightSunPosition.y, params.lightSunPosition.z )
+    lightSun.shadow.camera.far = lightSun.position.distanceTo( origin )
     lightSun.intensity = params.lightSunIntensity
     lightSun.color.set( params.lightSunColor )
     //fog
@@ -445,6 +448,7 @@ function updateScene() {
     ambientLight.intensity = lightMoon.intensity = params.lightMoonIntensity
     //luz y sombra
     lightMoon.position.set( params.lightMoonPosition.x, params.lightMoonPosition.y, params.lightMoonPosition.z )
+    lightMoon.shadow.camera.far = lightMoon.position.distanceTo( origin )
     lightMoon.intensity = params.lightMoonIntensity
     lightMoon.color.set( params.lightMoonColor )
     //fog
@@ -494,19 +498,18 @@ function makeTweak() {
   cameraFolder.addInput(params, 'initialSceneRotation', { x: {min: -3.1416, max: 3.1416}, y: {min: 0, max: 3.1416/2}, label: 'giro inicial' })
   cameraFolder.addSeparator()
   cameraFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
-  cameraFolder.addInput(params, 'spring', { type: 'number', min: 0, max: 0.5, step: 0.01, label: 'spring' })
-  cameraFolder.addInput(params, 'friction', { type: 'number', min: 0.9, max: 1, step: 0.01, label: 'friction' })
-  cameraFolder.addInput(params, 'mass', { type: 'number', min: 0, max: 0.1, step: 0.01, label: 'mass' })
   //DAY
   dayFolder = pane.addFolder({ title: 'DIA', expanded: false, hidden: params.dayOrNight === 'day' ? false : true })
-  dayFolder.addInput(params, 'fogDensityDay', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla dia' })
+  dayFolder.addInput(params, 'fogLinearNearDay', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla dia cerca' })
+  dayFolder.addInput(params, 'fogLinearFarDay', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla dia lejos' })
   dayFolder.addInput(params, 'daySkyColor', { label: 'cielo dia' })
   dayFolder.addInput(params, 'lightSunColor', { label: 'color sol' })
   dayFolder.addInput(params, 'lightSunIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power sol' })
   dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   //NIGHT
   nightFolder = pane.addFolder({ title: 'NOCHE', expanded: false, hidden: params.dayOrNight === 'night' ? false : true })
-  nightFolder.addInput(params, 'fogDensityNight', { type: 'number', min: 0, max: 0.2, step: 0.001, label: 'niebla noche' })
+  nightFolder.addInput(params, 'fogLinearNearNight', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla noche cerca' })
+  nightFolder.addInput(params, 'fogLinearFarNight', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla noche lejos' })
   nightFolder.addInput(params, 'nightSkyColor', { label: 'cielo noche' })
   nightFolder.addInput(params, 'lightMoonColor', {  label: 'color luna' })
   nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power luna' })
@@ -518,13 +521,8 @@ function makeTweak() {
   //DEBUG
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
-  debugFolder.addInput(params, 'shadowPlaneSize', { min: 0.1, max: 10, step: 0.01 })
-  const btn = debugFolder.addButton({
-    title: 'export',
-  })
-  btn.on('click', () => {
-   exportPreset()
-  })
+  debugFolder.addInput(params, 'shadowPlaneSize', { label: '*shadowPlaneSize*', min: 0.1, max: 10, step: 0.01 })
+  debugFolder.addButton({ title: 'export' }).on('click', () => { exportPreset() })
   presetDebug = debugFolder.addMonitor(preset, 'debug', {
     label: 'preset',
     multiline: true,
@@ -590,7 +588,7 @@ onUnmounted(() => {
       >
       </div>
       <!--SWITCH-->
-      <div class="absolute bottom-8 md:bottom-0 text-xl flex flex-col items-center space-y-8 w-full">
+      <div class="absolute bottom-8 md:bottom-0 text-xl flex flex-col items-center space-y-8 md:space-y-12 w-full">
         <div class="form-control">
           <label class="label cursor-pointer space-x-4">
             <svg :class="{'opacity-25': dayNight === 'day'}" class="swap-off fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
