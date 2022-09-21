@@ -317,7 +317,7 @@ function init() {
   controls.maxAzimuthAngle = Math.PI/3
   controls.screenSpacePanning = false
   controls.enableZoom = false
-  controls.target.y = 0
+  controls.target.y = amIMobile ? 0 : 0.5
   controls.minZoom = 0.85
   controls.maxZoom = 2
   
