@@ -285,8 +285,8 @@ function init() {
   container = document.getElementById( 'container' )
 
   renderer = new THREE.WebGLRenderer({
-    //antialias: amIMobile ? false : true,
-    antialias: true,
+    antialias: amIMobile ? false : true,
+    //antialias: true,
   })
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
