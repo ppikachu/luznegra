@@ -35,9 +35,9 @@ export default defineNuxtConfig({
       TEAM_LOGO_IMAGE_ON_FOOTER: '/images/tubos_loop_ani.png',
       TEAM_LOGO_BLACK: '/images/tubos_loader_a.png',
       OG_IMAGE: '/OG.png',
-      //GITHUB_ORGANIZATION_URL: 'https://github.com/longrun',
+      //GITHUB_ORGANIZATION_URL: 'https://github.com/luznegra',
       //GA_ID: process.env.GA_ID,
-      //GA_APP_NAME: 'LongRun Blog',
+      //GA_APP_NAME: 'LUZ NEGRA',
     },
   },
   css: [

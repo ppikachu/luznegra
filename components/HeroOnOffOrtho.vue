@@ -161,10 +161,7 @@ function setupModel(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveMap.minFilter = THREE.LinearFilter
-  model.material.map.minFilter = THREE.LinearFilter
-
-  console.log(model.material)
-  
+  //model.material.map.minFilter = THREE.LinearFilter  
   model.castShadow = true
   model.matrixAutoUpdate = false
   return model
@@ -174,7 +171,7 @@ function setupModelB(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveMap.minFilter = THREE.LinearFilter
-  model.material.map.minFilter = THREE.LinearFilter
+  //model.material.map.minFilter = THREE.LinearFilter
   model.material.emissiveIntensity = 1
   model.scale.set( 1.5, 1.5, 1.5)
   model.position.set( 0, 0, 2 )
@@ -285,9 +282,11 @@ function init() {
   container = document.getElementById( 'container' )
 
   renderer = new THREE.WebGLRenderer({
-    antialias: amIMobile ? false : true,
+    antialias: amIMobile.value ? true : true,
     //antialias: true,
   })
+  console.log(amIMobile.value)
+  
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
   renderer.outputEncoding = THREE.sRGBEncoding
@@ -337,8 +336,6 @@ function init() {
   lightSun.shadow.mapSize.height = shadowSize
   lightSun.shadow.camera.near = 1
   lightSun.shadow.camera.far = lightSun.position.distanceTo( new THREE.Vector3(0,0,0) )
-  console.log(lightSun.shadow.camera.far)
-  
   lightSun.shadow.camera.left = -params.shadowPlaneSize
   lightSun.shadow.camera.right = params.shadowPlaneSize
   lightSun.shadow.camera.top = params.shadowPlaneSize
@@ -613,8 +610,8 @@ onUnmounted(() => {
     <!--fadeScene-->
     <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
-      <p v-if="amIMobile" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> arrastra el dedo sobre el autocine!</p>
-      <p v-else class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> arrastra el ratón sobre el autocine!</p>
+      <p v-if="amIMobile===true" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> arrastra el dedo sobre el autocine!</p>
+      <p v-else-if="amIMobile===false" class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> arrastra el ratón sobre el autocine!</p>
     </div>
   </div>
 </template>

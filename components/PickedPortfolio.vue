@@ -52,7 +52,12 @@ function closeProject() {
     <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
-        <div v-if="openProyect" :class="{ 'modal-open': openProyect }" class="modal" id="modal-proyecto">
+        <div
+        v-if="openProyect"
+        id="modal-proyecto"
+        class="modal bg-black/90 backdrop-blur backdrop-grayscale"
+        :class="{ 'modal-open': openProyect }"
+        >
           <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
             <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-3 top-3 font-tag">
               <Icon name="material-symbols:close" />
@@ -79,14 +84,14 @@ function closeProject() {
       </Teleport>
     </ClientOnly>
     <!--SWITCH-->
-    <div class="text-xl md:text-2xl flex justify-center items-center space-x-4 my-8 mx-auto leading-none">
-      <span class="text-right basis-1/3" :class="{ 'opacity-25' : !destacadoTodos }">Proyectos destacados</span>
-      <div class="form-control">
+    <div class="flex justify-center items-center my-8 mx-auto">
+      <div class="form-control md:text-xl">
         <label class="label cursor-pointer">
-          <input type="checkbox" @click="swapDestacados" class="toggle toggle-lg" />  
+          <span class="text-right basis-1/3 leading-none" :class="{ 'opacity-25' : !destacadoTodos }">Proyectos destacados</span>
+          <input type="checkbox" @click="swapDestacados" class="toggle toggle-md" />  
+          <span class="basis-1/3" :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
         </label>
       </div>
-      <span class="basis-1/3" :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
     </div>
     <!--Proyectos destacados-->
     <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-4 lg:gap-8">
@@ -153,7 +158,7 @@ function closeProject() {
       </TransitionGroup>
     </div>
     <!--Gradient-->
-    <div class="fixed z-10 bottom-0 left-0 w-full h-36 spotlight bg-gradient-to-t from-zinc-900"></div>
+    <div class="fixed z-10 bottom-0 left-0 w-full h-24 spotlight bg-gradient-to-t from-zinc-900"></div>
   </section>
 </template>
 
