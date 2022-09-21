@@ -288,7 +288,7 @@ function init() {
     //antialias: amIMobile ? false : true,
     antialias: true,
   })
-  //renderer.setPixelRatio( window.devicePixelRatio )
+  renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
   renderer.outputEncoding = THREE.sRGBEncoding
   renderer.shadowMap.enabled = true
@@ -611,7 +611,7 @@ onUnmounted(() => {
     </div>
     <AboutUs :ciclo="dayNight" :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
     <!--fadeScene-->
-    <div id="fader" v-if="loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
+    <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
       <p v-if="amIMobile" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> arrastra el dedo sobre el autocine!</p>
       <p v-else class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> arrastra el ratón sobre el autocine!</p>
