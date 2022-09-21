@@ -76,6 +76,7 @@ const heroBgColor = ref()
 const loadedModels = ref(false)
 const dayNight = ref(params.dayOrNight)
 const target = ref(null)
+const amIMobile = ref()
 
 const
 groundSize = 30,
@@ -100,7 +101,7 @@ container: HTMLElement, camera, renderer,
 rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, telonMaterial, telon, telonTexture,
 shadowSize: number, frustumSize: number,
 pane, dayFolder, nightFolder, extraFolder, cameraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
-amIMobile: boolean, timer: number, controls
+timer: number, controls
 
 swapHeroBgColor()
 
@@ -278,7 +279,7 @@ function onWindowResize() {
 
 function init() {
   //#region sceneSetup
-  amIMobile = isMobile().any
+  amIMobile.value = isMobile().any
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
   shadowSize = amIMobile ? 512 : 2048
   container = document.getElementById( 'container' )
@@ -610,9 +611,10 @@ onUnmounted(() => {
     </div>
     <AboutUs :ciclo="dayNight" :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
     <!--fadeScene-->
-    <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
+    <div id="fader" v-if="loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
-      <p v-if="!amIMobile" class="text-xs">arrastra el dedo sobre el autocine!</p>
+      <p v-if="amIMobile" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> arrastra el dedo sobre el autocine!</p>
+      <p v-else class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> arrastra el ratón sobre el autocine!</p>
     </div>
   </div>
 </template>
@@ -623,5 +625,19 @@ onUnmounted(() => {
 }
 .toggle {
   background-color: white;
+}
+.wave {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-25%);
+    /*animation-timing-function: cubic-bezier(0.8, 0, 1, 1);*/
+  }
+  50% {
+    transform: translateX(0);
+    /*animation-timing-function: cubic-bezier(0, 0, 0.2, 1);*/
+  }
 }
 </style>
