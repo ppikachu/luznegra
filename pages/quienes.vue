@@ -1,3 +1,3 @@
 <template>
-  <PickedPortfolio />
+  <AboutUs />
 </template>

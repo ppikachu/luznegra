@@ -153,7 +153,7 @@ function closeProject() {
       </TransitionGroup>
     </div>
     <!--Gradient-->
-    <div class="spotlight-wrapper overflow-hidden"><div class="fixed z-10 spotlight"></div></div>
+    <div class="fixed z-10 bottom-0 left-0 w-full h-36 spotlight bg-gradient-to-t from-zinc-900"></div>
   </section>
 </template>
 
@@ -161,16 +161,6 @@ function closeProject() {
 .toggle {
   background-color: white;
 }
-
-.spotlight {
-  background: linear-gradient(45deg, hsl(var(--b3)) 0%, hsl(var(--sf)) 100%);
-  filter: blur(2vh);
-  height: 9rem;
-  bottom: -4rem;
-  left: -4rem;
-  right: -4rem;
-}
-
 .gradient-border {
   position: relative;
   border-radius: 1rem;
