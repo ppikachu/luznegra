@@ -10,7 +10,7 @@ import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
-import { useParallax } from '@vueuse/core'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 const params = {
   mouseFollow: true,
@@ -31,8 +31,12 @@ const params = {
   groundColor: 'rgb(63, 86, 40)',
   daySkyColor: 'rgb(170, 238, 255)',
   nightSkyColor: 'rgb(1, 9, 36)',
+  fogLinearNearDay: 15,
+  fogLinearFarDay: 30,
+  fogLinearNearNight: 15,
+  fogLinearFarNight: 30,
   fogDensityDay: 0.05,
-  fogDensityNight: 0.08,
+  fogDensityNight: 0.05,
   shadowPlaneSize: 6,
   pantallaEmissive: 2,
   screenLightColor: 'rgb(17, 17, 51)',
@@ -45,8 +49,8 @@ const params = {
   lightMoonColor: 'rgb(152, 1, 4)',
   lightMoonIntensity: 0.5,
   lightMoonPosition: new THREE.Vector3( -5, 5, -1 ),
-  cameraOrthoPos: { x: 0, y: 0.5, z: 10 },
-  initialSceneRotation: { x: Math.PI*0.2, y: Math.PI*0.1 },//WARN: estan invertidos
+  cameraOrthoPos: { x: 0, y: 0, z: 20 },
+  initialSceneRotation: { x: Math.PI/2.6, y: Math.PI*0.15 },
 }
 
 const debug = {
@@ -72,7 +76,6 @@ const heroBgColor = ref()
 const loadedModels = ref(false)
 const dayNight = ref(params.dayOrNight)
 const target = ref(null)
-const parallax = useParallax(target)
 
 const
 groundSize = 30,
@@ -97,10 +100,7 @@ container: HTMLElement, camera, renderer,
 rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, telonMaterial, telon, telonTexture,
 shadowSize: number, frustumSize: number,
 pane, dayFolder, nightFolder, extraFolder, cameraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
-mouseX = 0, deltaY = 0, ax = 0, vx = 0,
-amIMobile: boolean, windowHalfX: number, previousX: number, timer: number,
-previousGamma = 0,
-deltaGamma: number, finalRotation: number
+amIMobile: boolean, timer: number, controls
 
 swapHeroBgColor()
 
@@ -112,12 +112,10 @@ onMounted(() => {
   props()
 
   //Listeners
-  document.addEventListener( 'mousemove', onDocumentMouseMove )
   window.addEventListener( 'resize', onWindowResize )
   onWindowResize()
 
   document.addEventListener( 'scroll', handleScroll )
-  //window.addEventListener( 'deviceorientation', handleOrientation )
 
   //Tweakpane
   if( route.name == 'test') makeTweak()
@@ -133,6 +131,14 @@ function swapHeroBgColor() {
   //HACK: hardcoded hero colors:
   chroma(params.groundColor).brighten(1.8) :
   chroma(params.lightMoonColor).darken(1.3)
+}
+
+function setFog( cycle:string ) {
+  return new THREE.Fog(
+    cycle === 'day' ? params.daySkyColor : params.nightSkyColor,
+    cycle === 'day' ? params.fogLinearNearDay : params.fogLinearNearNight,
+    cycle === 'day' ? params.fogLinearFarDay : params.fogLinearFarNight
+  )
 }
 
 function handleScroll() {
@@ -153,6 +159,11 @@ function doDayNightCycle () {
 function setupModel(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
+  model.material.emissiveMap.minFilter = THREE.LinearFilter
+  model.material.map.minFilter = THREE.LinearFilter
+
+  console.log(model.material)
+  
   model.castShadow = true
   model.matrixAutoUpdate = false
   return model
@@ -161,9 +172,11 @@ function setupModel(modelData) {
 function setupModelB(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
+  model.material.emissiveMap.minFilter = THREE.LinearFilter
+  model.material.map.minFilter = THREE.LinearFilter
   model.material.emissiveIntensity = 1
   model.scale.set( 1.5, 1.5, 1.5)
-  model.position.set( 0, 0, 1.7 )
+  model.position.set( 0, 0, 2 )
   model.castShadow = true
   model.updateMatrix()
   model.matrixAutoUpdate = false
@@ -175,7 +188,7 @@ function initProjector() {
   const video = document.getElementById( 'video' )
   telonTexture = new THREE.VideoTexture( video )
   telonTexture.encoding = THREE.sRGBEncoding
-  //telonTexture.minFilter = THREE.LinearFilter
+  telonTexture.minFilter = THREE.LinearFilter
   telonMaterial = new THREE.MeshBasicMaterial({ map: telonTexture })
 
   telon = new THREE.Mesh( telonGeometry, telonMaterial )
@@ -216,7 +229,7 @@ function swapDayNight() {
       ambientLight.color.set( params.lightSunColor )
       //swap bg color de seccion nosotros
       swapHeroBgColor()
-      scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
+      scene.fog = setFog(params.dayOrNight)
     } }, '<')
     //fade in:
     tlday.to([ lightSun, ambientLight], { intensity: params.lightSunIntensity, duration: params.dayNightSpeed }, '<')
@@ -236,7 +249,7 @@ function swapDayNight() {
       ambientLight.color.set( params.lightMoonColor )
       //swap bg color de seccion nosotros
       swapHeroBgColor()
-      scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
+      scene.fog = setFog(params.dayOrNight)
     } }, '<')
     tlnight.to([ lightMoon, ambientLight], { intensity: params.lightMoonIntensity, duration: params.dayNightSpeed }, '<')
     //turn on modelPanchera inner emissive
@@ -249,10 +262,6 @@ function swapDayNight() {
     dayFolder.hidden = params.dayOrNight === 'day' ? false : true
     nightFolder.hidden = params.dayOrNight === 'night' ? false : true
   }
-}
-
-function onDocumentMouseMove(event: { clientX: number; }) {
-  mouseX = ( event.clientX - windowHalfX )
 }
 
 function onWindowResize() {
@@ -273,7 +282,6 @@ function init() {
   frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
   shadowSize = amIMobile ? 512 : 2048
   container = document.getElementById( 'container' )
-  windowHalfX = container.clientWidth / 2
 
   renderer = new THREE.WebGLRenderer({
     //antialias: amIMobile ? false : true,
@@ -299,7 +307,22 @@ function init() {
     frustumSize / 2, frustumSize / -2,
     0, 50
   )
+  //CAMERA controls
+  controls = new OrbitControls( camera, renderer.domElement )
+  controls.enableDamping = true // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.05
+  controls.minPolarAngle = params.initialSceneRotation.x
+  controls.maxPolarAngle = params.initialSceneRotation.x
+  controls.minAzimuthAngle = -Math.PI/3
+  controls.maxAzimuthAngle = Math.PI/3
+  controls.screenSpacePanning = false
+  controls.enableZoom = false
+  controls.target.y = 0
+  controls.minZoom = 0.85
+  controls.maxZoom = 2
+  
   camera.position.set(params.cameraOrthoPos.x, params.cameraOrthoPos.y, params.cameraOrthoPos.z)
+  controls.update()
   //lighthelper layer
   camera.layers.enable(1)
 
@@ -342,14 +365,19 @@ function init() {
   lightHelperMoon.layers.set( 1 )
   scene.add( lightSun, lightMoon, ambientLight, lightHelperSun, lightHelperMoon )
   //#endregion Lights
-  
-  //Mueve la escena para que se vea con el angulo elegido
-  //scene.position.set(0, 0, -7)
-  scene.rotation.x = params.initialSceneRotation.y
-  scene.rotation.y = params.initialSceneRotation.x
   //#endregion sceneSetup
   
   //#region environmentSetup
+  scene.fog = setFog(params.dayOrNight)
+  //? new THREE.FogExp2(
+  //  params.daySkyColor,
+  //  params.fogDensityDay
+  //)
+  //: new THREE.FogExp2(
+  //    params.nightSkyColor,
+  //    params.fogDensityNight
+  //)
+
   //const pmremGenerator = new THREE.PMREMGenerator( renderer )
   //scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture
 
@@ -387,14 +415,12 @@ async function props() {
     //Welcome!
     fadeScene(1)
   }
-
-  scene.fog = params.dayOrNight === 'day' ? new THREE.FogExp2(params.daySkyColor, params.fogDensityDay ) : new THREE.FogExp2(params.nightSkyColor, params.fogDensityNight )
+  scene.rotation.y = params.initialSceneRotation.y
   //#endregion GROUND
   
   if (!params.showLightsHelpers) camera.layers.disable( 1 )
   //Animation
-  if (amIMobile) animateMobile()
-  else animate()
+  animateMobile()
 }
 
 function updateScene() {
@@ -402,8 +428,6 @@ function updateScene() {
   if (params.showLightsHelpers) camera.layers.enable( 1 )
   else camera.layers.disable( 1 )
   camera.position.set(params.cameraOrthoPos.x, params.cameraOrthoPos.y, params.cameraOrthoPos.z)
-  scene.rotation.x = params.initialSceneRotation.y
-  scene.rotation.y = params.initialSceneRotation.x
   
   if (params.dayOrNight === 'day') {
     //Actualiza el ambiente
@@ -414,7 +438,7 @@ function updateScene() {
     lightSun.intensity = params.lightSunIntensity
     lightSun.color.set( params.lightSunColor )
     //fog
-    scene.fog = new THREE.FogExp2( params.daySkyColor, params.fogDensityDay )
+    scene.fog = setFog(params.dayOrNight)
   } else {
     //Actualiza el ambiente
     ambientLight.color.set( lightMoon.color )
@@ -424,7 +448,7 @@ function updateScene() {
     lightMoon.intensity = params.lightMoonIntensity
     lightMoon.color.set( params.lightMoonColor )
     //fog
-    scene.fog = new THREE.FogExp2( params.nightSkyColor, params.fogDensityNight )
+    scene.fog = setFog(params.dayOrNight)
   }
   groundMaterial.color.set(params.groundColor)
   swapHeroBgColor()
@@ -438,38 +462,6 @@ function updateScene() {
   lightMoon.shadow.camera.right   =  params.shadowPlaneSize
   lightMoon.shadow.camera.top     =  params.shadowPlaneSize
   lightMoon.shadow.camera.bottom  = -params.shadowPlaneSize
-}
-
-function animate() {
-  requestAnimationFrame(animate)
-  if (!debug.animate) return
-  const clock = Math.round(performance.now()*0.021)
-  const flick = clock % 2 == 0 ? 0.6 : 1
-  const flickB = clock % 4 == 0 ? 0.7 : 1
-
-  //projector flickering
-  //if (debug.showPantalla) {
-  rectLight.intensity = params.screenIntensity - flick
-  rectLightB.intensity = params.screenIntensity - flickB
-  //}
-
-  //luz negra screen flickering / 0.3 de dia
-  modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flick : 0.3
-
-  //mouse follow
-  if (params.mouseFollow) {
-    var dx = mouseX - scene.rotation.x,
-    ax = dx * params.spring
-    vx += ax
-    vx *= params.friction
-    deltaY = (vx - previousX)*params.mass
-    previousX = vx
-    if (Math.abs(deltaY) > 0.001) scene.rotation.y = deltaY + params.initialSceneRotation.x //rotación (encuadre) inicial
-    //limit camera rotation:
-    //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
- } 
-  else scene.rotation.y = params.initialSceneRotation.x
-  renderer.render( scene, camera )
 }
 
 function animateMobile() {
@@ -486,18 +478,7 @@ function animateMobile() {
   //luz negra screen flickering / 0.3 de dia
   modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flick : 0.3
   
-  //orientation follow
-  deltaGamma = parallax.tilt.value - previousGamma
-  ax = (deltaGamma*500) * params.spring
-  vx += ax
-  vx *= params.friction
-  finalRotation = -(vx - previousGamma) * params.mass
-  //finalRotation = parallax.tilt.value
-  //finalRotation = deltaGamma * params.mass
-  scene.rotation.y = finalRotation + params.initialSceneRotation.y //rotación (encuadre) inicial
-  previousGamma = parallax.tilt.value
-  //limit camera rotation:
-  //if (scene.rotation.y < turntableLimitY) scene.rotation.y = turntableLimitY 
+  controls.update()
   renderer.render( scene, camera )
 }
 
@@ -581,7 +562,6 @@ onUnmounted(() => {
   //get rid of makeTweak
   if (pane) pane.dispose()
   //get rid of listeners
-  document.removeEventListener('mousemove', onDocumentMouseMove)
   window.removeEventListener('resize', onWindowResize)
   document.removeEventListener('scroll', handleScroll)
   //window.removeEventListener('deviceorientation', handleOrientation)
@@ -591,7 +571,7 @@ onUnmounted(() => {
 
 <template>
   <div class="relative z-30">
-    <div id="container" ref="target" class="relative overflow-hidden pb-16">
+    <div id="container" ref="target" class="relative overflow-hidden">
       <!--<dialog class="badge absolute top-2/3">{{ parallax.tilt }}</dialog>-->
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
@@ -610,7 +590,7 @@ onUnmounted(() => {
       >
       </div>
       <!--SWITCH-->
-      <div class="absolute bottom-16 md:bottom-0 text-xl flex justify-center w-full">
+      <div class="absolute bottom-8 md:bottom-0 text-xl flex flex-col items-center space-y-8 w-full">
         <div class="form-control">
           <label class="label cursor-pointer space-x-4">
             <svg :class="{'opacity-25': dayNight === 'day'}" class="swap-off fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -622,6 +602,8 @@ onUnmounted(() => {
             </svg>
           </label>
         </div>
+        <!--SCROLL-->
+        <Icon name="ic:sharp-keyboard-double-arrow-up" class="h-10 w-10 animate-bounce" />
       </div>
       <!--Tweakpane-->
       <div v-if="route.name == 'test'" class="absolute flex justify-center w-full p-4">
@@ -630,8 +612,9 @@ onUnmounted(() => {
     </div>
     <AboutUs :ciclo="dayNight" :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
     <!--fadeScene-->
-    <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex justify-center items-center" :style="`background-color: ${heroBgColor}`">
+    <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
+      <p v-if="!amIMobile" class="text-xs">arrastra el dedo sobre el autocine!</p>
     </div>
   </div>
 </template>

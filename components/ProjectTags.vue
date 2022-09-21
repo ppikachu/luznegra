@@ -19,12 +19,11 @@ function buttonClick(tag) {
   emit('tag', tag)
   currentTag.value = tag.sys.id
 }
-
 </script>
 
 <template>
   <section id="tags" class="pb-8 flex flex-col items-center">
-    <div class="btn-group">
+    <div class="btn-group btn-group-vertical md:btn-group-horizontal">
       <button
         v-for="tag in data.items"
         :key="tag"

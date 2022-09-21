@@ -80,13 +80,13 @@ function closeProject() {
     </ClientOnly>
     <!--SWITCH-->
     <div class="text-xl md:text-2xl flex justify-center items-center space-x-4 my-8 mx-auto leading-none">
-      <span class="text-right basis-1/3" :class="{'opacity-25': !destacadoTodos, 'text-primary': destacadoTodos }">Proyectos destacados</span>
+      <span class="text-right basis-1/3" :class="{ 'opacity-25' : !destacadoTodos }">Proyectos destacados</span>
       <div class="form-control">
         <label class="label cursor-pointer">
           <input type="checkbox" @click="swapDestacados" class="toggle toggle-lg" />  
         </label>
       </div>
-      <span class="basis-1/3" :class="{'opacity-25': destacadoTodos, 'text-primary': !destacadoTodos  }">Portfolio</span>
+      <span class="basis-1/3" :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
     </div>
     <!--Proyectos destacados-->
     <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-4 lg:gap-8">
@@ -108,7 +108,7 @@ function closeProject() {
             <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
-            <h2 class="text-2xl lg:text-3xl text-primary leading-none">{{ post.fields.title }}</h2>
+            <h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post.fields.title }}</h2>
             <p v-if="post.fields.excerpt">{{ post.fields.excerpt }}</p>
             <div class="card-actions" v-if="post.metadata.tags[0]">
               <ProjectMeta :tags="post.metadata.tags" />
@@ -142,7 +142,7 @@ function closeProject() {
             <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
-            <h2 class="card-title text-primary leading-tight">{{ post.fields.title }}</h2>
+            <h2 class="card-title text-primary text-2xl leading-tight">{{ post.fields.title }}</h2>
             <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
             <div class="card-actions">
               <ProjectMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />

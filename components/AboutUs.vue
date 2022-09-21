@@ -17,8 +17,8 @@
 </script>
 
 <template>
-  <section class="py-16 md:py-32 px-4 md:px-8 text-center lg:text-left max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center">
+  <section class="py-16 md:py-32 px-4 md:px-8 text-center lg:text-left">
+      <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto">
         <h1 class="text-4xl md:text-5xl px-4 lg:text-right my-4 prose" :class="colorClass" >
           LUZ NEGRA es el Estudio Multimedia que buscabas.
         </h1>
@@ -30,7 +30,7 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 items-center mx-auto mt-32 lg:mt-32">
+      <div class="grid grid-cols-1 lg:grid-cols-3 items-center max-w-6xl mx-auto mt-32">
         <p class="my-4 text-2xl prose lg:text-right" :class="colorP" >
           LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span :class="colorClass">Video</span>, <span :class="colorClass">Animación</span>, <span :class="colorClass">Motion Graphics</span>, <span :class="colorClass">Diseño Gráfico</span> y <span :class="colorClass">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.
         </p>
