@@ -313,8 +313,8 @@ function init() {
   controls.dampingFactor = 0.05
   controls.minPolarAngle = params.initialSceneRotation.x
   controls.maxPolarAngle = params.initialSceneRotation.x
-  controls.minAzimuthAngle = -Math.PI/3
-  controls.maxAzimuthAngle = Math.PI/3
+  controls.minAzimuthAngle = -Math.PI/2.5 + params.initialSceneRotation.y
+  controls.maxAzimuthAngle = Math.PI/2.5 + params.initialSceneRotation.y
   controls.screenSpacePanning = false
   controls.enableZoom = route.name == 'test' ? true : false
   controls.target.y = amIMobile ? 0 : 0.5
