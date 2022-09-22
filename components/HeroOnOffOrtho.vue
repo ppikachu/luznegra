@@ -285,9 +285,8 @@ function init() {
     antialias: amIMobile.value ? true : true,
     //antialias: true,
   })
-  console.log(amIMobile.value)
   
-  renderer.setPixelRatio( window.devicePixelRatio )
+  //renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
   renderer.outputEncoding = THREE.sRGBEncoding
   renderer.shadowMap.enabled = true
