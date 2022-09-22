@@ -55,19 +55,17 @@ function closeProject() {
         <div
         v-if="openProyect"
         id="modal-proyecto"
-        class="modal bg-black/90 backdrop-blur backdrop-grayscale"
+        class="modal bg-black/80 backdrop-blur backdrop-grayscale"
         :class="{ 'modal-open': openProyect }"
         >
-          <div class="modal-box rounded-none relative w-full max-w-5xl max-h-full">
+          <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-5xl max-h-full">
             <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-3 top-3 font-tag">
-              <Icon name="material-symbols:close" />
+              <Icon name="mdi:close-thick" />
             </label>
-            <div v-if="openProyect.fields.video" >
-              <ProjectVideos :videos="openProyect.fields.video" />
-            </div>
-            <ProjectGallery :gallery="openProyect.fields.imgGallery" />
-            <div class="flex md:flex-row space-x-4 lg:justify-between items-center">
-              <h1 class="text-4xl">{{ openProyect.fields.title }}</h1>
+            <ProjectVideos v-if="openProyect.fields.video" :videos="openProyect.fields.video" />
+            <ProjectGallery v-if="openProyect.fields.imgGallery" :gallery="openProyect.fields.imgGallery" />
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center mt-4">
+              <h1 class="text-4xl text-primary">{{ openProyect.fields.title }}</h1>
               <ProjectMeta :tags="openProyect.metadata.tags" />
             </div>
             <div class="prose my-4">

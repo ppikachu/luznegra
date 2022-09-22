@@ -14,7 +14,7 @@ const props = defineProps({ gallery: Array })
       />
     </div>
   </aside>
-  <div class="justify-center py-2 btn-group">
+  <div class="flex justify-center py-2 btn-group">
     <a v-for="(img, i) in props.gallery" :href="`#${i}`" class="btn btn-sm text-xs">{{ img.fields.title }}</a> 
   </div>
 </template>
