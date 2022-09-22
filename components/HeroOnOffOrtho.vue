@@ -39,7 +39,7 @@ const params = {
   fogDensityNight: 0.05,
   shadowPlaneSize: 6,
   pantallaEmissive: 2,
-  screenLightColor: 'rgb(17, 17, 51)',
+  screenLightColor: 'rgb(27, 27, 61)',
   screenIntensity: 3,
 
   showLightsHelpers: false,
@@ -130,8 +130,8 @@ function fadeScene(time:number) {
 function swapHeroBgColor() {
   heroBgColor.value = params.dayOrNight === 'day'?
   //HACK: hardcoded hero colors:
-  chroma(params.groundColor).brighten(1.8) :
-  chroma(params.lightMoonColor).darken(1.3)
+  chroma(params.groundColor).brighten(2) :
+  chroma(params.lightMoonColor).darken(.6)
 }
 
 function setFog( cycle:string ) {
@@ -282,16 +282,15 @@ function init() {
   container = document.getElementById( 'container' )
 
   renderer = new THREE.WebGLRenderer({
-    antialias: amIMobile.value ? true : true,
-    //antialias: true,
+    antialias: amIMobile.value ? false : true,
   })
   
-  //renderer.setPixelRatio( window.devicePixelRatio )
+  renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
   renderer.outputEncoding = THREE.sRGBEncoding
   renderer.shadowMap.enabled = true
   //renderer.shadowMap.type = THREE.PCFShadowMap
-  THREE.ColorManagement.legacyMode = true
+  //THREE.ColorManagement.legacyMode = true
   //renderer.toneMapping = THREE.ReinhardToneMapping
   //renderer.toneMappingExposure = 1
   // turn on the physically correct lighting model
@@ -477,7 +476,7 @@ function animateMobile() {
   rectLightB.intensity = params.screenIntensity - flickB
   
   //luz negra screen flickering / 0.3 de dia
-  modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flick : 0.3
+  modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flickB : 0.3
   
   controls.update()
   renderer.render( scene, camera )
@@ -514,7 +513,8 @@ function makeTweak() {
   //PARAMETROS
   extraFolder = pane.addFolder({ title: 'EXTRA', expanded: false })
   extraFolder.addInput(params, 'groundColor', { view:'color', label: 'color piso' })
-  if(!amIMobile) extraFolder.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
+  extraFolder.addInput(params, 'screenLightColor', { view:'color', label: 'color pantalla' })
+  extraFolder.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
   //DEBUG
   const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
   debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
@@ -576,7 +576,7 @@ onUnmounted(() => {
         playsinline
         style="display:none"
       >
-        <source src="/images/pantalla.mp4" type="video/mp4">
+        <source src="/images/pantalla_v03.mp4" type="video/mp4">
       </video>
       <!--bottom linear-gradient-->
       <div
