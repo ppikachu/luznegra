@@ -190,7 +190,6 @@ function initProjector() {
   telonMaterial = new THREE.MeshBasicMaterial({ map: telonTexture })
 
   telon = new THREE.Mesh( telonGeometry, telonMaterial )
-
   telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
   pantallaGroup.add( telon )
   // @ts-ignore
@@ -282,20 +281,14 @@ function init() {
   container = document.getElementById( 'container' )
 
   renderer = new THREE.WebGLRenderer({
-    antialias: amIMobile.value ? false : true,
+    antialias: true
   })
   
-  renderer.setPixelRatio( window.devicePixelRatio )
+  renderer.setPixelRatio( amIMobile.value ? 1 : window.devicePixelRatio )
   renderer.setSize( container.clientWidth, container.clientHeight )
   renderer.outputEncoding = THREE.sRGBEncoding
   renderer.shadowMap.enabled = true
-  //renderer.shadowMap.type = THREE.PCFShadowMap
-  //THREE.ColorManagement.legacyMode = true
-  //renderer.toneMapping = THREE.ReinhardToneMapping
-  //renderer.toneMappingExposure = 1
-  // turn on the physically correct lighting model
-  //renderer.physicallyCorrectLights = true
-  //scene.background = color
+  
   container.appendChild( renderer.domElement )
 
   //CAMERA
@@ -303,7 +296,7 @@ function init() {
   camera = new THREE.OrthographicCamera(
     frustumSize / 2 * -aspect , frustumSize / 2 * aspect,
     frustumSize / 2, frustumSize / -2,
-    0, 50
+    1, 40
   )
   //CAMERA controls
   controls = new OrbitControls( camera, renderer.domElement )
@@ -576,7 +569,8 @@ onUnmounted(() => {
         playsinline
         style="display:none"
       >
-        <source src="/images/pantalla_v03.mp4" type="video/mp4">
+        <source src="/images/pantalla_v03.mp4">
+        <source src="/images/pantalla_v03.webm">
       </video>
       <!--bottom linear-gradient-->
       <div
