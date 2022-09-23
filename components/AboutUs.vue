@@ -30,7 +30,7 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 items-center max-w-6xl mx-auto mt-32">
+      <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto mt-32">
         <p class="my-4 text-2xl prose lg:text-right" :class="colorP" >
           LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span :class="colorClass">Video</span>, <span :class="colorClass">Animación</span>, <span :class="colorClass">Motion Graphics</span>, <span :class="colorClass">Diseño Gráfico</span> y <span :class="colorClass">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.
         </p>
