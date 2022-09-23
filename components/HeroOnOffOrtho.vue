@@ -173,7 +173,7 @@ function setupModelB(modelData) {
   model.material.emissiveMap.minFilter = THREE.LinearFilter
   //model.material.map.minFilter = THREE.LinearFilter
   model.material.emissiveIntensity = 1
-  model.scale.set( 1.5, 1.5, 1.5)
+  model.scale.set( 15, 15, 15)
   model.position.set( 0, 0, 2 )
   model.castShadow = true
   model.updateMatrix()
@@ -390,7 +390,8 @@ async function props() {
   if (debug.showGLTFs) {
     const loader = new GLTFLoader()
     const [pancheraData, pantallaData] = await Promise.all([
-      loader.loadAsync('/gltf/autoIneMiUV/auto_ine_miuv.gltf'),
+      //loader.loadAsync('/gltf/autoIneMiUV/auto_ine_miuv.gltf'),
+      loader.loadAsync('/gltf/auto_v05/panchera.gltf'),
       loader.loadAsync('/gltf/pantalla_v3/pantalla.gltf'),
     ])
     modelPanchera = setupModelB(pancheraData)
