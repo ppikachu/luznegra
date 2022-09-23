@@ -64,7 +64,7 @@ const debug = {
 }
 
 const modelScale = 15
-const frustumDesktopSize = 4, frustumMobileSize = 7
+const frustumDesktopSize = 5, frustumMobileSize = 7
 const telonWidth = .145
 const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
 const telonPosition = { x: 0, y: 0.06, z: -0.001 }
@@ -269,15 +269,15 @@ function onWindowResize() {
   camera.bottom = - frustumSize / 2;
   camera.updateProjectionMatrix()
   renderer.setSize( container.clientWidth, container.clientHeight )
-  //if (!amIMobile) composer.setSize( container.clientWidth, container.clientHeight )
+  //if (!amIMobile.value) composer.setSize( container.clientWidth, container.clientHeight )
 }
 //#endregion
 
 function init() {
   //#region sceneSetup
   amIMobile.value = isMobile().any
-  frustumSize = amIMobile ? frustumMobileSize : frustumDesktopSize
-  shadowSize = amIMobile ? 512 : 2048
+  frustumSize = amIMobile.value ? frustumMobileSize : frustumDesktopSize
+  shadowSize = amIMobile.value ? 512 : 2048
   container = document.getElementById( 'container' )
 
   renderer = new THREE.WebGLRenderer({
@@ -308,7 +308,7 @@ function init() {
   controls.maxAzimuthAngle = Math.PI/2.5 + params.initialSceneRotation.y
   controls.screenSpacePanning = false
   controls.enableZoom = route.name == 'test' ? true : false
-  controls.target.y = amIMobile ? 0 : 0.5
+  controls.target.y = amIMobile.value ? 0 : 0.5
   controls.minZoom = 0.2
   controls.maxZoom = 2
   
