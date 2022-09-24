@@ -5,7 +5,11 @@ import gsap from 'gsap'
 /* Fetch all projects */
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
-  return $contentfulClient.getEntries({ order: 'sys.createdAt' })
+  return $contentfulClient.getEntries({
+    //order: 'sys.createdAt'
+    content_type: 'entradas',
+    order: '-fields.date'
+  })
 })
 const posts = data
 
