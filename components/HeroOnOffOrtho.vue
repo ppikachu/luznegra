@@ -118,7 +118,7 @@ onMounted(() => {
 
 //#region FUNCTIONS
 function fadeScene(time:number) {
-  gsap.to( document.getElementById('fader'), { opacity: 0, duration: time, onComplete: ()=> { loadedModels.value = true} })
+  gsap.to( document.getElementById('fader'), { opacity: 0, duration: time, delay: 1000, onComplete: ()=> { loadedModels.value = true} })
 }
 
 function swapHeroBgColor() {
