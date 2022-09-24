@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-//import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
-//import { ShadowMapViewer } from 'three/examples/jsm/utils/ShadowMapViewer.js'
 
 import { useSound } from '@vueuse/sound'
 import chroma from 'chroma-js'
@@ -14,9 +12,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 const params = {
   mouseFollow: true,
-  spring: 0.03,
-  friction: 0.97,
-  mass: 0.05,
   dayOrNight: "night",
   dayNightSpeed: 0.25,
   dayNightDelay: 1,
@@ -49,8 +44,7 @@ const params = {
   lightMoonColor: 'rgb(152, 1, 4)',
   lightMoonIntensity: 0.5,
   lightMoonPosition: new THREE.Vector3( -5, 5, -1 ),
-  cameraOrthoPos: { x: 0, y: 0, z: 20 },
-  initialSceneRotation: { x: Math.PI/2.6, y: Math.PI*0.15 },
+  initialSceneRotation: { x: Math.PI*0.15, y: Math.PI/2.6 },
 }
 
 const debug = {
@@ -79,6 +73,7 @@ const target = ref(null)
 const amIMobile = ref()
 
 const
+cameraOrthoPos = { x: 0, y: 0, z: 20 },
 groundSize = 30,
 groundMaterial = new THREE.MeshStandardMaterial( { color: params.groundColor } ),
 groundGeometry = new THREE.PlaneGeometry( groundSize, groundSize ),
@@ -88,9 +83,8 @@ const
 ambientLight = new THREE.AmbientLight(),
 lightSun = new THREE.DirectionalLight(),
 lightMoon = new THREE.DirectionalLight(),
-rectLight = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
-rectLightB = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
-origin = new THREE.Vector3( 0, 0, 0 ),
+proyectorFuera = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
+proyectorSelf = new THREE.RectAreaLight( params.screenLightColor, params.screenIntensity, telonSize.x*modelScale, telonSize.y*modelScale ),
 scene = new THREE.Scene(),
 pantallaGroup = new THREE.Group()
 
@@ -100,7 +94,7 @@ modelPanchera, modelPantalla,
 container: HTMLElement, camera, renderer,
 rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, telonMaterial, telon, telonTexture,
 shadowSize: number, frustumSize: number,
-pane, dayFolder, nightFolder, extraFolder, cameraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
+pane, dayFolder, nightFolder, extraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
 timer: number, controls
 
 swapHeroBgColor()
@@ -196,16 +190,16 @@ function initProjector() {
   video.play()
 
   //proyector light to front
-  rectLight.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
-  rectLight.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
+  proyectorFuera.position.set( telonPosition.x, telonPosition.y, telonPosition.z - 0.01 )
+  proyectorFuera.lookAt( telonPosition.x, telonPosition.y, telonPosition.z+1 )
   //proyector light to self
-  rectLightB.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.015 )
-  rectLightB.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
+  proyectorSelf.position.set( telonPosition.x, telonPosition.y, telonPosition.z + 0.015 )
+  proyectorSelf.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
 
-  pantallaGroup.add( rectLight, rectLightB )
+  pantallaGroup.add( proyectorFuera, proyectorSelf )
 
-  rectLightHelper = new RectAreaLightHelper( rectLight )
-  rectLightHelperB = new RectAreaLightHelper( rectLightB )
+  rectLightHelper = new RectAreaLightHelper( proyectorFuera )
+  rectLightHelperB = new RectAreaLightHelper( proyectorSelf )
   rectLightHelper.layers.set( 1 )
   rectLightHelperB.layers.set( 1 )
   scene.add( rectLightHelper, rectLightHelperB )
@@ -302,17 +296,17 @@ function init() {
   controls = new OrbitControls( camera, renderer.domElement )
   controls.enableDamping = true // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.05
-  controls.minPolarAngle = params.initialSceneRotation.x
-  controls.maxPolarAngle = params.initialSceneRotation.x
-  controls.minAzimuthAngle = -Math.PI/2.5 + params.initialSceneRotation.y
-  controls.maxAzimuthAngle = Math.PI/2.5 + params.initialSceneRotation.y
+  controls.minPolarAngle = params.initialSceneRotation.y
+  controls.maxPolarAngle = params.initialSceneRotation.y
+  controls.minAzimuthAngle = -Math.PI/2.5 + params.initialSceneRotation.x
+  controls.maxAzimuthAngle = Math.PI/2.5 + params.initialSceneRotation.x
   controls.screenSpacePanning = false
   controls.enableZoom = route.name == 'test' ? true : false
   controls.target.y = amIMobile.value ? 0 : 0.5
   controls.minZoom = 0.2
   controls.maxZoom = 2
   
-  camera.position.set(params.cameraOrthoPos.x, params.cameraOrthoPos.y, params.cameraOrthoPos.z)
+  camera.position.set(cameraOrthoPos.x, cameraOrthoPos.y, cameraOrthoPos.z)
   controls.update()
   //lighthelper layer
   camera.layers.enable(1)
@@ -326,7 +320,8 @@ function init() {
   lightSun.shadow.mapSize.width = shadowSize
   lightSun.shadow.mapSize.height = shadowSize
   lightSun.shadow.camera.near = 1
-  lightSun.shadow.camera.far = lightSun.position.distanceTo( new THREE.Vector3(0,0,0) )
+  lightSun.shadow.camera.far = 22
+  lightSun.shadow.camera.zoom = 2.5
   lightSun.shadow.camera.left = -params.shadowPlaneSize
   lightSun.shadow.camera.right = params.shadowPlaneSize
   lightSun.shadow.camera.top = params.shadowPlaneSize
@@ -340,7 +335,8 @@ function init() {
   lightMoon.shadow.mapSize.width = shadowSize
   lightMoon.shadow.mapSize.height = shadowSize
   lightMoon.shadow.camera.near = 1
-  lightMoon.shadow.camera.far = 50
+  lightMoon.shadow.camera.far = 22
+  lightMoon.shadow.camera.zoom = 2.5
   lightMoon.shadow.camera.left = -params.shadowPlaneSize
   lightMoon.shadow.camera.right = params.shadowPlaneSize
   lightMoon.shadow.camera.top = params.shadowPlaneSize
@@ -349,10 +345,10 @@ function init() {
   //ambient
   ambientLight.color.set( params.dayOrNight === 'day' ? params.lightSunColor : params.lightMoonColor )
   //lighthelpers
-  lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera, 0.5 )
-  lightHelperMoon = new THREE.CameraHelper( lightMoon.shadow.camera, 0.5 )
+  lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera, 0.015 )
+  lightHelperMoon = new THREE.CameraHelper( lightMoon.shadow.camera, 0.015 )
   //lighthelper layers
-  lightHelperSun.layers.set( 1 )
+  lightHelperSun.layers.set( 2 )
   lightHelperMoon.layers.set( 1 )
   scene.add( lightSun, lightMoon, ambientLight, lightHelperSun, lightHelperMoon )
   //#endregion Lights
@@ -407,7 +403,7 @@ async function props() {
     //Welcome!
     fadeScene(1)
   }
-  scene.rotation.y = params.initialSceneRotation.y
+  scene.rotation.y = params.initialSceneRotation.x
   //#endregion GROUND
   
   if (!params.showLightsHelpers) camera.layers.disable( 1 )
@@ -415,19 +411,34 @@ async function props() {
   animateMobile()
 }
 
-function updateScene() {
+function updateHelpers() {
   //lighthelpers
-  if (params.showLightsHelpers) camera.layers.enable( 1 )
-  else camera.layers.disable( 1 )
-  camera.position.set(params.cameraOrthoPos.x, params.cameraOrthoPos.y, params.cameraOrthoPos.z)
-  
+  if (params.showLightsHelpers && params.dayOrNight==='night') {
+    camera.layers.enable( 1 )
+    camera.layers.disable( 2 )
+  }
+  else if (params.showLightsHelpers && params.dayOrNight==='day') {
+    camera.layers.enable( 2 )
+    camera.layers.disable( 1 )
+  }
+  else {
+    camera.layers.disable(1)
+    camera.layers.disable(2)
+  }
+}
+
+function updateScene() {
+  controls.minPolarAngle = params.initialSceneRotation.y
+  controls.maxPolarAngle = params.initialSceneRotation.y
+  controls.minAzimuthAngle = -Math.PI/2.5 + params.initialSceneRotation.x
+  controls.maxAzimuthAngle = Math.PI/2.5 + params.initialSceneRotation.x
+
   if (params.dayOrNight === 'day') {
     //Actualiza el ambiente
     ambientLight.color.set( lightSun.color )
     ambientLight.intensity = lightSun.intensity
     //luz y sombra
     lightSun.position.set( params.lightSunPosition.x, params.lightSunPosition.y, params.lightSunPosition.z )
-    lightSun.shadow.camera.far = lightSun.position.distanceTo( origin )
     lightSun.intensity = params.lightSunIntensity
     lightSun.color.set( params.lightSunColor )
     //fog
@@ -438,12 +449,13 @@ function updateScene() {
     ambientLight.intensity = lightMoon.intensity = params.lightMoonIntensity
     //luz y sombra
     lightMoon.position.set( params.lightMoonPosition.x, params.lightMoonPosition.y, params.lightMoonPosition.z )
-    lightMoon.shadow.camera.far = lightMoon.position.distanceTo( origin )
     lightMoon.intensity = params.lightMoonIntensity
     lightMoon.color.set( params.lightMoonColor )
     //fog
     scene.fog = setFog(params.dayOrNight)
   }
+  proyectorFuera.color.set(params.screenLightColor)
+  proyectorSelf.color.set(params.screenLightColor)
   groundMaterial.color.set(params.groundColor)
   swapHeroBgColor()
   //shadowmaps:
@@ -456,18 +468,19 @@ function updateScene() {
   lightMoon.shadow.camera.right   =  params.shadowPlaneSize
   lightMoon.shadow.camera.top     =  params.shadowPlaneSize
   lightMoon.shadow.camera.bottom  = -params.shadowPlaneSize
+  updateHelpers()
 }
 
 function animateMobile() {
   requestAnimationFrame(animateMobile)
-  if (!params.mouseFollow || !debug.animate) return
+  if (!debug.animate) return
   const clock = Math.round(performance.now()*0.021)
   const flick = clock % 2 == 0 ? 0.6 : 1
   const flickB = clock % 4 == 0 ? 0.7 : 1
   
   //projector flickering
-  rectLight.intensity = params.screenIntensity - flick
-  rectLightB.intensity = params.screenIntensity - flickB
+  proyectorFuera.intensity = params.screenIntensity - flick
+  proyectorSelf.intensity = params.screenIntensity - flickB
   
   //luz negra screen flickering / 0.3 de dia
   modelPantalla.material.emissiveIntensity = (params.dayOrNight == 'night') ? driverLuzPantalla.intensity * flickB : 0.3
@@ -482,12 +495,6 @@ function makeTweak() {
     updateScene()
     presetDebug.hidden = true
   })
-  //CAMERA
-  cameraFolder = pane.addFolder({ title: 'CAMARA', expanded: false })
-  cameraFolder.addInput(params, 'cameraOrthoPos', { step: 0.01, label: 'pos cam' })
-  cameraFolder.addInput(params, 'initialSceneRotation', { x: {min: -3.1416, max: 3.1416}, y: {min: 0, max: 3.1416/2}, label: 'giro inicial' })
-  cameraFolder.addSeparator()
-  cameraFolder.addInput(params, 'mouseFollow', { label: 'seguir cursor' })
   //DAY
   dayFolder = pane.addFolder({ title: 'DIA', expanded: false, hidden: params.dayOrNight === 'day' ? false : true })
   dayFolder.addInput(params, 'fogLinearNearDay', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla dia cerca' })
@@ -495,7 +502,7 @@ function makeTweak() {
   dayFolder.addInput(params, 'daySkyColor', { label: 'cielo dia' })
   dayFolder.addInput(params, 'lightSunColor', { label: 'color sol' })
   dayFolder.addInput(params, 'lightSunIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power sol' })
-  dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
+  dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 0.5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   //NIGHT
   nightFolder = pane.addFolder({ title: 'NOCHE', expanded: false, hidden: params.dayOrNight === 'night' ? false : true })
   nightFolder.addInput(params, 'fogLinearNearNight', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla noche cerca' })
@@ -503,9 +510,10 @@ function makeTweak() {
   nightFolder.addInput(params, 'nightSkyColor', { label: 'cielo noche' })
   nightFolder.addInput(params, 'lightMoonColor', {  label: 'color luna' })
   nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power luna' })
-  nightFolder.addInput(params, 'lightMoonPosition', { label: 'posición luna', x: { min: -10, max: 10, step: 0.1 }, y: { min: 5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
+  nightFolder.addInput(params, 'lightMoonPosition', { label: 'posición luna', x: { min: -10, max: 10, step: 0.1 }, y: { min: 0.5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   //PARAMETROS
   extraFolder = pane.addFolder({ title: 'EXTRA', expanded: false })
+  extraFolder.addInput(params, 'initialSceneRotation', { x: { min: -3.1416, max: 3.1416, step: 0.01, inverted: true }, y: { min: 0, max: 3.1416/2, step: 0.01, inverted: true }, label: 'giro inicial' })
   extraFolder.addInput(params, 'groundColor', { view:'color', label: 'color piso' })
   extraFolder.addInput(params, 'screenLightColor', { view:'color', label: 'color pantalla' })
   extraFolder.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
@@ -570,8 +578,8 @@ onUnmounted(() => {
         playsinline
         style="display:none"
       >
-        <source src="/images/pantalla_v03.mp4">
-        <source src="/images/pantalla_v03.webm">
+        <source src="/images/REEL.mp4">
+        <!--<source src="/images/pantalla_v03.webm">-->
       </video>
       <!--bottom linear-gradient-->
       <div
@@ -580,7 +588,7 @@ onUnmounted(() => {
       >
       </div>
       <!--SWITCH-->
-      <div class="absolute bottom-8 md:bottom-0 text-xl flex flex-col items-center space-y-8 md:space-y-12 w-full">
+      <div class="absolute pt-16 bottom-8 md:bottom-0 text-xl flex flex-col items-center space-y-8 md:space-y-12 w-full">
         <div class="form-control">
           <label class="label cursor-pointer space-x-4">
             <svg :class="{'opacity-25': dayNight === 'day'}" class="swap-off fill-slate-100 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
