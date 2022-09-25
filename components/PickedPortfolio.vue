@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-import gsap from 'gsap'
 
 /* Fetch all projects */
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
-    //order: 'sys.createdAt'
     content_type: 'entradas',
     order: '-fields.date'
   })
@@ -57,13 +55,13 @@ function closeProject() {
     <ClientOnly>
       <Teleport to="html">
         <div
-        v-if="openProyect"
-        id="modal-proyecto"
-        class="modal bg-black/80 backdrop-blur backdrop-grayscale"
-        :class="{ 'modal-open': openProyect }"
+          v-if="openProyect"
+          id="modal-proyecto"
+          class="modal bg-black/80 backdrop-blur backdrop-grayscale"
+          :class="{ 'modal-open': openProyect }"
         >
           <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-5xl max-h-full">
-            <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-3 top-3 font-tag">
+            <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
               <Icon name="mdi:close-thick" />
             </label>
             <ProjectVideos v-if="openProyect.fields.video" :videos="openProyect.fields.video" />
