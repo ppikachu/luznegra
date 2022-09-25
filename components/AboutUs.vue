@@ -23,7 +23,7 @@
           LUZ NEGRA es el Estudio Multimedia que buscabas.
         </h1>
 
-        <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.GIF" type="video/webm" />
+        <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.GIF" />
         
         <p class="text-3xl prose" :class="colorP" >
           Nos especializamos en <span :class="colorClass">comunicación creativa</span>, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.
