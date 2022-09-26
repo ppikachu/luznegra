@@ -1,3 +1,15 @@
+<script setup>
+  onMounted(() => {
+    
+    grecaptcha.ready(function () {
+      grecaptcha.execute('6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV', {action: 'submit'}).then(function (token) {
+        console.info("got token: " + token);
+        document.getElementById('g-recaptcha-response').value = token;
+      })
+    })
+  })
+</script>
+
 <template>
   <div class="hero mx-auto bg-gradient-to-br from-secondary to-secondary-focus py-8">
     <div class="hero-content flex-col lg:flex-row-reverse">
@@ -21,7 +33,8 @@
               </label>
               <textarea name="mensaje" class="textarea textarea-bordered" placeholder="Tu mensaje"></textarea>
             </div>
-            <div class="mt-6 g-recaptcha" data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"></div>
+            <!--<div class="mt-6 g-recaptcha" data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"></div>-->
+            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
             <div class="form-control mt-6">
               <button class="btn btn-primary">Enviar</button>
             </div>

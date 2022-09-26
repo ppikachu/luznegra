@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      script: [{ src: 'https://www.google.com/recaptcha/api.js', async: true, defer: true }],
+      script: [{ src: 'https://www.google.com/recaptcha/api.js?render=6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV', async: true, defer: true }],
     },
   },
   modules: [
