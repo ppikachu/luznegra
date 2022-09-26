@@ -21,6 +21,7 @@
               </label>
               <textarea name="mensaje" class="textarea textarea-bordered" placeholder="Tu mensaje"></textarea>
             </div>
+            <div class="mt-6 g-recaptcha" data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"></div>
             <div class="form-control mt-6">
               <button class="btn btn-primary">Enviar</button>
             </div>

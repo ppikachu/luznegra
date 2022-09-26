@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   server: {
     host: '0' // default: localhost
   },
+  app: {
+    head: {
+      script: [{ src: 'https://www.google.com/recaptcha/api.js', async: true, defer: true }],
+    },
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
@@ -70,7 +75,6 @@ export default defineNuxtConfig({
       ogImage: '/OG.png',
     }
   },
-
   nuxtIcon: {
     size: '1em' // default <Icon> size applied
   },
