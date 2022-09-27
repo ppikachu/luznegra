@@ -167,9 +167,7 @@ function closeProject() {
     <div class="fixed z-10 bottom-0 left-0 w-full h-24 spotlight bg-gradient-to-t from-zinc-900"></div>
   </section>
 </template>
-
-<style scoped>
-.list-enter-from {
+<!--.list-enter-from {
   opacity: 0;
   transform: scale(0.6);
 }
@@ -198,8 +196,8 @@ function closeProject() {
 }
 .list-move {
   transition: all 0.5s;
-}
-
+}-->
+<style scoped>
 .toggle {
   background-color: white;
 }
