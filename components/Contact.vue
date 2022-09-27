@@ -8,20 +8,20 @@
       }
     ]
   })
-  onMounted(() => {
-    var clientId = grecaptcha.render('inline-badge', {
-        'sitekey': '6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV',
-        'badge': 'inline',
-        'size': 'invisible'
-    })
-    grecaptcha.ready(function() {
-        grecaptcha.execute(clientId, { action: 'submit' }).then(function(token) {
-          // Verify the token on the server.
-          console.info("got token: " + token)
-          document.getElementById('g-recaptcha-response').value = token
-        })
-    })
-  })
+  //onMounted(() => {
+    //var clientId = grecaptcha.render('inline-badge', {
+    //    'sitekey': '6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV',
+    //    'badge': 'inline',
+    //    'size': 'invisible'
+    //})
+    //grecaptcha.ready(function() {
+    //    grecaptcha.execute(clientId, { action: 'submit' }).then(function(token) {
+    //      // Verify the token on the server.
+    //      console.info("got token: " + token)
+    //      document.getElementById('g-recaptcha-response').value = token
+    //    })
+    //})
+  //})
 </script>
 
 <template>
