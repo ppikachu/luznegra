@@ -1,11 +1,25 @@
 <script setup>
+  useHead({
+    script: [
+      {
+        src: 'https://www.google.com/recaptcha/api.js?render=6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV&render=explicit',
+        async: true,
+        defer: true,
+      }
+    ]
+  })
   onMounted(() => {
-    
-    grecaptcha.ready(function () {
-      grecaptcha.execute('6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV', {action: 'submit'}).then(function (token) {
-        console.info("got token: " + token);
-        document.getElementById('g-recaptcha-response').value = token;
-      })
+    var clientId = grecaptcha.render('inline-badge', {
+        'sitekey': '6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV',
+        'badge': 'inline',
+        'size': 'invisible'
+    })
+    grecaptcha.ready(function() {
+        grecaptcha.execute(clientId, { action: 'submit' }).then(function(token) {
+          // Verify the token on the server.
+          console.info("got token: " + token)
+          document.getElementById('g-recaptcha-response').value = token
+        })
     })
   })
 </script>
@@ -19,7 +33,6 @@
       </div>
       <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <div class="card-body">
-          <!--<form action="https://app.headlessforms.cloud/api/v1/form-submission/awfCcRTUJ4" method="POST">-->
           <form action="https://formspree.io/f/mwkzplkb" method="POST">
             <div class="form-control">
               <label class="label">
@@ -33,9 +46,9 @@
               </label>
               <textarea name="mensaje" class="textarea textarea-bordered" placeholder="Tu mensaje"></textarea>
             </div>
-            <!--<div class="mt-6 g-recaptcha" data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"></div>-->
-            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
             <div class="form-control mt-6">
+              <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" data-badge="inline" class="input mb-6 input-xs" />
+              <div id="inline-badge" class="mb-6" ></div>
               <button class="btn btn-primary">Enviar</button>
             </div>
           </form>

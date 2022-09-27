@@ -5,18 +5,13 @@ export default defineNuxtConfig({
   server: {
     host: '0' // default: localhost
   },
-  app: {
-    head: {
-      script: [{ src: 'https://www.google.com/recaptcha/api.js?render=6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV', async: true, defer: true }],
-    },
-  },
   modules: [
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
     '@vueuse/nuxt',
     '@kevinmarrec/nuxt-pwa',
     'nuxt-icon',
-],
+  ],
   buildModules: [
     '@nuxtjs/google-fonts'
   ],

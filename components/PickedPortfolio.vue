@@ -87,9 +87,9 @@ function closeProject() {
     <div class="flex justify-center items-center my-8 mx-auto">
       <div class="form-control md:text-xl">
         <label class="label cursor-pointer">
-          <span class="text-right basis-1/3 leading-none" :class="{ 'opacity-25' : !destacadoTodos }">Proyectos destacados</span>
-          <input type="checkbox" @click="swapDestacados" class="toggle toggle-md" />  
-          <span class="basis-1/3" :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
+          <span class="" :class="{ 'opacity-25' : !destacadoTodos }">Destacados</span>
+          <input type="checkbox" @click="swapDestacados" class="toggle toggle-md mx-6" />  
+          <span class="" :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
         </label>
       </div>
     </div>
