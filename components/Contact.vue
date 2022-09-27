@@ -26,9 +26,9 @@
 
 <template>
   <div class="hero mx-auto bg-gradient-to-br from-secondary to-secondary-focus py-8">
-    <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="hero-content flex-col">
       <div class="text-center lg:text-left">
-        <h1 class="text-5xl font-bold">Escribínos!</h1>
+        <h1 class="text-5xl font-bold mb-6">Escribínos!</h1>
         <!--<p class="py-6">Acá podés escribirnos.</p>-->
       </div>
       <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
