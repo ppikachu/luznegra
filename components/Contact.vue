@@ -46,8 +46,12 @@
               </label>
               <textarea name="mensaje" class="textarea textarea-bordered" placeholder="Tu mensaje"></textarea>
             </div>
+            <div
+              class="g-recaptcha my-6 w-min"
+              data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"
+              data-theme="dark"
+            ></div>
             <div class="form-control mt-6">
-              <div class="g-recaptcha mb-6" data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"></div>
               <button class="btn btn-primary">Enviar</button>
             </div>
           </form>
