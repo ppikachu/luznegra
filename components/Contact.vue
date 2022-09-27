@@ -2,7 +2,7 @@
   useHead({
     script: [
       {
-        src: 'https://www.google.com/recaptcha/api.js?render=6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV&render=explicit',
+        src: 'https://www.google.com/recaptcha/api.js',
         async: true,
         defer: true,
       }
@@ -47,8 +47,7 @@
               <textarea name="mensaje" class="textarea textarea-bordered" placeholder="Tu mensaje"></textarea>
             </div>
             <div class="form-control mt-6">
-              <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" data-badge="inline" class="input mb-6 input-xs" />
-              <div id="inline-badge" class="mb-6" ></div>
+              <div class="g-recaptcha mb-6" data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"></div>
               <button class="btn btn-primary">Enviar</button>
             </div>
           </form>

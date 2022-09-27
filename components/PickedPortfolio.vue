@@ -87,9 +87,9 @@ function closeProject() {
     <div class="flex justify-center items-center my-8 mx-auto">
       <div class="form-control md:text-xl">
         <label class="label cursor-pointer">
-          <span class="" :class="{ 'opacity-25' : !destacadoTodos }">Destacados</span>
+          <span :class="{ 'opacity-25' : !destacadoTodos }">Destacados</span>
           <input type="checkbox" @click="swapDestacados" class="toggle toggle-md mx-6" />  
-          <span class="" :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
+          <span :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
         </label>
       </div>
     </div>
@@ -126,10 +126,16 @@ function closeProject() {
     <div v-show="!destacadoTodos" class="">
       <ProjectTags @tag="onTag" :initTag="currentTag" />
       <TransitionGroup
-        tag="ul"
-        class="grid md:grid-cols-3 lg:grid-cols-4 gap-4"
+        tag="div"
+        name="list"
+        class="grid md:grid-cols-3 lg:grid-cols-4 gap-4 content-start relative"
+      >
+        <!--class="grid md:grid-cols-3 lg:grid-cols-4 gap-4"-->
+        <div v-for="(post, i) in filtered"
+          :key="post"
+          :data-index="i"
+          class="col-span-1"
         >
-        <li v-for="(post, i) in filtered" :key="post" :data-index="i">
           <a
             :href="`/proyecto/${post.fields.slug}`"
             @click.prevent="openProyect = post"
@@ -154,7 +160,7 @@ function closeProject() {
             </div>
           </div>
           </a>
-        </li>
+        </div>
       </TransitionGroup>
     </div>
     <!--Gradient-->
@@ -163,6 +169,37 @@ function closeProject() {
 </template>
 
 <style scoped>
+.list-enter-from {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list-enter-active {
+  transition: all 0.5s ease;
+}
+.list-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.6)
+}
+.list-leave-active {
+  transition: opacity;
+  position: absolute;
+  /*transition: all 0.5s ease;*/
+}
+.list-complete-active {
+  position: absolute;
+}
+.list-move {
+  transition: all 0.5s;
+}
+
 .toggle {
   background-color: white;
 }
@@ -171,7 +208,7 @@ function closeProject() {
   border-radius: 1rem;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  width: 100%
+  width: 100%;
 }
 .gradient-border::before {
   content: "";
@@ -188,15 +225,13 @@ function closeProject() {
   background-position: 0 0;
   /*opacity: 0.5;*/
   transition: background-position 0.3s ease-in-out, opacity 0.2s ease-in-out;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
-  mask-composite: exclude
+  mask-composite: exclude;
 }
 .gradient-border:hover::before {
   background-position: -50% 0;
-  opacity: 1
+  opacity: 1;
 }
 </style>
