@@ -77,7 +77,7 @@ function closeProject() {
             <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
             <div class="modal-action">
               <p class="text-xs text-zinc-400">
-                link para compartir proyecto: <a :href="config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
+                {{ $t('link_compartir') }}: <a :href="config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
               </p>
             </div>
           </div>
@@ -88,7 +88,7 @@ function closeProject() {
     <div class="flex justify-center items-center my-8 mx-auto">
       <div class="form-control md:text-xl">
         <label class="label cursor-pointer">
-          <span :class="{ 'opacity-25' : !destacadoTodos }">Destacados</span>
+          <span :class="{ 'opacity-25' : !destacadoTodos }">{{ $t('destacados') }}</span>
           <input type="checkbox" @click="swapDestacados" class="toggle toggle-md mx-6" />  
           <span :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
         </label>
