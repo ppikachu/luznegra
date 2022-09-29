@@ -31,7 +31,6 @@ function buttonClick(tag) {
         class="btn btn-sm lg:btn-md"
         :class="{ 'btn-active': tag.sys.id == currentTag }"
       >
-        <!--{{ tag.name }}-->
         {{ $t(tag.sys.id) }}
       </button>
     </div>

@@ -5,7 +5,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
-    //locale: 'es',
+    locale: 'en',
     content_type: 'entradas',
     order: '-fields.date'
   })
