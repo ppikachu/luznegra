@@ -11,6 +11,55 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@kevinmarrec/nuxt-pwa',
     'nuxt-icon',
+    ['@nuxtjs/i18n',
+      {
+        locales: [
+          { code: 'es', name: 'Español', file: 'es.js' },
+          { code: 'en', name: 'English', file: 'en.js' },
+        ],
+        vueI18n: {
+          fallbackLocale: 'es',
+          messages: {
+            en: {
+              welcome: 'LUZ NEGRA is the Estudio Multimedia you have been looking for.',
+              nos1: 'We specialize in',
+              nos2: 'creative communication',
+              nos3: 'dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.',
+              dir1: 'LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos. Junto a un equipo de profesionales con amplia experiencia, producimos',
+              dir2: 'Video, Animación, Motion Graphics, Diseño Gráfico y Diseño Web',
+              dir3: 'combinando técnicas tradicionales con las nuevas tecnologías.',
+
+              sin1: 'Buscamos la',
+              sin2: 'síntesis',
+              sin3: 'necesaria para comunicar de manera',
+              sin4: 'original',
+              sin5: 'y',
+              sin6: 'efectiva',
+              sin7: 'tu mensaje.',
+            },
+            es: {
+              welcome: 'LUZ NEGRA es el Estudio Multimedia que buscabas.',
+              nos1: 'Nos especializamos en',
+              nos2: 'comunicación creativa',
+              nos3: 'dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.',
+              dir1: 'LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos. Junto a un equipo de profesionales con amplia experiencia, producimos',
+              dir2: 'Video, Animación, Motion Graphics, Diseño Gráfico y Diseño Web',
+              dir3: 'combinando técnicas tradicionales con las nuevas tecnologías.',
+
+              sin1: 'Buscamos la',
+              sin2: 'síntesis',
+              sin3: 'necesaria para comunicar de manera',
+              sin4: 'original',
+              sin5: 'y',
+              sin6: 'efectiva',
+              sin7: 'tu mensaje.',
+            }
+          }
+        },
+        detectBrowserLanguage: true,
+        defaultLocale: 'en',
+      }
+    ]
   ],
   buildModules: [
     '@nuxtjs/google-fonts'

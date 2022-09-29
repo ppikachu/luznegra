@@ -20,25 +20,37 @@
   <section class="py-16 md:py-32 px-4 md:px-8 text-center lg:text-left">
       <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto">
         <h1 class="text-4xl md:text-5xl lg:text-right prose" :class="colorClass" >
-          LUZ NEGRA es el Estudio Multimedia que buscabas.
+          {{ $t('welcome') }}
         </h1>
 
         <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" />
         
+        <p class="text-3xl prose" :class="colorP">{{ $t('welcome') }}</p>
+        
         <p class="text-3xl prose" :class="colorP" >
-          Nos especializamos en <span :class="colorClass">comunicación creativa</span>, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.
+          {{ $t('nos1') }}
+          <span :class="colorClass">{{ $t('nos2') }}</span>
+          {{ $t('nos3') }}
         </p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto mt-32">
         <p class="text-2xl prose lg:text-right" :class="colorP" >
-          LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos.  Junto a un equipo de profesionales con amplia experiencia, producimos <span :class="colorClass">Video</span>, <span :class="colorClass">Animación</span>, <span :class="colorClass">Motion Graphics</span>, <span :class="colorClass">Diseño Gráfico</span> y <span :class="colorClass">Diseño Web</span>, combinando técnicas tradicionales con las nuevas tecnologías.
+          {{ $t('dir1') }}
+          <span :class="colorClass">{{ $t('dir2') }}</span>
+          {{ $t('dir3') }}
         </p>
 
         <img class="max-w-sm w-full" src="/images/BETTY.gif" />
 
         <p class="text-3xl md:text-4xl prose" :class="colorP" >
-          Buscamos la <span :class="colorClass">síntesis</span> necesaria para comunicar de manera <span :class="colorClass">original</span> y <span :class="colorClass">efectiva</span> tu mensaje.
+          {{ $t('sin1') }}
+          <span :class="colorClass">{{ $t('sin2') }}</span>
+          {{ $t('sin3') }}
+          <span :class="colorClass">{{ $t('sin4') }}</span>
+          {{ $t('sin5') }}
+          <span :class="colorClass">{{ $t('sin6') }}</span>
+          {{ $t('sin7') }}
         </p>
       </div>
   </section>

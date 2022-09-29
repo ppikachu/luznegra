@@ -8,10 +8,11 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^15.13.1",
+    "@nuxtjs/i18n": "^8.0.0-alpha.2",
     "@vueuse/sound": "^1.1.7",
     "chroma-js": "^2.4.2",
     "contentful": "^10.0.0-beta-v10.8",
-    "gsap": "^3.11.1",
+    "gsap": "^3.11.2",
     "ismobilejs": "^1.1.1",
     "lodash.startcase": "^4.4.0",
     "lodash.upperfirst": "^4.3.1",
@@ -24,8 +25,8 @@
     "@nuxtjs/google-fonts": "^3.0.0-0",
     "@nuxtjs/tailwindcss": "^5.3.3",
     "@tailwindcss/typography": "^0.5.7",
-    "@vueuse/core": "^9.2.0",
-    "@vueuse/nuxt": "^9.2.0",
+    "@vueuse/core": "^9.3.0",
+    "@vueuse/nuxt": "^9.3.0",
     "daisyui": "^2.31.0",
     "nuxt": "^3.0.0-rc.11",
     "nuxt-icon": "^0.1.5"
