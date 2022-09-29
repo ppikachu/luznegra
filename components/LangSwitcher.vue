@@ -6,6 +6,7 @@ const availableLocales = computed(() => {
 </script>
 
 <template>
+  <ClientOnly>
   <div class="fixed right-0 z-50 p-6">
     <nuxt-link
       v-for="locale in availableLocales"
@@ -16,4 +17,5 @@ const availableLocales = computed(() => {
       {{ locale.name }}
     </nuxt-link>
   </div>
+  </ClientOnly>
 </template>

@@ -14,16 +14,16 @@ export default defineNuxtConfig({
     ['@nuxtjs/i18n',
       {
         locales: [
-          { code: 'es', name: 'Español', file: 'es.js' },
-          { code: 'en', name: 'English', file: 'en.js' },
+          { code: 'es',  iso: 'es',name: 'Español', file: 'es.js' },
+          { code: 'en',  iso: 'en',name: 'English', file: 'en.js' },
         ],
         vueI18n: {
           fallbackLocale: 'es',
           messages: {
             en: {
-              welcome: 'LUZ NEGRA is the Estudio Multimedia you have been looking for.',
-              nos1: 'We specialize in',
-              nos2: 'creative communication',
+              welcome: 'LUZ NEGRA es el Estudio Multimedia que buscabas.',
+              nos1: 'Nos especializamos en',
+              nos2: 'comunicación creativa',
               nos3: 'dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.',
               dir1: 'LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos. Junto a un equipo de profesionales con amplia experiencia, producimos',
               dir2: 'Video, Animación, Motion Graphics, Diseño Gráfico y Diseño Web',
@@ -36,6 +36,18 @@ export default defineNuxtConfig({
               sin5: 'y',
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
+
+              destacados: 'Highlighted',
+              series: 'series',
+              booktrailer: 'booktrailer',
+              animacion: 'animation',
+              motion_graphics: 'motion graphics',
+              ilus_diseno: 'ilustration & design',
+              link_compartir: 'share project link',
+              escribinos: 'Contact us',
+              mensaje: 'Message',
+              tu_mensaje: 'Your message',
+              enviar: 'send',
             },
             es: {
               welcome: 'LUZ NEGRA es el Estudio Multimedia que buscabas.',
@@ -53,6 +65,18 @@ export default defineNuxtConfig({
               sin5: 'y',
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
+
+              destacados: 'Destacados',
+              series: 'series',
+              booktrailer: 'booktrailer',
+              animacion: 'animación',
+              motion_graphics: 'motion graphics',
+              ilus_diseno: 'ilustración & diseño',
+              link_compartir: 'link para compartir proyecto',
+              escribinos: 'Escribínos',
+              mensaje: 'Mensaje',
+              tu_mensaje: 'Tu mensaje',
+              enviar: 'enviar',
             }
           }
         },
