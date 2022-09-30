@@ -31,7 +31,7 @@
         <h1 class="text-5xl font-bold mb-6">Escribínos!</h1>
         <!--<p class="py-6">Acá podés escribirnos.</p>-->
       </div>
-      <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+      <div class="card card-compact lg:card-normal flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <div class="card-body">
           <form action="https://formspree.io/f/mwkzplkb" method="POST">
             <div class="form-control">
