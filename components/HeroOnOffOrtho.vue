@@ -568,7 +568,7 @@ onUnmounted(() => {
 
 <template>
   <div class="relative z-30">
-    <div id="container" ref="target" class="relative overflow-hidden h-screen">
+    <div id="container" ref="target" class="absolute inset-0   overflow-hidden h-screen">
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
         loop

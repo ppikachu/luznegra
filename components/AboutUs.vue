@@ -87,3 +87,9 @@
     </ClientOnly>
 
 </template>
+<style scoped>
+  #about-us {
+    /*position: relative;*/
+    padding-top: 100vh;
+  }
+</style>
