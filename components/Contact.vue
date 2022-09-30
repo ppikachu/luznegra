@@ -25,25 +25,25 @@
 </script>
 
 <template>
-  <div class="hero mx-auto bg-gradient-to-br from-secondary to-secondary-focus py-8">
+  <div class="hero bg-gradient-to-br from-secondary to-secondary-focus py-8">
     <div class="hero-content flex-col">
       <div class="text-center lg:text-left">
         <h1 class="text-5xl font-bold mb-6">{{ $t('escribinos') }}!</h1>
       </div>
-      <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+      <div class="card card-compact lg:card-normal flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <div class="card-body">
           <form action="https://formspree.io/f/mwkzplkb" method="POST">
             <div class="form-control">
               <label class="label">
                 <span class="label-text">E-mail</span>
               </label>
-              <input type="email" name="email" required placeholder="e-mail" class="input input-bordered" />
+              <input type="email" name="email" required placeholder="e-mail" class=" textarea-secondary accent-amber-500 input" />
             </div>
             <div class="form-control">
               <label class="label">
                 <span class="label-text">{{ $t('mensaje') }}</span>
               </label>
-              <textarea name="mensaje" class="textarea textarea-bordered" :placeholder="$t('tu_mensaje')"></textarea>
+              <textarea name="mensaje" class="textarea textarea-secondary" :placeholder="$t('tu_mensaje')"></textarea>
             </div>
             <div
               class="g-recaptcha my-6 w-min"

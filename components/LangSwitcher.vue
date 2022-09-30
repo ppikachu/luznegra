@@ -6,16 +6,12 @@ const availableLocales = computed(() => {
 </script>
 
 <template>
-  <ClientOnly>
-  <div class="fixed right-0 z-50 p-6">
-    <nuxt-link
-      v-for="locale in availableLocales"
-      :key="locale.code"
-      :to="switchLocalePath(locale.code)"
-      class="btn btn-primary btn-xs"
-    >
-      {{ locale.name }}
-    </nuxt-link>
-  </div>
-  </ClientOnly>
+  <a
+    v-for="locale in availableLocales"
+    :key="locale.code"
+    :href="switchLocalePath(locale.code)"
+    class="btn btn-outline btn-sm"
+  >
+  {{ $t('cambiar_idioma') }}: {{ locale.name }}
+  </a>
 </template>

@@ -44,10 +44,14 @@ export default defineNuxtConfig({
               motionGraphics: 'motion graphics',
               ilustracion: 'ilustration & design',
               link_compartir: 'share project link',
+
               escribinos: 'Contact us',
               mensaje: 'Message',
               tu_mensaje: 'Your message',
               enviar: 'send',
+
+              cambiar_idioma: 'cambiar a',
+              vamos: "let's go!"
             },
             es: {
               welcome: 'LUZ NEGRA es el Estudio Multimedia que buscabas.',
@@ -73,10 +77,14 @@ export default defineNuxtConfig({
               motionGraphics: 'motion graphics',
               ilustracion: 'ilustración & diseño',
               link_compartir: 'link para compartir proyecto',
+
               escribinos: 'Escribínos',
               mensaje: 'Mensaje',
               tu_mensaje: 'Tu mensaje',
               enviar: 'enviar',
+              
+              cambiar_idioma: 'switch to',
+              vamos: "vamos!"
             }
           }
         },
@@ -141,6 +149,7 @@ export default defineNuxtConfig({
       description: 'Diseño y animación',
       ogHost: process.env.NODE_ENV === 'production' ? 'https://luz-negra.com' : 'http://localhost:3000',
       ogImage: '/OG.png',
+      twitterCard: 'summary_large_image',
     }
   },
   nuxtIcon: {
