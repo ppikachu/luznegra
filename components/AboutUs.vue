@@ -7,6 +7,13 @@
   const props = defineProps<Props>()
   
   const openTeam = ref(null)
+  const TeamProfile = ref(null)
+
+  function openPerfil(quien: string) {
+    openTeam.value = true
+    TeamProfile.value = quien
+  }
+
   //const sound = useSound('/audio/Click03.mp3')
   //const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
   
@@ -43,7 +50,10 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto mt-32">
       <p class="text-2xl prose lg:text-right" :class="colorP" >
-        {{ $t('dir1') }}
+        {{ $t('dir1a') }}
+        <button @click="openPerfil('ines')" class="link link-primary">Inés Trigub</button>
+        {{ $t('sin5') }}
+        <button @click="openPerfil('santi')" class="link link-primary">Santiago Toyos</button>{{ $t('dir1b') }}
         <span :class="colorClass">{{ $t('dir2') }}</span>
         {{ $t('dir3') }}
       </p>
@@ -60,37 +70,22 @@
     </div>
   </section>
   <ClientOnly>
-      <Teleport to="html">
+      <Teleport to="body">
         <div
           v-if="openTeam"
           id="modal-team"
           class="modal bg-black/80 backdrop-blur backdrop-grayscale"
           :class="{ 'modal-open': openTeam }"
         >
-          <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-5xl max-h-full">
-            <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
-              <Icon name="mdi:close-thick" />
-            </label>
-            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center mt-4">
-              <h1 class="text-4xl text-primary"></h1>
-            </div>
-            <div class="prose my-4">
-              <div class="mb-4" id="content" ></div>
-            </div>
-            <div class="modal-action">
-              <p class="text-xs text-zinc-400">
-                {{ $t('link_compartir') }}
-              </p>
-            </div>
-          </div>
+          <Perfil @close-me="closeProject" :name="TeamProfile" />
         </div>
       </Teleport>
-    </ClientOnly>
+  </ClientOnly>
 
 </template>
 <style scoped>
   #about-us {
-    /*position: relative;*/
-    padding-top: 100vh;
+    position: relative;
+    top: 100vh;
   }
 </style>

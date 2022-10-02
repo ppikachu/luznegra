@@ -25,7 +25,8 @@ export default defineNuxtConfig({
               nos1: 'Nos especializamos en',
               nos2: 'comunicación creativa',
               nos3: 'dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.',
-              dir1: 'LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos. Junto a un equipo de profesionales con amplia experiencia, producimos',
+              dir1a: 'LUZ NEGRA está dirigido por ',
+              dir1b: '. Junto a un equipo de profesionales con amplia experiencia, producimos',
               dir2: 'Video, Animación, Motion Graphics, Diseño Gráfico y Diseño Web',
               dir3: 'combinando técnicas tradicionales con las nuevas tecnologías.',
 
@@ -36,6 +37,9 @@ export default defineNuxtConfig({
               sin5: 'y',
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
+
+              info_ine: 'Texto ine inglés',
+              info_santi: 'Texto santi inglés',
 
               destacados: 'Highlighted',
               series: 'series',
@@ -58,7 +62,8 @@ export default defineNuxtConfig({
               nos1: 'Nos especializamos en',
               nos2: 'comunicación creativa',
               nos3: 'dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.',
-              dir1: 'LUZ NEGRA está dirigido por Inés Trigub y Santiago Toyos. Junto a un equipo de profesionales con amplia experiencia, producimos',
+              dir1a: 'LUZ NEGRA está dirigido por ',
+              dir1b: '. Junto a un equipo de profesionales con amplia experiencia, producimos',
               dir2: 'Video, Animación, Motion Graphics, Diseño Gráfico y Diseño Web',
               dir3: 'combinando técnicas tradicionales con las nuevas tecnologías.',
 
@@ -69,6 +74,9 @@ export default defineNuxtConfig({
               sin5: 'y',
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
+
+              info_ine: 'Texto ine español',
+              info_santi: 'Texto santi español',
 
               destacados: 'Destacados',
               series: 'series',
