@@ -614,7 +614,7 @@ onUnmounted(() => {
         <div id="parameters" class="w-80 md:w-96"></div>
       </div>
     </div>
-    <AboutUs :ciclo="dayNight" :class="{'text-base-100' : dayNight === 'day'}" :style="`background-color: ${heroBgColor}`" />
+    <AboutUs :ciclo="dayNight" :class="{'text-base-100' : dayNight === 'day'}" :color="heroBgColor" />
     <!--fadeScene-->
     <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">

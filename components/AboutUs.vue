@@ -1,11 +1,11 @@
 <script setup lang="ts">
   /* Define props */
-  const props = defineProps({
-    ciclo: {
-    type: String,
-    required: false,
-    }
-  })
+  interface Props{
+    ciclo: String,
+    color?: String, 
+  }
+  const props = defineProps<Props>()
+  
   const openTeam = ref(null)
   //const sound = useSound('/audio/Click03.mp3')
   //const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
@@ -25,7 +25,8 @@
 </script>
 
 <template>
-  <section id="about-us" class="py-16 md:py-32 px-4 md:px-8 text-center">
+  <section id="about-us" class="py-16 md:py-32 px-4 md:px-8 text-center" :style="`background-color: ${ props.color }`" >
+
     <div class="flex flex-col lg:flex-row place-items-center max-w-6xl mx-auto">
       <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" />
       <div class="lg:text-left prose">
