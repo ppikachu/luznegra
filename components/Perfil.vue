@@ -17,19 +17,19 @@ const teamAvatar = computed(() => {
 })
 </script>
 <template>
-  <div class="modal-box rounded-none md:rounded-3xl relative max-w-2xl">
-  <label for="modal-proyecto" @click="$emit('closeMe')" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
+  <div class="modal-box gradient-bold rounded-none md:rounded-3xl relative max-w-2xl mx-3 md:mx-8">
+  <label for="modal-proyecto" @click="$emit('closeMe')" class="btn btn-primary btn-sm btn-circle absolute z-10 left-2 top-2">
     <Icon name="mdi:close-thick" />
   </label>
-  <div class="mt-8">
-    <div class="mb-4" id="content" >
-      <div class="avatar">
-        <div class="w-20 rounded">
-          <img :src="teamAvatar" />
-        </div>
+  <div class="flex flex-col md:flex-row md:space-x-4 mt-8">
+    <div class="avatar">
+      <div class="w-32 h-32 rounded">
+        <img :src="teamAvatar" />
       </div>
-      <h1 class="text-2xl text-primary">{{ teamName }}</h1>
-      {{ teamProfile }}
+    </div>
+    <div class="mb-4 prose" id="content" >
+      <h2 class="text-primary my-4 md:mt-0">{{ teamName }}</h2>
+      <p>{{ teamProfile }}</p>
     </div>
   </div>
 </div>

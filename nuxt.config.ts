@@ -38,8 +38,8 @@ export default defineNuxtConfig({
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
 
-              info_ine: 'Texto ine inglés',
-              info_santi: 'Texto santi inglés',
+              info_ine: 'Es animadora. Estudió cine en la FUC, donde se graduó en 1996; paralelamente cursó la carrera de Bellas Artes en la escuela Pridiliano Pueyrredón y estudió dibujo con Roberto Paéz; trabajó en los estudios de animación de Videocolor, Bujos y Hook up, y como animadora en los canales Ciudad Abierta y Encuentro. Con el sello Pequeño Editor publicó dos libros Fiesta de disfraces (2007) y Autos (2008). Desde 2005 es co-directora del estudio de diseño y animación Luz Negra. Es egresada del Colegio Nacional de Buenos Aires. Nació en Buenos Aires, en 1974.',
+              info_santi: 'Es diseñador gráfico. Cursó Diseño Gráfico en la Universidad de Palermo y 2 años de Bellas Artes en la escuela Pridiliano Pueyrredón. Formó parte de Smartmedia, una de las primeras agencias de diseño web con clientes como Fiat Argentina, Iveco, Trenes Metropolitano y Edenor. Es co-director del estudio de diseño y animación Luz Negra. Egresado del Colegio Anglo Americano, de Bogotá, Colombia. Nació en Buenos Aires en 1969.',
 
               destacados: 'Highlighted',
               series: 'series',
@@ -75,8 +75,8 @@ export default defineNuxtConfig({
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
 
-              info_ine: 'Texto ine español',
-              info_santi: 'Texto santi español',
+              info_ine: 'Es animadora. Estudió cine en la FUC, donde se graduó en 1996; paralelamente cursó la carrera de Bellas Artes en la escuela Pridiliano Pueyrredón y estudió dibujo con Roberto Paéz; trabajó en los estudios de animación de Videocolor, Bujos y Hook up, y como animadora en los canales Ciudad Abierta y Encuentro. Con el sello Pequeño Editor publicó dos libros Fiesta de disfraces (2007) y Autos (2008). Desde 2005 es co-directora del estudio de diseño y animación Luz Negra. Es egresada del Colegio Nacional de Buenos Aires. Nació en Buenos Aires, en 1974.',
+              info_santi: 'Es diseñador gráfico. Cursó Diseño Gráfico en la Universidad de Palermo y 2 años de Bellas Artes en la escuela Pridiliano Pueyrredón. Formó parte de Smartmedia, una de las primeras agencias de diseño web con clientes como Fiat Argentina, Iveco, Trenes Metropolitano y Edenor. Es co-director del estudio de diseño y animación Luz Negra. Egresado del Colegio Anglo Americano, de Bogotá, Colombia. Nació en Buenos Aires en 1969.',
 
               destacados: 'Destacados',
               series: 'series',
