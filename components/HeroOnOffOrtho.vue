@@ -568,7 +568,7 @@ onUnmounted(() => {
 
 <template>
   <div class="relative z-30">
-    <div id="container" ref="target" class="relative overflow-hidden h-screen">
+    <div id="container" ref="target" class="relative overflow-hidden">
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
         loop
@@ -586,7 +586,7 @@ onUnmounted(() => {
         :style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, transparent 100%);`"
       >
       </div>
-      <div class="absolute bottom-8 lg:bottom-20 flex flex-col justify-center items-center space-y-8 w-full">
+      <div class="absolute bottom-0 py-12 px-4 lg:bottom-20 flex flex-col justify-center items-center space-y-8 w-full">
         <!--SWITCH-->
         <label class="swap">
           <!-- this hidden checkbox controls the state -->
@@ -604,8 +604,12 @@ onUnmounted(() => {
         <div class="grid grid-cols-2 gap-4 lg:gap-16">
           <!--SCROLL/LANGUAGE -->
           <LangSwitcher />
-          <a href="#about-us" class="btn btn-outline btn-sm animate-pulse">
+          <a href="#about-us" class="btn btn-outline btn-sm relative">
             <Icon name="ic:sharp-keyboard-double-arrow-down" class="w-5 h-5" />{{ $t('vamos') }}
+            <span class="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+            </span>
           </a>
         </div>
       </div>
@@ -625,6 +629,9 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+  #container {
+    height: 95vh;
+  }
 .wave {
   animation: bounce 1s infinite;
 }

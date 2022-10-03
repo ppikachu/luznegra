@@ -50,8 +50,8 @@ function closeProject() {
 </script>
 
 <template>
-  <section id="portfolio" class="container mx-auto px-4 md:px-8 my-16 relative">
-    <h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
+  <section id="hero" class="container"></section>
+  <section id="portfolio" class="mx-auto px-4 md:px-8 my-16 relative">
     <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
@@ -84,8 +84,10 @@ function closeProject() {
         </div>
       </Teleport>
     </ClientOnly>
+    
+    <h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
     <!--SWITCH-->
-    <div class="flex justify-center items-center my-8 mx-auto">
+    <div class="flex justify-center items-center py-8 mx-auto">
       <div class="form-control md:text-xl">
         <label class="label cursor-pointer">
           <span :class="{ 'opacity-25' : !destacadoTodos }">{{ $t('destacados') }}</span>
@@ -131,7 +133,6 @@ function closeProject() {
         name="list"
         class="grid md:grid-cols-3 lg:grid-cols-4 gap-4 content-start relative"
       >
-        <!--class="grid md:grid-cols-3 lg:grid-cols-4 gap-4"-->
         <div v-for="(post, i) in filtered"
           :key="post"
           :data-index="i"
