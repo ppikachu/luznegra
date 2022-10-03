@@ -3,25 +3,34 @@
 interface Props{ name: String }
 const props = defineProps<Props>()
 const nuxtApp = useNuxtApp()
-const lang = nuxtApp.$i18n.locale.destacados
+
+const teamName = computed(() => {
+  return props.name ==='ines' ? 'Inés Trigub' : 'Santiago Toyos'
+})
+
+const teamProfile = computed(() => {
+  return props.name ==='ines' ? nuxtApp.$i18n.t('info_ine') : nuxtApp.$i18n.t('info_santi')
+})
+
+const teamAvatar = computed(() => {
+  return props.name ==='ines' ? '/images/ine.jpg' : '/images/santi.jpg'
+})
 </script>
 <template>
-  <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-5xl max-h-full">
+  <div class="modal-box rounded-none md:rounded-3xl relative max-w-2xl">
   <label for="modal-proyecto" @click="$emit('closeMe')" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
     <Icon name="mdi:close-thick" />
   </label>
-  <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center mt-4">
-    <h1 class="text-4xl text-primary">{{ props.name }}</h1>
-  </div>
-  <div class="prose my-4">
+  <div class="mt-8">
     <div class="mb-4" id="content" >
-      {{ lang }}
+      <div class="avatar">
+        <div class="w-20 rounded">
+          <img :src="teamAvatar" />
+        </div>
+      </div>
+      <h1 class="text-2xl text-primary">{{ teamName }}</h1>
+      {{ teamProfile }}
     </div>
-  </div>
-  <div class="modal-action">
-    <p class="text-xs text-zinc-400">
-      
-    </p>
   </div>
 </div>
 </template>

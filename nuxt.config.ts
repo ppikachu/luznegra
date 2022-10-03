@@ -14,8 +14,8 @@ export default defineNuxtConfig({
     ['@nuxtjs/i18n',
       {
         locales: [
-          { code: 'es',  iso: 'es',name: 'Español', file: 'es.js' },
-          { code: 'en',  iso: 'en',name: 'English', file: 'en.js' },
+          { code: 'es',  iso: 'es',name: 'Español', file: 'es.json' },
+          { code: 'en',  iso: 'en',name: 'English', file: 'en.json' },
         ],
         vueI18n: {
           fallbackLocale: 'es',
@@ -96,6 +96,8 @@ export default defineNuxtConfig({
             }
           }
         },
+        //lazy: true,
+        //langDir: 'lang/',//WARN: estos dos no funcionan
         detectBrowserLanguage: true,
         defaultLocale: 'en',
       }

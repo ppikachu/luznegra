@@ -1,11 +1,10 @@
 <script setup lang="ts">
   /* Define props */
-  interface Props{
-    ciclo: String,
-    color?: String, 
-  }
-  const props = defineProps<Props>()
-  
+  const props = defineProps({
+    ciclo: { type: String, default: 'noche' },
+    color: String
+  })
+
   const openTeam = ref(null)
   const TeamProfile = ref(null)
 
@@ -15,10 +14,10 @@
   }
 
   //const sound = useSound('/audio/Click03.mp3')
-  //const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
+  const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
   
   function closeProject() {
-    //soundClose.play()
+    soundClose.play()
     openTeam.value = false
   }
 
@@ -83,9 +82,3 @@
   </ClientOnly>
 
 </template>
-<style scoped>
-  #about-us {
-    position: relative;
-    top: 100vh;
-  }
-</style>
