@@ -17,7 +17,7 @@
 </script>
 
 <template>
-  <section class="py-16 md:py-32 px-4 md:px-8 text-center lg:text-left">
+  <section id="about-us" class="py-16 md:py-32 px-4 md:px-8 text-center lg:text-left">
       <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto">
         <h1 class="text-4xl md:text-5xl lg:text-right prose" :class="colorClass" >
           LUZ NEGRA es el Estudio Multimedia que buscabas.

@@ -601,7 +601,9 @@ onUnmounted(() => {
           </label>
         </div>
         <!--SCROLL-->
-        <Icon name="ic:sharp-keyboard-double-arrow-up" class="h-10 w-10 animate-bounce" />
+        <a href="#about-us">
+          <Icon name="ic:sharp-keyboard-double-arrow-down" class="w-10 h-10 animate-bounce" />
+        </a>
       </div>
       <!--Tweakpane-->
       <div v-if="route.name == 'test'" class="absolute flex justify-center w-full p-4">
