@@ -99,7 +99,7 @@ export default defineNuxtConfig({
         //lazy: true,
         //langDir: 'lang/',//WARN: estos dos no funcionan
         detectBrowserLanguage: true,
-        defaultLocale: 'en',
+        defaultLocale: 'es',
       }
     ]
   ],

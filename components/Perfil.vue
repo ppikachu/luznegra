@@ -2,6 +2,7 @@
 /* Define props */
 interface Props{ name: String }
 const props = defineProps<Props>()
+
 const nuxtApp = useNuxtApp()
 
 const teamName = computed(() => {
@@ -28,7 +29,7 @@ const teamAvatar = computed(() => {
       </div>
     </div>
     <div class="mb-4 prose" id="content" >
-      <h2 class="text-primary my-4 md:mt-0">{{ teamName }}</h2>
+      <h1 class="text-primary my-4 md:mt-0">{{ teamName }}</h1>
       <p>{{ teamProfile }}</p>
     </div>
   </div>

@@ -58,7 +58,7 @@ function closeProject() {
         <div
           v-if="openProyect"
           id="modal-proyecto"
-          class="modal bg-black/80 backdrop-blur backdrop-grayscale"
+          class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
           :class="{ 'modal-open': openProyect }"
         >
           <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-5xl max-h-full">

@@ -31,8 +31,11 @@
 </script>
 
 <template>
-  <section id="about-us" class="py-16 md:py-32 px-4 md:px-8 text-center" :style="`background-color: ${ props.color }`" >
-
+  <section
+    id="about-us"
+    class="py-16 md:py-32 px-4 md:px-8 text-center"
+    :style="`background-color: ${ props.color }`"
+  >
     <div class="flex flex-col lg:flex-row place-items-center max-w-6xl mx-auto">
       <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" />
       <div class="lg:text-left prose">
@@ -50,9 +53,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto mt-32">
       <p class="text-2xl prose lg:text-right" :class="colorP" >
         {{ $t('dir1a') }}
-        <button @click="openPerfil('ines')" class="link link-primary">Inés Trigub</button>
+        <button @click="openPerfil('ines')" class="link" :class="colorClass">Inés Trigub</button>
         {{ $t('sin5') }}
-        <button @click="openPerfil('santi')" class="link link-primary">Santiago Toyos</button>{{ $t('dir1b') }}
+        <button @click="openPerfil('santi')" class="link" :class="colorClass">Santiago Toyos</button>{{ $t('dir1b') }}
         <span :class="colorClass">{{ $t('dir2') }}</span>
         {{ $t('dir3') }}
       </p>
@@ -73,7 +76,7 @@
         <div
           v-if="openTeam"
           id="modal-team"
-          class="modal bg-black/80 backdrop-blur backdrop-grayscale"
+          class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
           :class="{ 'modal-open': openTeam }"
         >
           <Perfil @close-me="closeProject" :name="TeamProfile" />

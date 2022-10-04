@@ -124,8 +124,8 @@ function fadeScene(time:number) {
 function swapHeroBgColor() {
   heroBgColor.value = params.dayOrNight === 'day'?
   //HACK: hardcoded hero colors:
-  chroma(params.groundColor).brighten(2) :
-  chroma(params.lightMoonColor).darken(.6)
+  chroma(params.groundColor).brighten(2).hex() :
+  chroma(params.lightMoonColor).darken(.6).hex()
 }
 
 function setFog( cycle:string ) {
@@ -586,7 +586,7 @@ onUnmounted(() => {
         :style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, transparent 100%);`"
       >
       </div>
-      <div class="absolute bottom-0 py-12 px-4 lg:bottom-20 flex flex-col justify-center items-center space-y-8 w-full">
+      <div class="absolute bottom-0 lg:-bottom-8 py-12 px-4 flex flex-col justify-center items-center space-y-8 w-full">
         <!--SWITCH-->
         <label class="swap">
           <!-- this hidden checkbox controls the state -->
@@ -601,15 +601,11 @@ onUnmounted(() => {
           </svg>
         </label>
 
-        <div class="grid grid-cols-2 gap-4 lg:gap-16">
+        <div class="grid grid-cols-2 btn-group">
           <!--SCROLL/LANGUAGE -->
           <LangSwitcher />
-          <a href="#about-us" class="btn btn-outline btn-sm relative">
-            <Icon name="ic:sharp-keyboard-double-arrow-down" class="w-5 h-5" />{{ $t('vamos') }}
-            <span class="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-            </span>
+          <a href="#about-us" class="btn btn-outline btn-sm md:btn-md">
+            {{ $t('vamos') }}<Icon name="ic:sharp-keyboard-double-arrow-down" class="w-6 h-6" />
           </a>
         </div>
       </div>
@@ -618,7 +614,7 @@ onUnmounted(() => {
         <div id="parameters" class="w-80 md:w-96"></div>
       </div>
     </div>
-    <AboutUs :ciclo="dayNight" :class="{'text-base-100' : dayNight === 'day'}" :color="heroBgColor" />
+    <AboutUs :ciclo="dayNight" :color="heroBgColor" />
     <!--fadeScene-->
     <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">

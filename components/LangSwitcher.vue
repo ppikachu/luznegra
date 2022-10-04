@@ -10,7 +10,7 @@ const availableLocales = computed(() => {
     v-for="locale in availableLocales"
     :key="locale.code"
     :href="switchLocalePath(locale.code)"
-    class="btn btn-outline btn-sm"
+    class="btn btn-outline btn-sm md:btn-md"
   >
   {{ $t('cambiar_idioma') }}: {{ locale.name }}
   </a>
