@@ -601,12 +601,10 @@ onUnmounted(() => {
           </svg>
         </label>
 
-        <div class="grid grid-cols-2 btn-group">
+        <div class="flex flex-col items-center space-y-4">
           <!--SCROLL/LANGUAGE -->
+          <a href="#about-us" class="btn btn-outline">{{ $t('vamos') }}<Icon name="ic:sharp-keyboard-double-arrow-down" class="w-6 h-6" /></a>
           <LangSwitcher />
-          <a href="#about-us" class="btn btn-outline btn-sm md:btn-md">
-            {{ $t('vamos') }}<Icon name="ic:sharp-keyboard-double-arrow-down" class="w-6 h-6" />
-          </a>
         </div>
       </div>
       <!--Tweakpane-->

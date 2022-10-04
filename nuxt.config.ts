@@ -54,7 +54,7 @@ export default defineNuxtConfig({
               tu_mensaje: 'Your message',
               enviar: 'send',
 
-              cambiar_idioma: 'cambiar a',
+              cambiar_idioma: 'o cambiar a',
               vamos: "let's go!"
             },
             es: {
@@ -91,7 +91,7 @@ export default defineNuxtConfig({
               tu_mensaje: 'Tu mensaje',
               enviar: 'enviar',
               
-              cambiar_idioma: 'switch to',
+              cambiar_idioma: 'or switch to',
               vamos: "vamos!"
             }
           }
