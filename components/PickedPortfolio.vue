@@ -12,7 +12,6 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
 })
 const posts = data
 
-const config = useRuntimeConfig()
 const openProyect = ref(null)
 const destacadoTodos = ref(true)
 
@@ -77,7 +76,7 @@ function closeProject() {
             <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
             <div class="modal-action">
               <p class="text-xs text-zinc-400">
-                {{ $t('link_compartir') }}: <a :href="config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
+                {{ $t('link_compartir') }}: <a :href="$config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
               </p>
             </div>
           </div>

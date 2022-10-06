@@ -38,7 +38,7 @@ export default defineNuxtConfig({
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
 
-              info_ine: 'Es animadora. Estudió cine en la FUC, donde se graduó en 1996; paralelamente cursó la carrera de Bellas Artes en la escuela Pridiliano Pueyrredón y estudió dibujo con Roberto Paéz; trabajó en los estudios de animación de Videocolor, Bujos y Hook up, y como animadora en los canales Ciudad Abierta y Encuentro. Con el sello Pequeño Editor publicó dos libros Fiesta de disfraces (2007) y Autos (2008). Desde 2005 es co-directora del estudio de diseño y animación Luz Negra. Es egresada del Colegio Nacional de Buenos Aires. Nació en Buenos Aires, en 1974.',
+              info_ine: 'Es animadora. Estudió cine en la FUC, donde se graduó en 1996. Paralelamente cursó la carrera de Bellas Artes en la escuela Pridiliano Pueyrredón y estudió dibujo con Roberto Paéz.<br>Trabajó en los estudios de animación de Videocolor, Bujos y Hook up, y como animadora en los canales Ciudad Abierta y Encuentro. Con el sello Pequeño Editor publicó dos libros Fiesta de disfraces (2007) y Autos (2008).<br>Desde 2005 es co-directora del estudio de diseño y animación Luz Negra. Es egresada del Colegio Nacional de Buenos Aires. Nació en Buenos Aires, en 1974.',
               info_santi: 'Es diseñador gráfico. Cursó Diseño Gráfico en la Universidad de Palermo y 2 años de Bellas Artes en la escuela Pridiliano Pueyrredón. Formó parte de Smartmedia, una de las primeras agencias de diseño web con clientes como Fiat Argentina, Iveco, Trenes Metropolitano y Edenor. Es co-director del estudio de diseño y animación Luz Negra. Egresado del Colegio Anglo Americano, de Bogotá, Colombia. Nació en Buenos Aires en 1969.',
 
               destacados: 'Highlighted',
@@ -75,8 +75,8 @@ export default defineNuxtConfig({
               sin6: 'efectiva',
               sin7: 'tu mensaje.',
 
-              info_ine: 'Es animadora. Estudió cine en la FUC, donde se graduó en 1996; paralelamente cursó la carrera de Bellas Artes en la escuela Pridiliano Pueyrredón y estudió dibujo con Roberto Paéz; trabajó en los estudios de animación de Videocolor, Bujos y Hook up, y como animadora en los canales Ciudad Abierta y Encuentro. Con el sello Pequeño Editor publicó dos libros Fiesta de disfraces (2007) y Autos (2008). Desde 2005 es co-directora del estudio de diseño y animación Luz Negra. Es egresada del Colegio Nacional de Buenos Aires. Nació en Buenos Aires, en 1974.',
-              info_santi: 'Es diseñador gráfico. Cursó Diseño Gráfico en la Universidad de Palermo y 2 años de Bellas Artes en la escuela Pridiliano Pueyrredón. Formó parte de Smartmedia, una de las primeras agencias de diseño web con clientes como Fiat Argentina, Iveco, Trenes Metropolitano y Edenor. Es co-director del estudio de diseño y animación Luz Negra. Egresado del Colegio Anglo Americano, de Bogotá, Colombia. Nació en Buenos Aires en 1969.',
+              info_ine: '<p>Es animadora. Estudió cine en la FUC, donde se graduó en 1996. Paralelamente cursó la carrera de Bellas Artes en la escuela Pridiliano Pueyrredón y estudió dibujo con Roberto Paéz</p><p>Trabajó en los estudios de animación de Videocolor, Bujos y Hook up, y como animadora en los canales Ciudad Abierta y Encuentro. Con el sello Pequeño Editor publicó dos libros Fiesta de disfraces (2007) y Autos (2008).</p><p>Desde 2005 es co-directora del estudio de diseño y animación Luz Negra.</p><p>Es egresada del Colegio Nacional de Buenos Aires. Nació en Buenos Aires, en 1974.</p>',
+              info_santi: '<p>Diseñador Gráfico con 20 años de experiencia en producción de contenido multimedia. Residió en Bogotá, Colombia durante el secundario. En Argentina cursó Diseño Gráfico en la Universidad de Palermo y 2 años de Bellas Artes en la escuela Pridiliano Pueyrredón.</p><p>Formó parte de Smartmedia, una de las primeras agencias de diseño web con clientes como Fiat Argentina, Iveco, Trenes Metropolitano y Edenor.</p><p>Es co-director de Luz Negra.</p>',
 
               destacados: 'Destacados',
               series: 'series',
@@ -129,6 +129,10 @@ export default defineNuxtConfig({
       //GITHUB_ORGANIZATION_URL: 'https://github.com/luznegra',
       //GA_ID: process.env.GA_ID,
       //GA_APP_NAME: 'LUZ NEGRA',
+      twitterUrlI: '#',
+      twitterUrlS: 'https://twitter.com/ppika',
+      behanceI: '#',
+      behanceS: '#'
     },
   },
   css: [
@@ -138,7 +142,6 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       'Open Sans': true,
-      'Varela Round': true,//FIXME no carga en los project tags
     }
   },
   //image: {
