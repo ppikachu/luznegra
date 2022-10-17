@@ -12,6 +12,6 @@ const availableLocales = computed(() => {
     :href="switchLocalePath(locale.code)"
     class="text-sm"
   >
-  {{ $t('cambiar_idioma') }} {{ locale.name }}
+    {{ $t('cambiar_idioma') }} {{ locale.name }}
   </a>
 </template>

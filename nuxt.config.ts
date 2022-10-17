@@ -55,7 +55,9 @@ export default defineNuxtConfig({
               enviar: 'send',
 
               cambiar_idioma: 'o cambiar a',
-              vamos: "let's go!"
+              vamos: "let's go!",
+              drag_m_experiment: 'drag over the cinema!',
+              drag_d_experiment: 'drag mouse over the cinema!',
             },
             es: {
               welcome: 'LUZ NEGRA es el Estudio Multimedia que buscabas.',
@@ -92,13 +94,15 @@ export default defineNuxtConfig({
               enviar: 'enviar',
               
               cambiar_idioma: 'or switch to',
-              vamos: "vamos!"
+              vamos: 'vamos!',
+              drag_m_experiment: 'arrastra el dedo sobre el autocine!',
+              drag_d_experiment: 'arrastra el ratón sobre el autocine!',
             }
           }
         },
         //lazy: true,
         //langDir: 'lang/',//WARN: estos dos no funcionan
-        detectBrowserLanguage: true,
+        //detectBrowserLanguage: true,
         defaultLocale: 'es',
       }
     ]

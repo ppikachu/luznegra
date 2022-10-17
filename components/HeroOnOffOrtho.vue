@@ -616,8 +616,8 @@ onUnmounted(() => {
     <!--fadeScene-->
     <div id="fader" v-if="!loadedModels" class="absolute top-0 w-full h-screen flex flex-col justify-center items-center" :style="`background-color: ${heroBgColor}`">
       <img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
-      <p v-if="amIMobile===true" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> arrastra el dedo sobre el autocine!</p>
-      <p v-else-if="amIMobile===false" class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> arrastra el ratón sobre el autocine!</p>
+      <p v-if="amIMobile===true" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> {{ $t('drag_m_experiment') }}</p>
+      <p v-else-if="amIMobile===false" class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> {{ $t('drag_d_experiment') }}</p>
     </div>
   </div>
 </template>
