@@ -141,7 +141,8 @@ export default defineNuxtConfig({
   ],
   googleFonts: {
     families: {
-      'Open Sans': true,
+      'Varela Round': true,
+      //'Open Sans': true,
     }
   },
   //image: {
