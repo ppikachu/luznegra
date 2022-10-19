@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   server: {
     host: '0' // default: localhost
   },
+  typescript: {
+    shim: false
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
@@ -38,8 +41,8 @@ export default defineNuxtConfig({
               sin6: 'creative',
               sin7: 'way.',
 
-              info_ine: 'Inés Trigub was born in Buenos Aires in 1974. She is an animator. She graduated in Cinema Studies at FUC in 1996, and studied Arts at Pridiliano Pueyrredón School and drawing with Roberto Paéz. She has worked in the animation studios Videocolor, Bujos and Hook Up. As an animator, she has worked for the TV channels Ciudad Abierta and Encuentro. The publishing house Pequeño Editor has issued two of her books Fiesta de disfraces (Costume Party) (2007) and Autos (Cars) (2008). Since 2005 she is co-director of the design and animation studio LUZ NEGRA.',
-              info_santi: 'Santiago Toyos was born in Buenos Aires in 1969. He is a graphic designer. He lived in Bogotá, Colombia, while he was at secondary school, and he discovered there his vocation as he worked for the advertising agency Casares Grey & Asociados. In Argentina, he followed graphic design studies at Universidad de Palermo, and attended Pridiliano Pueyrredón School. He was part of Smartmedia, one of the first web design agencies in Argentina with clients such as Fiat Argentina, Iveco, Metropolitan trains and Edenor. He is co-director of the design and animation studio LUZ NEGRA.',
+              info_ine: '<p>Inés Trigub was born in Buenos Aires in 1974. She is an animator. She graduated in Cinema Studies at FUC in 1996, and studied Arts at Pridiliano Pueyrredón School and drawing with Roberto Paéz.</p><p>She has worked in the animation studios Videocolor, Bujos and Hook Up. As an animator, she has worked for the TV channels Ciudad Abierta and Encuentro. The publishing house Pequeño Editor has issued two of her books Fiesta de disfraces (Costume Party) (2007) and Autos (Cars) (2008).</p><p>Since 2005 she is co-director of the design and animation studio LUZ NEGRA.</p>',
+              info_santi: '<p>Santiago Toyos was born in Buenos Aires in 1969. He is a graphic designer.</p><p>He lived in Bogotá, Colombia, while he was at secondary school, and he discovered there his vocation as he worked for the advertising agency Casares Grey & Asociados. In Argentina, he followed graphic design studies at Universidad de Palermo, and attended Pridiliano Pueyrredón School. He was part of Smartmedia, one of the first web design agencies in Argentina with clients such as Fiat Argentina, Iveco, Metropolitan trains and Edenor.</p><p>He is co-director of the design and animation studio LUZ NEGRA.</p>',
 
               destacados: 'Highlighted',
               series: 'series',
@@ -54,7 +57,7 @@ export default defineNuxtConfig({
               tu_mensaje: 'Your message',
               enviar: 'send',
 
-              cambiar_idioma: 'o cambiar a',
+              cambiar_idioma: 'cambiar a',
               vamos: "let's go!",
               drag_m_experiment: 'drag over the cinema!',
               drag_d_experiment: 'drag mouse over the cinema!',
@@ -93,7 +96,7 @@ export default defineNuxtConfig({
               tu_mensaje: 'Tu mensaje',
               enviar: 'enviar',
               
-              cambiar_idioma: 'or switch to',
+              cambiar_idioma: 'switch to',
               vamos: 'vamos!',
               drag_m_experiment: 'arrastra el dedo sobre el autocine!',
               drag_d_experiment: 'arrastra el ratón sobre el autocine!',

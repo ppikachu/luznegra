@@ -569,6 +569,7 @@ onUnmounted(() => {
 <template>
   <div class="relative z-30">
     <div id="container" ref="target" class="relative overflow-hidden">
+      <LangSwitcher />
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
         loop
@@ -586,7 +587,7 @@ onUnmounted(() => {
         :style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, transparent 100%);`"
       >
       </div>
-      <div class="absolute bottom-0 lg:-bottom-8 py-12 px-4 flex flex-col justify-center items-center space-y-8 w-full">
+      <div class="absolute bottom-0 lg:-bottom-8 py-12 px-4 flex flex-col justify-center items-center space-y-10 w-full">
         <!--SWITCH-->
         <label class="swap">
           <!-- this hidden checkbox controls the state -->
@@ -603,8 +604,7 @@ onUnmounted(() => {
 
         <div class="flex flex-col items-center space-y-4">
           <!--SCROLL/LANGUAGE -->
-          <a href="#about-us" class="btn btn-outline">{{ $t('vamos') }}<Icon name="ic:sharp-keyboard-double-arrow-down" class="w-6 h-6" /></a>
-          <LangSwitcher />
+          <a href="#about-us" class="animate-bounce" ><Icon name="ic:sharp-keyboard-double-arrow-down" class="w-12 h-12" /></a>
         </div>
       </div>
       <!--Tweakpane-->

@@ -57,4 +57,4 @@
     background-position: -50% 0;
     opacity: 1;
   }
-  </style>
+</style>
