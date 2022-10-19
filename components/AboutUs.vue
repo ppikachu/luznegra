@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import AOS from 'aos'
+  import 'aos/dist/aos.css'
+
   /* Define props */
   const props = defineProps({
     ciclo: { type: String, default: 'noche' },
@@ -28,6 +31,19 @@
   const colorP = computed(() => {
     return props.ciclo === 'day' ? 'text-neutral' : 'text-neutral-content'
   })
+
+  onMounted(() => {
+    AOS.init({
+      // Global settings:
+      offset: 120, // offset (in px) from the original trigger point
+      delay: 0, // values from 0 to 3000, with step 50ms
+      duration: 400, // values from 0 to 3000, with step 50ms
+      easing: 'ease', // default easing for AOS animations
+      once: true, // whether animation should happen only once - while scrolling down
+      anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
+    })
+  })
+
 </script>
 
 <template>
@@ -39,10 +55,10 @@
     <div class="flex flex-col lg:flex-row place-items-center max-w-6xl mx-auto">
       <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" />
       <div class="lg:text-left prose">
-        <h1 class="text-4xl md:text-5xl" :class="colorClass" >
+        <h1 class="text-4xl md:text-5xl" :class="colorClass" data-aos="zoom-in" >
           {{ $t('welcome') }}
         </h1>
-        <p class="text-3xl" :class="colorP" >
+        <p class="text-3xl" :class="colorP" data-aos="zoom-in" >
           {{ $t('nos1') }}
           <span :class="colorClass">{{ $t('nos2') }}</span>
           {{ $t('nos3') }}
@@ -51,7 +67,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto mt-32">
-      <p class="text-2xl prose lg:text-right" :class="colorP" >
+      <p class="text-2xl prose lg:text-right" :class="colorP" data-aos="zoom-in" >
         {{ $t('dir1a') }}
         <button @click="openPerfil('ines')" class="link" :class="colorClass">Inés Trigub</button>
         {{ $t('sin5') }}
@@ -60,7 +76,7 @@
         {{ $t('dir3') }}
       </p>
       <img class="max-w-sm w-full" src="/images/BETTY.gif" />
-      <p class="text-3xl md:text-4xl prose" :class="colorP" >
+      <p class="text-3xl md:text-4xl prose" :class="colorP" data-aos="zoom-in" >
         {{ $t('sin1') }}
         <span :class="colorClass">{{ $t('sin2') }}</span>
         {{ $t('sin3') }}
