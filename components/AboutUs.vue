@@ -53,12 +53,12 @@
     :style="`background-color: ${ props.color }`"
   >
     <div class="flex flex-col lg:flex-row place-items-center max-w-6xl mx-auto">
-      <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" />
+      <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" data-aos="zoom-in" />
       <div class="lg:text-left prose">
-        <h1 class="text-4xl md:text-5xl" :class="colorClass" data-aos="zoom-in" >
+        <h1 class="text-4xl md:text-5xl" :class="colorClass" data-aos="fade-up" >
           {{ $t('welcome') }}
         </h1>
-        <p class="text-3xl" :class="colorP" data-aos="zoom-in" >
+        <p class="text-3xl" :class="colorP" data-aos="fade-up" >
           {{ $t('nos1') }}
           <span :class="colorClass">{{ $t('nos2') }}</span>
           {{ $t('nos3') }}
@@ -67,7 +67,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 place-items-center max-w-6xl mx-auto mt-32">
-      <p class="text-2xl prose lg:text-right" :class="colorP" data-aos="zoom-in" >
+      <p class="text-2xl prose lg:text-right" :class="colorP" data-aos="fade-up" >
         {{ $t('dir1a') }}
         <button @click="openPerfil('ines')" class="link" :class="colorClass">Inés Trigub</button>
         {{ $t('sin5') }}
@@ -75,8 +75,8 @@
         <span :class="colorClass">{{ $t('dir2') }}</span>
         {{ $t('dir3') }}
       </p>
-      <img class="max-w-sm w-full" src="/images/BETTY.gif" />
-      <p class="text-3xl md:text-4xl prose" :class="colorP" data-aos="zoom-in" >
+      <img class="max-w-sm w-full" src="/images/BETTY.gif" data-aos="zoom-in" />
+      <p class="text-3xl md:text-4xl prose" :class="colorP" data-aos="fade-up" >
         {{ $t('sin1') }}
         <span :class="colorClass">{{ $t('sin2') }}</span>
         {{ $t('sin3') }}
