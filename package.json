@@ -8,26 +8,29 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^15.13.1",
+    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge",
     "@vueuse/sound": "^1.1.7",
+    "aos": "^2.3.4",
     "chroma-js": "^2.4.2",
     "contentful": "^10.0.0-beta-v10.8",
-    "gsap": "^3.11.1",
+    "gsap": "^3.11.3",
     "ismobilejs": "^1.1.1",
     "lodash.startcase": "^4.4.0",
     "lodash.upperfirst": "^4.3.1",
-    "three": "^0.144.0",
+    "three": "^0.145.0",
     "tweakpane": "^3.1.0",
     "vue-plyr": "^7.0.0"
   },
   "devDependencies": {
-    "@kevinmarrec/nuxt-pwa": "^0.4.2",
+    "@kevinmarrec/nuxt-pwa": "^0.8.0",
     "@nuxtjs/google-fonts": "^3.0.0-0",
-    "@nuxtjs/tailwindcss": "^5.3.3",
+    "@nuxtjs/tailwindcss": "^6.0.1",
     "@tailwindcss/typography": "^0.5.7",
-    "@vueuse/core": "^9.2.0",
-    "@vueuse/nuxt": "^9.2.0",
+    "@types/node": "^18.11.3",
+    "@vueuse/core": "^9.3.1",
+    "@vueuse/nuxt": "^9.3.1",
     "daisyui": "^2.31.0",
-    "nuxt": "^3.0.0-rc.11",
+    "nuxt": "^3.0.0-rc.12",
     "nuxt-icon": "^0.1.5"
   }
 }

@@ -5,13 +5,13 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
   const { $contentfulClient } = nuxtApp
   return $contentfulClient.getEntries({
+    locale: 'en',
     content_type: 'entradas',
     order: '-fields.date'
   })
 })
 const posts = data
 
-const config = useRuntimeConfig()
 const openProyect = ref(null)
 const destacadoTodos = ref(true)
 
@@ -49,15 +49,15 @@ function closeProject() {
 </script>
 
 <template>
-  <section id="portfolio" class="container mx-auto px-4 md:px-8 my-16 relative">
-    <h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
+  <section id="hero" class="container"></section>
+  <section id="portfolio" class="mx-auto px-4 md:px-8 my-16 relative">
     <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
         <div
           v-if="openProyect"
           id="modal-proyecto"
-          class="modal bg-black/80 backdrop-blur backdrop-grayscale"
+          class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
           :class="{ 'modal-open': openProyect }"
         >
           <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-5xl max-h-full">
@@ -76,18 +76,20 @@ function closeProject() {
             <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
             <div class="modal-action">
               <p class="text-xs text-zinc-400">
-                link para compartir proyecto: <a :href="config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
+                {{ $t('link_compartir') }}: <a :href="$config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
               </p>
             </div>
           </div>
         </div>
       </Teleport>
     </ClientOnly>
+    
+    <h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
     <!--SWITCH-->
-    <div class="flex justify-center items-center my-8 mx-auto">
+    <div class="flex justify-center items-center py-8 mx-auto">
       <div class="form-control md:text-xl">
         <label class="label cursor-pointer">
-          <span :class="{ 'opacity-25' : !destacadoTodos }">Destacados</span>
+          <span :class="{ 'opacity-25' : !destacadoTodos }">{{ $t('destacados') }}</span>
           <input type="checkbox" @click="swapDestacados" class="toggle toggle-md mx-6" />  
           <span :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
         </label>
@@ -130,7 +132,6 @@ function closeProject() {
         name="list"
         class="grid md:grid-cols-3 lg:grid-cols-4 gap-4 content-start relative"
       >
-        <!--class="grid md:grid-cols-3 lg:grid-cols-4 gap-4"-->
         <div v-for="(post, i) in filtered"
           :key="post"
           :data-index="i"
@@ -200,36 +201,5 @@ function closeProject() {
 <style scoped>
 .toggle {
   background-color: white;
-}
-.gradient-border {
-  position: relative;
-  border-radius: 1rem;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  width: 100%;
-}
-.gradient-border::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 1rem;
-  padding: 2px;
-  width: 100%;
-  background: linear-gradient(90deg, hsl(var(--s)) 0%, hsl(var(--s)) 50%, hsl(var(--p)) 100%);
-  background-size: 400% auto;
-  background-position: 0 0;
-  /*opacity: 0.5;*/
-  transition: background-position 0.3s ease-in-out, opacity 0.2s ease-in-out;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-.gradient-border:hover::before {
-  background-position: -50% 0;
-  opacity: 1;
 }
 </style>
