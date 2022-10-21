@@ -23,28 +23,30 @@ const teamAvatar = computed(() => {
 })
 </script>
 <template>
-  <div class="modal-box bg-base-300 p-1 gradient-bold rounded-none md:rounded-3xl relative max-w-2xl mx-3 md:mx-8">
-  <label for="modal-proyecto" @click="$emit('closeMe')" class="btn btn-primary btn-sm btn-circle absolute z-10 left-4 top-4">
-    <Icon name="mdi:close-thick" />
-  </label>
-  <div class="z-10 h-full flex flex-col md:flex-row md:space-x-4">
-    <div class="flex-shrink-0 bg-base-100 p-12 flex flex-col items-center space-y-4">
-      <div class="avatar">
-        <div class="w-32 h-32 rounded-full ring-4 ring-base-100">
-          <img :src="teamAvatar" :alt="teamName" width="128" height="128" />
+  <div class="modal-box bg-base-300 rounded-3xl p-0 relative max-w-2xl mx-3 md:mx-8">
+    <div class="gradient-bold p-1">
+      <label for="modal-proyecto" @click="$emit('closeMe')" class="btn btn-primary btn-sm btn-circle absolute z-10 left-4 top-4">
+        <Icon name="mdi:close-thick" />
+      </label>
+      <div class="z-10 h-full flex flex-col md:flex-row md:space-x-4">
+        <div class="flex-shrink-0 bg-base-100 p-8 md:p-12 flex flex-col items-center space-y-4">
+          <div class="avatar">
+            <div class="w-28 h-28 md:w-32 md:h-32 rounded-full ring-4 ring-base-100">
+              <img :src="teamAvatar" :alt="teamName" width="128" height="128" />
+            </div>
+          </div>
+          <h1 class="text-primary text-2xl">{{ teamName }}</h1>
+          <!--<div id="redes-sociales" class="flex space-x-4 text-2xl">
+            <a :href="networkUrl">
+              <Icon name="mdi:twitter" />
+            </a>
+            <Icon name="carbon:logo-instagram" />
+          </div>-->
+        </div>
+        <div class="prose p-4 md:p-8 -mt-4">
+          <p v-html="teamProfile"></p>
         </div>
       </div>
-      <h1 class="text-primary text-2xl">{{ teamName }}</h1>
-      <!--<div id="redes-sociales" class="flex space-x-4 text-2xl">
-        <a :href="networkUrl">
-          <Icon name="mdi:twitter" />
-        </a>
-        <Icon name="carbon:logo-instagram" />
-      </div>-->
-    </div>
-    <div class="prose p-8">
-      <p v-html="teamProfile"></p>
     </div>
   </div>
-</div>
 </template>
