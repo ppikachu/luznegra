@@ -49,8 +49,7 @@ function closeProject() {
 </script>
 
 <template>
-  <section id="hero" class="container"></section>
-  <section id="portfolio" class="mx-auto px-4 md:px-8 my-16 relative">
+  <section id="portfolio" class="mx-auto max-w-6xl px-4 md:px-8 my-16 relative">
     <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
@@ -96,7 +95,7 @@ function closeProject() {
       </div>
     </div>
     <!--Proyectos destacados-->
-    <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-4 lg:gap-8">
+    <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-8 lg:gap-8">
       <li v-for="(post) in pickedPortfolioItems" :key="post">
         <a
           :href="`/proyecto/${post.fields.slug}`"
@@ -125,12 +124,12 @@ function closeProject() {
       </li>
     </ul>
     <!--Portfolio-->
-    <div v-show="!destacadoTodos" class="">
+    <div v-show="!destacadoTodos">
       <ProjectTags @tag="onTag" :initTag="currentTag" />
       <TransitionGroup
         tag="div"
         name="list"
-        class="grid md:grid-cols-3 lg:grid-cols-4 gap-4 content-start relative"
+        class="grid md:grid-cols-3 lg:grid-cols-4 gap-8 content-start relative"
       >
         <div v-for="(post, i) in filtered"
           :key="post"
