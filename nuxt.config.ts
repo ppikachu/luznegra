@@ -11,6 +11,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
+    '@nuxtjs/google-fonts',
     '@vueuse/nuxt',
     '@kevinmarrec/nuxt-pwa',
     'nuxt-icon',
@@ -110,9 +111,7 @@ export default defineNuxtConfig({
       }
     ]
   ],
-  buildModules: [
-    '@nuxtjs/google-fonts'
-  ],
+  buildModules: [],
   runtimeConfig: {
     private: {
     },
