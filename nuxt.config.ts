@@ -1,10 +1,6 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   telemetry: false,
-  target: 'static',
-  server: {
-    host: '0' // default: localhost
-  },
   typescript: {
     shim: false
   },
@@ -111,7 +107,6 @@ export default defineNuxtConfig({
       }
     ]
   ],
-  buildModules: [],
   runtimeConfig: {
     private: {
     },
@@ -171,8 +166,5 @@ export default defineNuxtConfig({
       ogImage: '/OG.png',
       twitterCard: 'summary_large_image',
     }
-  },
-  nuxtIcon: {
-    size: '1em' // default <Icon> size applied
   },
 })
