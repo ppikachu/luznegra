@@ -8,15 +8,14 @@
     color: String
   })
 
-  const openTeam = ref(null)
-  const TeamProfile = ref(null)
+  const openTeam = ref(false)
+  const TeamProfile = ref()
 
   function openPerfil(quien: string) {
     openTeam.value = true
     TeamProfile.value = quien
   }
 
-  //const sound = useSound('/audio/Click03.mp3')
   const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
   
   function closeProject() {
@@ -87,6 +86,7 @@
       </p>
     </div>
   </section>
+  
   <ClientOnly>
       <Teleport to="body">
         <div

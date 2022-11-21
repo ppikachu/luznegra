@@ -1,6 +1,6 @@
 <script setup>
 const { locale, locales, setLocale } = useI18n()
-const nuxtApp = useNuxtApp()
+
 const availableLocales = computed(() => {
   return (locales.value).filter(i => i.code !== locale.value)
 })

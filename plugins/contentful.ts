@@ -1,4 +1,4 @@
-//import { defineNuxtPlugin } from '#app'
+import { defineNuxtPlugin } from '#app'
 
 // for dev
 import { createClient } from 'contentful'
@@ -13,5 +13,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     space: config.public.SPACE_ID,
     accessToken: config.public.ACCESS_TOKEN,
   })
-  nuxtApp.provide('contentfulClient', client)
+  //nuxtApp.provide('contentfulClient', client)
+  return {
+    provide: {
+      contentfulClient: client,
+    },
+  }
 })

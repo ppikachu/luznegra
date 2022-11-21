@@ -4,9 +4,11 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 interface Props { articleId: string }
 const props = defineProps<Props>()
 /* Get contentful data */
+const config = useRuntimeConfig()
+
 const { data } = await useAsyncData('entradas', async (nuxtApp) => {
-  const { $contentfulClient } = nuxtApp
-  return $contentfulClient.getEntries({
+  const { $contentfulClient }:any = nuxtApp
+  return await $contentfulClient.getEntries({
     content_type: 'entradas',
     'fields.slug[in]': props.articleId,
     limit: 1,

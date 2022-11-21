@@ -3,14 +3,14 @@
 const props = defineProps<{ initTag?: string }>()
 
 const { data } = await useAsyncData('tags', async (nuxtApp) => {
-  const { $contentfulClient } = nuxtApp
+  const { $contentfulClient }:any = nuxtApp
   return $contentfulClient.getTags()
 })
 
 const currentTag = ref(props.initTag)
 const emit = defineEmits(['tag'])
 
-function buttonClick(tag) {
+function buttonClick(tag:any) {
   if (tag.sys.id===currentTag.value) {
     currentTag.value = ''
     emit('tag', '')

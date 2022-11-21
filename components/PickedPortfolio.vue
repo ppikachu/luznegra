@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 
+const config = useRuntimeConfig()
+
 /* Fetch all projects */
-const { data } = await useAsyncData('entradas', async (nuxtApp) => {
-  const { $contentfulClient } = nuxtApp
+const { data } = await useAsyncData(async (nuxtApp) => {
+  const { $contentfulClient }:any = nuxtApp
   return $contentfulClient.getEntries({
     locale: 'en',
     content_type: 'entradas',
@@ -12,13 +14,13 @@ const { data } = await useAsyncData('entradas', async (nuxtApp) => {
 })
 const posts = data
 
-const openProyect = ref(null)
+const openProyect = ref()
 const destacadoTodos = ref(true)
 
 /* Default tags */
 const currentTag = ref()
 
-function onTag(tag) {
+function onTag(tag:any) {
   currentTag.value = tag != '' ? tag.sys.id : null
 }
 
@@ -29,8 +31,8 @@ const pickedPortfolioItems = computed(() => {
 
 //Filter standard projects
 const filtered = computed(() => {
- return currentTag.value
-  ? posts.value.items.filter(r => r.metadata.tags.some(i => i.sys.id === currentTag.value))
+ return currentTag.value ?
+ posts.value.items.filter((r: any) => r.metadata.tags.some((i: any) => i.sys.id === currentTag.value))
   : posts.value.items
 })
 
@@ -75,7 +77,7 @@ function closeProject() {
             <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
             <div class="modal-action">
               <p class="text-xs text-zinc-400">
-                {{ $t('link_compartir') }}: <a :href="$config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
+                {{ $t('link_compartir') }}: <a :href="config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
               </p>
             </div>
           </div>
