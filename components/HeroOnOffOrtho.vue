@@ -2,8 +2,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
-
-import { useSound } from '@vueuse/sound'
 import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
@@ -90,12 +88,12 @@ pantallaGroup = new THREE.Group()
 
 let
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? 2 : 0 },
-modelPanchera, modelPantalla,
-container: HTMLElement, camera, renderer,
-rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, telonMaterial, telon, telonTexture,
-shadowSize: number, frustumSize: number,
-pane, dayFolder, nightFolder, extraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
-timer: number, controls
+modelPanchera:any, modelPantalla:any,
+container:HTMLElement, camera:any, renderer:any,
+rectLightHelper:any, rectLightHelperB:any, lightHelperSun:any, lightHelperMoon:any, telonMaterial:any, telon, telonTexture:any,
+shadowSize:number, frustumSize:number,
+pane:any, dayFolder:any, nightFolder:any, extraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
+timer: number, controls:any
 
 swapHeroBgColor()
 
@@ -151,7 +149,7 @@ function doDayNightCycle () {
   swapDayNight()
 }
 //pantalla:
-function setupModel(modelData) {
+function setupModel(modelData:any) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveMap.minFilter = THREE.LinearFilter
@@ -161,7 +159,7 @@ function setupModel(modelData) {
   return model
 }
 //auto:
-function setupModelB(modelData) {
+function setupModelB(modelData:any) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveMap.minFilter = THREE.LinearFilter
@@ -345,8 +343,8 @@ function init() {
   //ambient
   ambientLight.color.set( params.dayOrNight === 'day' ? params.lightSunColor : params.lightMoonColor )
   //lighthelpers
-  lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera, 0.015 )
-  lightHelperMoon = new THREE.CameraHelper( lightMoon.shadow.camera, 0.015 )
+  lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera )
+  lightHelperMoon = new THREE.CameraHelper( lightMoon.shadow.camera )
   //lighthelper layers
   lightHelperSun.layers.set( 2 )
   lightHelperMoon.layers.set( 1 )
@@ -568,7 +566,7 @@ onUnmounted(() => {
 
 <template>
   <div class="relative z-30">
-    <div id="container" ref="target" class="relative overflow-hidden">
+    <div id="container" ref="target" class="relative overflow-hidden cursor-ew-resize">
       <LangSwitcher />
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
