@@ -1,16 +1,20 @@
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
+//import { defineNuxtConfig } from 'nuxt'
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   telemetry: false,
-  target: 'static',
-  server: {
-    host: '0' // default: localhost
-  },
-  typescript: {
-    shim: false
+  ssr: false,
+  //target: 'static',
+  //typescript: {
+  //  shim: false
+  //},
+  nitro: {
+    preset: 'vercel-edge',
   },
   modules: [
+    'nuxt-graphql-client',
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
+    '@nuxtjs/google-fonts',
     '@vueuse/nuxt',
     '@kevinmarrec/nuxt-pwa',
     'nuxt-icon',
@@ -110,19 +114,15 @@ export default defineNuxtConfig({
       }
     ]
   ],
-  buildModules: [
-    '@nuxtjs/google-fonts'
-  ],
   runtimeConfig: {
     private: {
     },
     public: {
-      //WARN cambiar al deploy final:
       CONTENT_KEY: process.env.CONTENT_KEY,
       SPACE_ID: process.env.SPACE_ID,
       ACCESS_TOKEN: process.env.ACCESS_TOKEN,
       DEFAULT_LANGUAGE: 'es-AR',
-      HOST: process.env.NODE_ENV === 'production' ? 'https://luz-negra.com' : 'http://localhost:3000',
+      HOST: process.env.NODE_ENV === 'production' ? 'https://luz-negra.com' : 'https://localhost:3000',
       APP_NAME: 'LUZ NEGRA',
       APP_URL: 'https://luz-negra.com',
       SITE_TITLE: 'LUZ NEGRA - Diseño y animación',
@@ -173,7 +173,14 @@ export default defineNuxtConfig({
       twitterCard: 'summary_large_image',
     }
   },
-  nuxtIcon: {
-    size: '1em' // default <Icon> size applied
-  },
+  'graphql-client': {
+    clients: {
+      default: {
+        host: 'https://graphql.contentful.com/content/v1/spaces/jwdsialp51tb/',
+        headers: {
+          'Authorization': 'Bearer ' + process.env.ACCESS_TOKEN,
+        }
+      }
+    }
+  }
 })

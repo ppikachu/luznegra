@@ -1,0 +1,33 @@
+query entradas($limit: Int = 5) {
+  # add your query
+  entradasCollection(limit: $limit, order: date_DESC) {
+    items {
+      slug
+      title
+      destacado
+      contentfulMetadata {
+        tags {
+          id
+          name
+        }
+      }
+      excerpt
+      content {
+        json
+      }
+      imageFeatured {
+        url
+        title
+      }
+      imgGalleryCollection {
+        items {
+          title
+          url
+          width
+          height
+        }
+      }
+      video
+    }
+  }
+}

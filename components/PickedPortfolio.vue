@@ -1,37 +1,33 @@
 <script lang="ts" setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 
-/* Fetch all projects */
-const { data } = await useAsyncData('entradas', async (nuxtApp) => {
-  const { $contentfulClient } = nuxtApp
-  return $contentfulClient.getEntries({
-    locale: 'en',
-    content_type: 'entradas',
-    order: '-fields.date'
-  })
-})
-const posts = data
+const config = useRuntimeConfig()
 
-const openProyect = ref(null)
+/* Fetch all projects */
+const { data } = await useAsyncGql('entradas', { limit: 0 })
+const posts = data.value?.entradasCollection?.items
+//console.table(posts)
+
+const openProyect = ref()
 const destacadoTodos = ref(true)
 
 /* Default tags */
 const currentTag = ref()
 
-function onTag(tag) {
-  currentTag.value = tag != '' ? tag.sys.id : null
+function onTag(tag:any) {
+  currentTag.value = tag != '' ? tag.id : null
 }
 
 //Filter picked projects
 const pickedPortfolioItems = computed(() => {
-  return posts.value.items.filter((itemPortfolio: { fields: { destacado: boolean; }; }) => itemPortfolio.fields.destacado)
+  return posts?.filter(itemPortfolio => itemPortfolio?.destacado==true)
 })
 
 //Filter standard projects
 const filtered = computed(() => {
- return currentTag.value
-  ? posts.value.items.filter(r => r.metadata.tags.some(i => i.sys.id === currentTag.value))
-  : posts.value.items
+ return currentTag.value ?
+ posts?.filter((r: any) => r.contentfulMetadata.tags.some((i: any) => i.id === currentTag.value))
+  : posts
 })
 
 const sound = useSound('/audio/Click03.mp3')
@@ -63,19 +59,18 @@ function closeProject() {
             <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
               <Icon name="mdi:close-thick" />
             </label>
-            <ProjectVideos v-if="openProyect.fields.video" :videos="openProyect.fields.video" />
-            <ProjectGallery v-if="openProyect.fields.imgGallery" :gallery="openProyect.fields.imgGallery" />
+            <ProjectVideos v-if="openProyect.video" :videos="openProyect.video" />
+            <ProjectGallery :gallery="openProyect.imgGalleryCollection" />
             <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center mt-4">
-              <h1 class="text-4xl text-primary">{{ openProyect.fields.title }}</h1>
-              <ProjectMeta :tags="openProyect.metadata.tags" />
+              <h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
+              <ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
             </div>
             <div class="prose my-4">
-              <div class="mb-4" id="content" v-html="openProyect.fields.content ? documentToHtmlString(openProyect.fields.content) : ''"></div>
+              <div class="mb-4" id="content" v-html="openProyect.content ? documentToHtmlString(openProyect.content.json) : ''"></div>
             </div>
-            <div v-if="openProyect.fields.contenido" v-html="openProyect.fields.contenido" class="rounded-lg aspect-video w-full"></div>
             <div class="modal-action">
               <p class="text-xs text-zinc-400">
-                {{ $t('link_compartir') }}: <a :href="$config.HOST+'/proyecto/'+openProyect.fields.slug" class="link link-primary">{{ openProyect.fields.slug }}</a>
+                {{ $t('link_compartir') }}: <a :href="config.HOST+'/proyecto/'+openProyect.slug" class="link link-primary">{{ openProyect.slug }}</a>
               </p>
             </div>
           </div>
@@ -96,16 +91,16 @@ function closeProject() {
     </div>
     <!--Proyectos destacados-->
     <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-8 lg:gap-8">
-      <li v-for="(post) in pickedPortfolioItems" :key="post">
+      <li v-for="(post, i) in pickedPortfolioItems" :key="i">
         <a
-          :href="`/proyecto/${post.fields.slug}`"
+          :href="`/proyecto/${post?.slug}`"
           @click.prevent="openProyect = post"
           class="gradient-border h-full card card-compact md:card-normal bg-base-300 shadow-lg"
         >
           <figure>
-            <img v-if="post.fields.imageFeatured"
-              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=600&h=400`"
-              :alt="post.fields.imageFeatured.fields.title"
+            <img v-if="post?.imageFeatured"
+              :src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
+              :alt="post.imageFeatured.title"
               class="w-full"
               loading="lazy"
               width="600"
@@ -114,10 +109,10 @@ function closeProject() {
             <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
-            <h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post.fields.title }}</h2>
-            <p v-if="post.fields.excerpt">{{ post.fields.excerpt }}</p>
-            <div class="card-actions" v-if="post.metadata.tags[0]">
-              <ProjectMeta :tags="post.metadata.tags" />
+            <h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post?.title }}</h2>
+            <p v-if="post?.excerpt">{{ post?.excerpt }}</p>
+            <div class="card-actions" v-if="post?.contentfulMetadata.tags[0]">
+              <ProjectMeta :tags="post?.contentfulMetadata.tags" />
             </div>
           </div>
         </a>
@@ -125,26 +120,28 @@ function closeProject() {
     </ul>
     <!--Portfolio-->
     <div v-show="!destacadoTodos">
-      <ProjectTags @tag="onTag" :initTag="currentTag" />
+
+      <ProjectTags @tag="onTag" :initTag="currentTag" :items="posts" />
+
       <TransitionGroup
         tag="div"
         name="list"
         class="grid md:grid-cols-3 lg:grid-cols-4 gap-8 content-start relative"
       >
         <div v-for="(post, i) in filtered"
-          :key="post"
+          :key="i"
           :data-index="i"
           class="col-span-1"
         >
           <a
-            :href="`/proyecto/${post.fields.slug}`"
+            :href="`/proyecto/${post?.slug}`"
             @click.prevent="openProyect = post"
             class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
           >
           <figure>
-            <img v-if="post.fields.imageFeatured"
-              :src="`${post.fields.imageFeatured.fields.file.url}?fm=webp&fit=fill&w=600&h=400`"
-              :alt="post.fields.imageFeatured.fields.title"
+            <img v-if="post?.imageFeatured"
+              :src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
+              :alt="post.imageFeatured.title"
               loading="lazy"
               class="w-full"
               width="600"
@@ -153,10 +150,10 @@ function closeProject() {
             <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
-            <h2 class="card-title text-primary text-2xl leading-tight">{{ post.fields.title }}</h2>
-            <p v-if="post.fields.excerpt" class="text-sm">{{ post.fields.excerpt }}</p>
+            <h2 class="card-title text-primary text-2xl leading-tight">{{ post?.title }}</h2>
+            <p v-if="post?.excerpt" class="text-sm">{{ post?.excerpt }}</p>
             <div class="card-actions">
-              <ProjectMeta v-if="post.metadata.tags[0]" :tags="post.metadata.tags" />
+              <ProjectMeta v-if="post?.contentfulMetadata.tags[0]" :tags="post.contentfulMetadata.tags" />
             </div>
           </div>
           </a>

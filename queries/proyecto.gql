@@ -1,0 +1,32 @@
+query proyecto($slug: String ) {
+  # add your query
+  entradasCollection( where: { slug: $slug } ) {
+    items {
+      slug
+      title
+      contentfulMetadata {
+        tags {
+          id
+          name
+        }
+      }
+      excerpt
+      content {
+        json
+      }
+      imageFeatured {
+        url
+        title
+      }
+      imgGalleryCollection {
+        items {
+          title
+          url
+          width
+          height
+        }
+      }
+      video
+    }
+  }
+}
