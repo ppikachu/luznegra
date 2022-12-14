@@ -1,33 +1,20 @@
 <script lang="ts" setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 /* Define props */
-interface Props { articleId: string }
+interface Props { articleSlug:String }
 const props = defineProps<Props>()
-/* Get contentful data */
-const config = useRuntimeConfig()
 
-const { data } = await useAsyncData('entradas', async (nuxtApp) => {
-  const { $contentfulClient }:any = nuxtApp
-  return await $contentfulClient.getEntries({
-    content_type: 'entradas',
-    'fields.slug[in]': props.articleId,
-    limit: 1,
-  })
-})
-if (!data) {
-  console.log('No data')
-  
-  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
-}
+/* Get contentful data */
+const { data } = await useAsyncGql('proyecto', { slug: props.articleSlug })
 
 /* Define article data */
-const project           = data
-const imgGallery        = project.value.items[0].fields.imgGallery
-const articleVideos     = project.value.items[0].fields.video
-const articleTitle      = project.value.items[0].fields.title
-const articleTags       = project.value.items[0].metadata.tags
-const articleBody       = project.value.items[0].fields.content ? documentToHtmlString(project.value.items[0].fields.content) : ''
-const articleContenido  = project.value.items[0].fields.contenido ? project.value.items[0].fields.contenido : ''
+const project           = data.value?.entradasCollection?.items[0]
+const imgGallery        = project?.imgGalleryCollection
+const articleVideos     = project?.video
+const articleTitle      = project?.title
+const articleTags       = project?.contentfulMetadata.tags
+const articleBody       = project?.content ? documentToHtmlString(project.content.json) : ''
+//console.table(project)
 </script>
 
 <template>
@@ -41,6 +28,5 @@ const articleContenido  = project.value.items[0].fields.contenido ? project.valu
     <div class="prose my-4 max-w-4xl mx-auto">
       <div class="mb-4" id="content" v-html="articleBody"></div>
     </div>
-    <div v-if="articleContenido" v-html="articleContenido" class="rounded-lg aspect-video w-full"></div>
   </div>
 </template>

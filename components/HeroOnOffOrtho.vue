@@ -600,8 +600,8 @@ onUnmounted(() => {
           </svg>
         </label>
 
+        <!--SCROLL/LANGUAGE -->
         <div class="flex flex-col items-center space-y-4">
-          <!--SCROLL/LANGUAGE -->
           <a href="#about-us" class="animate-bounce" ><Icon name="ic:sharp-keyboard-double-arrow-down" class="w-12 h-12" /></a>
         </div>
         

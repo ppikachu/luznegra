@@ -2,5 +2,5 @@
 </script>
 
 <template>
-  <ProjectBody :articleId="$route.params.articleId" />
+  <ProjectBody :articleSlug="$route.params.articleId" />
 </template>

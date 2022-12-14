@@ -1,23 +1,34 @@
 <script setup lang="ts">
 /* Define props */
-const props = defineProps<{ initTag?: string }>()
+const props = defineProps<{
+  initTag?: string
+  items: []
+}>()
 
-const { data } = await useAsyncData('tags', async (nuxtApp) => {
-  const { $contentfulClient }:any = nuxtApp
-  return $contentfulClient.getTags()
-})
+const getUniqueTagsFromItems = (items:[]) => {
+  const uniqueTags = {}
+  items.forEach((item:[]) => {
+    item.contentfulMetadata.tags.forEach(tag => {
+      uniqueTags[tag.id] = tag
+    })     
+  })
+  return Object.values(uniqueTags)
+}
+
+const uniqueTags = getUniqueTagsFromItems(props.items)
+//console.table(uniqueTags)
 
 const currentTag = ref(props.initTag)
 const emit = defineEmits(['tag'])
 
 function buttonClick(tag:any) {
-  if (tag.sys.id===currentTag.value) {
+  if (tag.id===currentTag.value) {
     currentTag.value = ''
     emit('tag', '')
     return
   }
   emit('tag', tag)
-  currentTag.value = tag.sys.id
+  currentTag.value = tag.id
 }
 </script>
 
@@ -25,13 +36,13 @@ function buttonClick(tag:any) {
   <section id="tags" class="pb-8 flex flex-col items-center">
     <div class="btn-group btn-group-vertical md:btn-group-horizontal">
       <button
-        v-for="tag in data.items"
-        :key="tag"
+        v-for="(tag, i) in uniqueTags"
+        :key="i"
         @click="buttonClick(tag)"
         class="btn btn-sm lg:btn-md"
-        :class="{ 'btn-active': tag.sys.id == currentTag }"
+        :class="{ 'btn-active': tag.id == currentTag }"
       >
-        {{ $t(tag.sys.id) }}
+        {{ $t(tag.id) }}
       </button>
     </div>
   </section>
