@@ -2,12 +2,11 @@
 /* Define props */
 const props = defineProps({ gallery: Array })
 const imgGallery = props.gallery.items
-console.table(imgGallery)
 </script>
 
 <template>
   <!--gallery component-->
-  <section v-if="props.gallery">
+  <section v-if="imgGallery.length>0">
     <!--gallery ON-->
     <aside class="carousel mt-8 items-center rounded-lg">
       <div v-for="(img, i) in imgGallery" class="carousel-item w-full h-fit justify-center">
