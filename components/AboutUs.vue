@@ -88,16 +88,16 @@
   </section>
   
   <ClientOnly>
-      <Teleport to="body">
-        <div
-          v-if="openTeam"
-          id="modal-team"
-          class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
-          :class="{ 'modal-open': openTeam }"
-        >
-          <Perfil @close-me="closeProject" :name="TeamProfile" />
-        </div>
-      </Teleport>
+    <Teleport to="body">
+      <div
+        v-if="openTeam"
+        id="modal-team"
+        class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
+        :class="{ 'modal-open': openTeam }"
+      >
+        <Perfil @close-me="closeProject" :name="TeamProfile" />
+      </div>
+    </Teleport>
   </ClientOnly>
 
 </template>

@@ -9,9 +9,8 @@ const imgGallery = props.gallery.items
   <section v-if="imgGallery.length>0">
     <!--gallery ON-->
     <aside class="carousel mt-8 items-center rounded-lg">
-      <div v-for="(img, i) in imgGallery" class="carousel-item w-full h-fit justify-center">
+      <div v-for="(img, i) in imgGallery" :key="i" :id="'img'+i" class="carousel-item w-full h-fit justify-center">
         <img
-          :id="i"
           :src="img.url"
           :width="img.width"
           :height="img.height"
@@ -19,7 +18,7 @@ const imgGallery = props.gallery.items
       </div>
     </aside>
     <div class="flex justify-center py-2 btn-group">
-      <a v-for="(img, i) in imgGallery" :href="`#${i}`" class="btn btn-sm text-xs">{{ img.title }}</a>
+      <a v-for="(img, i) in imgGallery" :href="`#img${i}`" class="btn btn-sm text-xs">{{ img.title }}</a>
     </div>
   </section>
 </template>

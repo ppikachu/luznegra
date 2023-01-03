@@ -18,7 +18,7 @@ if (props.videos) {
   <section v-if="videoId.length > 0">
     <ClientOnly>
       <aside class="space-y-2 carousel mt-8 items-center rounded-lg">
-        <div v-for="(video, i) in videoId" class="carousel-item w-full" :id="'vid'+i">
+        <div v-for="(video, i) in videoId" :key="i" class="carousel-item w-full" :id="'vid'+i">
           <VuePlyr class="w-full">
             <iframe v-if="provider[i] == 'youtube'"
               :src="`https://www.youtube.com/embed/${video}?iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`"
@@ -43,3 +43,8 @@ if (props.videos) {
     </ClientOnly>
   </section>
 </template>
+<style>
+.carousel {
+  scroll-behavior: auto;
+}
+</style>
