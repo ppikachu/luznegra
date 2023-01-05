@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
@@ -88,12 +88,12 @@ pantallaGroup = new THREE.Group()
 
 let
 driverLuzPantalla = { intensity: params.dayOrNight === 'night' ? 2 : 0 },
-modelPanchera:any, modelPantalla:any,
-container:HTMLElement, camera:any, renderer:any,
-rectLightHelper:any, rectLightHelperB:any, lightHelperSun:any, lightHelperMoon:any, telonMaterial:any, telon, telonTexture:any,
-shadowSize:number, frustumSize:number,
-pane:any, dayFolder:any, nightFolder:any, extraFolder, preset = { debug: '' }, presetDebug: { hidden: boolean },
-timer: number, controls:any
+modelPanchera, modelPantalla,
+container, camera, renderer,
+rectLightHelper, rectLightHelperB, lightHelperSun, lightHelperMoon, telonMaterial, telon, telonTexture,
+shadowSize, frustumSize,
+pane, dayFolder, nightFolder, extraFolder, preset = { debug: '' }, presetDebug,
+timer, controls
 
 swapHeroBgColor()
 
@@ -115,7 +115,7 @@ onMounted(() => {
 })
 
 //#region FUNCTIONS
-function fadeScene(time:number) {
+function fadeScene(time) {
   gsap.to( document.getElementById('fader'), { opacity: 0, duration: time, delay: 1, onComplete: ()=> { loadedModels.value = true} })
 }
 
@@ -126,7 +126,7 @@ function swapHeroBgColor() {
   chroma(params.lightMoonColor).darken(.6).hex()
 }
 
-function setFog( cycle:string ) {
+function setFog(cycle) {
   return new THREE.Fog(
     cycle === 'day' ? params.daySkyColor : params.nightSkyColor,
     cycle === 'day' ? params.fogLinearNearDay : params.fogLinearNearNight,
@@ -149,7 +149,7 @@ function doDayNightCycle () {
   swapDayNight()
 }
 //pantalla:
-function setupModel(modelData:any) {
+function setupModel(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveMap.minFilter = THREE.LinearFilter
@@ -159,7 +159,7 @@ function setupModel(modelData:any) {
   return model
 }
 //auto:
-function setupModelB(modelData:any) {
+function setupModelB(modelData) {
   const model = modelData.scene.children[0].children[0].children[0]
   model.material.side = THREE.DoubleSide
   model.material.emissiveMap.minFilter = THREE.LinearFilter

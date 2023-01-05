@@ -1,20 +1,19 @@
 <script lang="ts" setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 /* Define props */
-interface Props { articleSlug:String }
+interface Props { articleSlug:string }
 const props = defineProps<Props>()
 
 /* Get contentful data */
 const { data } = await useAsyncGql('proyecto', { slug: props.articleSlug })
 
 /* Define article data */
-const project           = data.value?.entradasCollection?.items[0]
-const imgGallery        = project?.imgGalleryCollection
-const articleVideos     = project?.video
-const articleTitle      = project?.title
-const articleTags       = project?.contentfulMetadata.tags
-const articleBody       = project?.content ? documentToHtmlString(project.content.json) : ''
-//console.table(project)
+const project             = data.value?.entradasCollection?.items[0]
+const imgGallery:any      = project?.imgGalleryCollection
+const articleVideos:any   = project?.video
+const articleTitle        = project?.title
+const articleTags:any     = project?.contentfulMetadata.tags
+const articleBody:string  = project?.content ? documentToHtmlString(project.content.json) : ''
 </script>
 
 <template>

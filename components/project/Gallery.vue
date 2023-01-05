@@ -1,6 +1,16 @@
-<script setup>
+<script lang="ts" setup>
 /* Define props */
-const props = defineProps({ gallery: Array })
+interface Props {
+  gallery: {
+    items: Array<{
+      title: string,
+      url: string,
+      width: number,
+      height: number
+    }>
+  }
+}
+const props = defineProps<Props>()
 const imgGallery = props.gallery.items
 </script>
 
@@ -14,6 +24,7 @@ const imgGallery = props.gallery.items
           :src="img.url"
           :width="img.width"
           :height="img.height"
+          :alt="img.title"
         />
       </div>
     </aside>

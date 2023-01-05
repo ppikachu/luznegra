@@ -4,9 +4,9 @@ export default defineNuxtConfig({
   telemetry: false,
   ssr: false,
   //target: 'static',
-  //typescript: {
-  //  shim: false
-  //},
+  typescript: {
+    typeCheck: true
+  },
   nitro: {
     preset: 'vercel-edge',
   },
