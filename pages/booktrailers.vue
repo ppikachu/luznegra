@@ -1,9 +1,8 @@
-<script lang="ts" setup>
+<script setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 /* Fetch projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
 const posts = data.value?.entradasCollection?.items
-//console.table(posts)
 
 const openProyect = ref()
 const config = useRuntimeConfig()

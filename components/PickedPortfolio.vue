@@ -1,12 +1,10 @@
-<script lang="ts" setup>
+<script setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-
 const config = useRuntimeConfig()
 
 /* Fetch all projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
-const posts = data.value?.entradasCollection?.items
-//console.table(posts)
+const posts = data.value.entradasCollection.items
 
 const openProyect = ref()
 const destacadoTodos = ref(true)
@@ -14,19 +12,19 @@ const destacadoTodos = ref(true)
 /* Default tags */
 const currentTag = ref()
 
-function onTag(tag:any) {
+function onTag(tag) {
   currentTag.value = tag != '' ? tag.id : null
 }
 
 //Filter picked projects
 const pickedPortfolioItems = computed(() => {
-  return posts?.filter(itemPortfolio => itemPortfolio?.destacado==true)
+  return posts.filter(itemPortfolio => itemPortfolio.destacado==true)
 })
 
 //Filter standard projects
 const filtered = computed(() => {
  return currentTag.value ?
- posts?.filter((r: any) => r.contentfulMetadata.tags.some((i: any) => i.id === currentTag.value))
+ posts.filter((r) => r.contentfulMetadata.tags.some((i) => i.id === currentTag.value))
   : posts
 })
 
@@ -49,6 +47,14 @@ function closeProject() {
     <!--Modal-->
     <ClientOnly>
       <Teleport to="html">
+        <transition
+          enter-active-class="transition ease-out duration-200 transform"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition ease-in duration-200 transform"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
         <div
           v-if="openProyect"
           id="modal-proyecto"
@@ -75,6 +81,7 @@ function closeProject() {
             </div>
           </div>
         </div>
+        </transition>
       </Teleport>
     </ClientOnly>
     
@@ -93,12 +100,12 @@ function closeProject() {
     <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-8 lg:gap-8">
       <li v-for="(post, i) in pickedPortfolioItems" :key="i">
         <a
-          :href="`/proyecto/${post?.slug}`"
+          :href="`/proyecto/${post.slug}`"
           @click.prevent="openProyect = post"
           class="gradient-border h-full card card-compact md:card-normal bg-base-300 shadow-lg"
         >
           <figure>
-            <img v-if="post?.imageFeatured"
+            <img v-if="post.imageFeatured"
               :src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
               :alt="post.imageFeatured.title"
               class="w-full"
@@ -109,10 +116,10 @@ function closeProject() {
             <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
-            <h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post?.title }}</h2>
-            <p v-if="post?.excerpt">{{ post?.excerpt }}</p>
-            <div class="card-actions" v-if="post?.contentfulMetadata.tags[0]">
-              <ProjectMeta :tags="post?.contentfulMetadata.tags" />
+            <h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post.title }}</h2>
+            <p v-if="post.excerpt">{{ post.excerpt }}</p>
+            <div class="card-actions" v-if="post.contentfulMetadata.tags[0]">
+              <ProjectMeta :tags="post.contentfulMetadata.tags" />
             </div>
           </div>
         </a>
@@ -134,12 +141,12 @@ function closeProject() {
           class="col-span-1"
         >
           <a
-            :href="`/proyecto/${post?.slug}`"
+            :href="`/proyecto/${post.slug}`"
             @click.prevent="openProyect = post"
             class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
           >
           <figure>
-            <img v-if="post?.imageFeatured"
+            <img v-if="post.imageFeatured"
               :src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
               :alt="post.imageFeatured.title"
               loading="lazy"
@@ -150,10 +157,10 @@ function closeProject() {
             <img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
           </figure>
           <div class="card-body">
-            <h2 class="card-title text-primary text-2xl leading-tight">{{ post?.title }}</h2>
-            <p v-if="post?.excerpt" class="text-sm">{{ post?.excerpt }}</p>
+            <h2 class="card-title text-primary text-2xl leading-tight">{{ post.title }}</h2>
+            <p v-if="post.excerpt" class="text-sm">{{ post.excerpt }}</p>
             <div class="card-actions">
-              <ProjectMeta v-if="post?.contentfulMetadata.tags[0]" :tags="post.contentfulMetadata.tags" />
+              <ProjectMeta v-if="post.contentfulMetadata.tags[0]" :tags="post.contentfulMetadata.tags" />
             </div>
           </div>
           </a>

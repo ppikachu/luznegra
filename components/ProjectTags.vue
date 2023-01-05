@@ -1,13 +1,13 @@
-<script setup lang="ts">
+<script setup>
 /* Define props */
-const props = defineProps<{
-  initTag?: string
-  items: []
-}>()
+const props = defineProps({
+  initTag: { type: String, default: '' },
+  items: { type: Array, default: '' }
+})
 
-const getUniqueTagsFromItems = (items:[]) => {
+const getUniqueTagsFromItems = (items) => {
   const uniqueTags = {}
-  items.forEach((item:[]) => {
+  items.forEach((item) => {
     item.contentfulMetadata.tags.forEach(tag => {
       uniqueTags[tag.id] = tag
     })     
@@ -21,7 +21,7 @@ const uniqueTags = getUniqueTagsFromItems(props.items)
 const currentTag = ref(props.initTag)
 const emit = defineEmits(['tag'])
 
-function buttonClick(tag:any) {
+function buttonClick(tag) {
   if (tag.id===currentTag.value) {
     currentTag.value = ''
     emit('tag', '')
@@ -34,7 +34,7 @@ function buttonClick(tag:any) {
 
 <template>
   <section id="tags" class="pb-8 flex flex-col items-center">
-    <div class="btn-group btn-group-vertical md:btn-group-horizontal">
+    <div class="btn-group btn-group-vertical md:btn-group-horizontal arreglame">
       <button
         v-for="(tag, i) in uniqueTags"
         :key="i"
@@ -42,8 +42,20 @@ function buttonClick(tag:any) {
         class="btn btn-sm lg:btn-md"
         :class="{ 'btn-active': tag.id == currentTag }"
       >
+        <!-- como contentful no permite idiomas en tags uso i18n: -->
         {{ $t(tag.id) }}
       </button>
     </div>
   </section>
 </template>
+<!-- TODO css necesario mientras daisy.ui arrregla button group -->
+<style>
+.arreglame button:last-child {
+  @apply md:rounded-l-none !important;
+  @apply md:rounded-r-lg !important;
+}
+.arreglame button:first-child {
+  @apply md:rounded-r-none !important;
+  @apply md:rounded-l-lg !important;
+}
+</style>

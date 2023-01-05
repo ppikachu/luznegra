@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
   import AOS from 'aos'
   import 'aos/dist/aos.css'
 
@@ -11,7 +11,7 @@
   const openTeam = ref(false)
   const TeamProfile = ref()
 
-  function openPerfil(quien: string) {
+  function openPerfil(quien) {
     openTeam.value = true
     TeamProfile.value = quien
   }
@@ -89,14 +89,23 @@
   
   <ClientOnly>
     <Teleport to="body">
-      <div
-        v-if="openTeam"
-        id="modal-team"
-        class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
-        :class="{ 'modal-open': openTeam }"
+      <transition
+        enter-active-class="transition ease-out duration-200 transform"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition ease-in duration-200 transform"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
       >
-        <Perfil @close-me="closeProject" :name="TeamProfile" />
-      </div>
+        <div
+          v-if="openTeam"
+          id="modal-team"
+          class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
+          :class="{ 'modal-open': openTeam }"
+        >
+          <Perfil @close-me="closeProject" :name="TeamProfile" />
+        </div>
+      </transition>
     </Teleport>
   </ClientOnly>
 
