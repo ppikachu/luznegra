@@ -28,8 +28,8 @@ const filtered = computed(() => {
   : posts
 })
 
-const sound = useSound('/audio/Click03.mp3')
-const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
+const sound = useSound('/sounds/Click03.mp3')
+const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
 
 function swapDestacados () {
   sound.play()
