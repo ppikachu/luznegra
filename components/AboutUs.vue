@@ -16,7 +16,7 @@
     TeamProfile.value = quien
   }
 
-  const soundClose = useSound('/audio/close.mp3', { volume: 0.5 })
+  const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
   
   function closeProject() {
     soundClose.play()

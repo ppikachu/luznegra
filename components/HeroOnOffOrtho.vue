@@ -61,7 +61,7 @@ const telonWidth = .145
 const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
 const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
-const sound = useSound('/audio/Click02.mp3',{ volume: 0.25 })
+const sound = useSound('/sounds/Click02.mp3',{ volume: 0.25 })
 
 const route = useRoute()
 const heroBgColor = ref()
