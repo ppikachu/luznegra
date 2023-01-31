@@ -52,7 +52,7 @@
     :style="`background-color: ${ props.color }`"
   >
     <div class="flex flex-col lg:flex-row place-items-center max-w-6xl mx-auto">
-      <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" data-aos="zoom-in" />
+      <img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" alt="Luz Negra" data-aos="zoom-in" />
       <div class="lg:text-left prose">
         <h1 class="text-4xl md:text-5xl" :class="colorClass" data-aos="fade-up" >
           {{ $t('welcome') }}
@@ -74,7 +74,7 @@
         <span :class="colorClass">{{ $t('dir2') }}</span>
         {{ $t('dir3') }}
       </p>
-      <img class="max-w-sm w-full" src="/images/BETTY.gif" data-aos="zoom-in" />
+      <img class="max-w-sm w-full" src="/images/BETTY.gif" alt="quienes somos" data-aos="zoom-in" />
       <p class="text-3xl md:text-4xl prose" :class="colorP" data-aos="fade-up" >
         {{ $t('sin1') }}
         <span :class="colorClass">{{ $t('sin2') }}</span>

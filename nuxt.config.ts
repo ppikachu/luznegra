@@ -156,7 +156,14 @@ export default defineNuxtConfig({
     // Options
   //}
   pwa: {
-    manifest: false,
+    manifest: {
+      name: 'LUZ NEGRA - Diseño y animación',
+      short_name: 'LUZ NEGRA',
+      lang: 'es',
+      description: 'Diseño y animación',
+      background_color: '#212121',
+      theme_color: '#212121',
+    },
     meta: {
       name: 'LUZ NEGRA - Diseño y animación',
       author: 'LUZ NEGRA',
