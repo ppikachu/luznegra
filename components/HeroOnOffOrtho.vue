@@ -606,7 +606,7 @@ onUnmounted(() => {
 
         <!--SCROLL/LANGUAGE -->
         <div class="flex flex-col items-center space-y-4">
-          <a href="#about-us" class="animate-bounce" ><Icon name="ic:sharp-keyboard-double-arrow-down" class="w-12 h-12" /></a>
+          <a href="#about-us" class="animate-bounce" aria-label="more..." ><Icon name="ic:sharp-keyboard-double-arrow-down" class="w-12 h-12" /></a>
         </div>
         
       </div>
