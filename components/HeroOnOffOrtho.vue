@@ -6,6 +6,7 @@ import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
+import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 const params = {
@@ -24,10 +25,14 @@ const params = {
   groundColor: 'rgb(63, 86, 40)',
   daySkyColor: 'rgb(170, 238, 255)',
   nightSkyColor: 'rgb(1, 9, 36)',
-  fogLinearNearDay: 15,
-  fogLinearFarDay: 30,
-  fogLinearNearNight: 15,
-  fogLinearFarNight: 30,
+  distanceFogDay: {
+    min: 15,
+    max: 30
+  },
+  distanceFogNight: {
+    min: 15,
+    max: 30
+  },
   fogDensityDay: 0.05,
   fogDensityNight: 0.05,
   shadowPlaneSize: 6,
@@ -111,7 +116,7 @@ onMounted(() => {
   document.addEventListener( 'scroll', handleScroll )
 
   //Tweakpane
-  if(route.name == 'test') makeTweak()
+  if(route.path == '/test') makeTweak()
 })
 
 //#region FUNCTIONS
@@ -129,8 +134,8 @@ function swapHeroBgColor() {
 function setFog(cycle) {
   return new THREE.Fog(
     cycle === 'day' ? params.daySkyColor : params.nightSkyColor,
-    cycle === 'day' ? params.fogLinearNearDay : params.fogLinearNearNight,
-    cycle === 'day' ? params.fogLinearFarDay : params.fogLinearFarNight
+    cycle === 'day' ? params.distanceFogDay.min : params.distanceFogNight.min,
+    cycle === 'day' ? params.distanceFogDay.max : params.distanceFogNight.max
   )
 }
 
@@ -489,22 +494,21 @@ function animateMobile() {
 
 function makeTweak() {
   pane = new Pane({ container: document.getElementById('parameters') })
+  pane.registerPlugin(EssentialsPlugin)
   pane.on('change', () => {
     updateScene()
     presetDebug.hidden = true
   })
   //DAY
   dayFolder = pane.addFolder({ title: 'DIA', expanded: false, hidden: params.dayOrNight === 'day' ? false : true })
-  dayFolder.addInput(params, 'fogLinearNearDay', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla dia cerca' })
-  dayFolder.addInput(params, 'fogLinearFarDay', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla dia lejos' })
+  dayFolder.addInput(params, 'distanceFogDay', { min: 0, max: 50, step: 0.1, label: 'distancia niebla' })
   dayFolder.addInput(params, 'daySkyColor', { label: 'cielo dia' })
   dayFolder.addInput(params, 'lightSunColor', { label: 'color sol' })
   dayFolder.addInput(params, 'lightSunIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power sol' })
   dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 0.5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
   //NIGHT
   nightFolder = pane.addFolder({ title: 'NOCHE', expanded: false, hidden: params.dayOrNight === 'night' ? false : true })
-  nightFolder.addInput(params, 'fogLinearNearNight', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla noche cerca' })
-  nightFolder.addInput(params, 'fogLinearFarNight', { type: 'number', min: 1, max: 50, step: 0.1, label: 'niebla noche lejos' })
+  nightFolder.addInput(params, 'distanceFogNight', { min: 0, max: 50, step: 0.1, label: 'distancia niebla' })
   nightFolder.addInput(params, 'nightSkyColor', { label: 'cielo noche' })
   nightFolder.addInput(params, 'lightMoonColor', {  label: 'color luna' })
   nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power luna' })
@@ -607,7 +611,7 @@ onUnmounted(() => {
         
       </div>
       <!--Tweakpane-->
-      <div v-if="route.name == 'test'" class="absolute flex justify-center w-full p-4">
+      <div v-if="route.path == '/test'" class="absolute flex justify-center w-full p-4">
         <div id="parameters" class="w-80 md:w-96"></div>
       </div>
     </div>
