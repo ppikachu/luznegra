@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     preset: 'vercel-edge',
   },
   modules: [
+    '@nuxt/devtools',
     'nuxt-graphql-client',
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
