@@ -18,7 +18,7 @@ const imgGallery = props.gallery.items
   <!--gallery component-->
   <section v-if="imgGallery.length>0">
     <!--gallery ON-->
-    <aside class="carousel mt-8 items-center rounded-lg">
+    <aside class="carousel items-center">
       <div v-for="(img, i) in imgGallery" :key="i" :id="'img'+i" class="carousel-item w-full h-fit justify-center">
         <img
           :src="img.url"
