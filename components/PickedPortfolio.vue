@@ -88,8 +88,8 @@ function closeProject() {
     <h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
     <!--SWITCH-->
     <div class="flex justify-center items-center py-8 mx-auto">
-      <div class="form-control md:text-xl">
-        <label class="label cursor-pointer">
+      <div class="form-control">
+        <label class="label cursor-pointer uppercase">
           <span :class="{ 'opacity-25' : !destacadoTodos }">{{ $t('destacados') }}</span>
           <input type="checkbox" @click="swapDestacados" class="toggle toggle-md mx-6" />  
           <span :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
