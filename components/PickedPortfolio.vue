@@ -167,8 +167,6 @@ function closeProject() {
         </div>
       </TransitionGroup>
     </div>
-    <!--Gradient-->
-    <div class="fixed z-10 bottom-0 left-0 w-full h-24 spotlight bg-gradient-to-t from-zinc-900"></div>
   </section>
 </template>
 <!--.list-enter-from {
