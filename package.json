@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^16.0.2",
-    "@nuxtjs/i18n": "^8.0.0-beta.9",
     "@tweakpane/plugin-essentials": "^0.1.8",
     "@vueuse/sound": "^2.0.1",
     "aos": "^2.3.4",
@@ -19,26 +18,27 @@
     "lodash.startcase": "^4.4.0",
     "lodash.upperfirst": "^4.3.1",
     "nuxt-graphql-client": "^0.2.25",
-    "three": "^0.149.0",
-    "tweakpane": "^3.1.4",
+    "three": "^0.150.1",
+    "tweakpane": "^3.1.6",
     "vue-plyr": "^7.0.0"
   },
   "devDependencies": {
-    "@kevinmarrec/nuxt-pwa": "^0.16.2",
-    "@nuxt/devtools": "^0.1.2",
+    "@kevinmarrec/nuxt-pwa": "^0.17.0",
+    "@nuxt/devtools": "^0.2.5",
     "@nuxtjs/google-fonts": "^3.0.0-1",
-    "@nuxtjs/tailwindcss": "^6.3.1",
+    "@nuxtjs/i18n": "^8.0.0-beta.10",
+    "@nuxtjs/tailwindcss": "^6.4.1",
     "@tailwindcss/typography": "^0.5.9",
     "@types/aos": "^3.0.4",
-    "@types/chroma-js": "^2.1.5",
-    "@types/node": "^18.13.0",
+    "@types/chroma-js": "^2.4.0",
+    "@types/node": "^18.14.6",
     "@types/three": "^0.149.0",
-    "@vueuse/core": "^9.12.0",
-    "@vueuse/nuxt": "^9.12.0",
-    "daisyui": "^2.50.0",
-    "nuxt": "^3.2.0",
-    "nuxt-icon": "^0.2.11",
+    "@vueuse/core": "^9.13.0",
+    "@vueuse/nuxt": "^9.13.0",
+    "daisyui": "^2.51.3",
+    "nuxt": "^3.2.3",
+    "nuxt-icon": "^0.3.2",
     "typescript": "^4.9.5",
-    "vue-tsc": "^1.0.24"
+    "vue-tsc": "^1.2.0"
   }
 }
