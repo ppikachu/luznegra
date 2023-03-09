@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^16.0.2",
-    "@nuxtjs/i18n": "^7.3.1",
     "@tweakpane/plugin-essentials": "^0.1.8",
     "@vueuse/sound": "^2.0.1",
     "aos": "^2.3.4",
@@ -27,6 +26,7 @@
     "@kevinmarrec/nuxt-pwa": "^0.17.0",
     "@nuxt/devtools": "^0.2.5",
     "@nuxtjs/google-fonts": "^3.0.0-1",
+    "@nuxtjs/i18n": "^8.0.0-beta.10",
     "@nuxtjs/tailwindcss": "^6.4.1",
     "@tailwindcss/typography": "^0.5.9",
     "@types/aos": "^3.0.4",
