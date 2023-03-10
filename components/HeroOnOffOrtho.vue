@@ -1,12 +1,12 @@
 <script setup>
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
 import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
 import { Pane } from 'tweakpane'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 const params = {
@@ -581,7 +581,7 @@ onUnmounted(() => {
       <!--bottom linear-gradient-->
       <div
         class = "absolute bottom-0 h-1/6 w-full"
-        :style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, transparent 100%);`"
+        :style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, ${chroma(heroBgColor).alpha(0)} 100%);`"
       >
       </div>
       <div class="absolute bottom-0 lg:-bottom-8 py-12 px-4 flex flex-col justify-center items-center space-y-10 w-full">
