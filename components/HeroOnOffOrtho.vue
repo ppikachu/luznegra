@@ -1,14 +1,20 @@
 <script setup>
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import chroma from 'chroma-js'
 import gsap from 'gsap'
 import isMobile from 'ismobilejs'
-import { Pane } from 'tweakpane'
-import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
-import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
+const route = useRoute()
+//only on /test:
+//if (route.path == '/test') {
+  const tweakpane = await import('tweakpane')
+  const lightHelper = await import('three/examples/jsm/helpers/RectAreaLightHelper.js')
+  const Pane = tweakpane.Pane
+  const RectAreaLightHelper = lightHelper.RectAreaLightHelper
+  const EssentialsPlugin = await import('@tweakpane/plugin-essentials')
+//}
 const params = {
   mouseFollow: true,
   dayOrNight: "night",
@@ -68,7 +74,6 @@ const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
 const sound = useSound('/sounds/Click02.mp3',{ volume: 0.25 })
 
-const route = useRoute()
 const heroBgColor = ref('#780000') //HACK: hardcoded hero colors
 const isReady = ref(false)
 const dayNight = ref(params.dayOrNight)
@@ -300,7 +305,7 @@ function init() {
   controls.minAzimuthAngle = -Math.PI/2.5 + params.initialSceneRotation.x
   controls.maxAzimuthAngle = Math.PI/2.5 + params.initialSceneRotation.x
   controls.screenSpacePanning = false
-  controls.enableZoom = route.name == 'test' ? true : false
+  controls.enableZoom = route.path == '/test' ? true : false
   controls.target.y = amIMobile.value ? 0 : 0.5
   controls.minZoom = 0.2
   controls.maxZoom = 2
