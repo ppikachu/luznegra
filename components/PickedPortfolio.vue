@@ -8,6 +8,11 @@ const posts = data.value.entradasCollection.items
 
 const openProyect = ref()
 const destacadoTodos = ref(true)
+watch(openProyect, () => {
+  const theBody = document.body
+  console.log(theBody)
+  openProyect.value ? theBody.style.overflow='hidden' : theBody.style.overflow='auto'
+})
 
 /* Default tags */
 const currentTag = ref()
@@ -61,7 +66,7 @@ function closeProject() {
           class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
           :class="{ 'modal-open': openProyect }"
         >
-          <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-5xl max-h-full">
+          <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-full">
             <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
               <Icon name="mdi:close-thick" />
             </label>
@@ -71,13 +76,13 @@ function closeProject() {
               <h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
               <ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
             </div>
-            <div class="prose my-4">
-              <div class="mb-4" id="content" v-html="openProyect.content ? documentToHtmlString(openProyect.content.json) : ''"></div>
-            </div>
-            <div class="modal-action">
+            <div class="my-4 flex flex-col md:flex-row space-y-4 md:space-x-4 md:items-end w-full md:justify-between">
+              <div class="prose" id="content" v-html="openProyect.content ? documentToHtmlString(openProyect.content.json) : ''"></div>
               <p class="text-xs text-zinc-400">
                 {{ $t('link_compartir') }}: <a :href="config.HOST+'/proyecto/'+openProyect.slug" class="link link-primary">{{ openProyect.slug }}</a>
               </p>
+            </div>
+            <div class="">
             </div>
           </div>
         </div>
