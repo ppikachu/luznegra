@@ -56,6 +56,8 @@ export default defineNuxtConfig({
               motionGraphics: 'motion graphics',
               ilustracion: 'ilustration & design',
               link_compartir: 'share project link',
+              link_copy: 'copy',
+              copied: 'copied!',
 
               escribinos: 'Contact us',
               mensaje: 'Message',
@@ -95,6 +97,8 @@ export default defineNuxtConfig({
               motionGraphics: 'motion graphics',
               ilustracion: 'ilustración & diseño',
               link_compartir: 'link para compartir proyecto',
+              link_copy: 'copiar',
+              copied: 'copiado!',
 
               escribinos: 'Escribínos',
               mensaje: 'Mensaje',

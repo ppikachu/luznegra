@@ -1,6 +1,7 @@
 <script setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 const config = useRuntimeConfig()
+const { text, isSupported, copy, copied } = useClipboard()
 
 /* Fetch all projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
@@ -9,9 +10,7 @@ const posts = data.value.entradasCollection.items
 const openProyect = ref()
 const destacadoTodos = ref(true)
 watch(openProyect, () => {
-  const theBody = document.body
-  console.log(theBody)
-  openProyect.value ? theBody.style.overflow='hidden' : theBody.style.overflow='auto'
+  openProyect.value ? document.body.style.overflow='hidden' : document.body.style.overflow='auto'
 })
 
 /* Default tags */
@@ -60,32 +59,26 @@ function closeProject() {
           leave-from-class="opacity-100"
           leave-to-class="opacity-0"
         >
-        <div
-          v-if="openProyect"
-          id="modal-proyecto"
-          class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
-          :class="{ 'modal-open': openProyect }"
-        >
-          <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-full">
-            <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
-              <Icon name="mdi:close-thick" />
-            </label>
-            <ProjectVideos v-if="openProyect.video" :videos="openProyect.video" />
-            <ProjectGallery :gallery="openProyect.imgGalleryCollection" />
-            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center mt-4">
-              <h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
-              <ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
-            </div>
-            <div class="my-4 flex flex-col md:flex-row space-y-4 md:space-x-4 md:items-end w-full md:justify-between">
+          <div
+            v-if="openProyect"
+            id="modal-proyecto"
+            class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
+            :class="{ 'modal-open': openProyect }"
+          >
+            <div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl h-screen max-h-full md:h-auto">
+              <label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle absolute left-2 top-2">
+                <Icon name="mdi:close-thick" />
+              </label>
+              <ProjectVideos v-if="openProyect.video" :videos="openProyect.video" />
+              <ProjectGallery :gallery="openProyect.imgGalleryCollection" />
+              <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center mt-4">
+                <h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
+                <ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
+              </div>
               <div class="prose" id="content" v-html="openProyect.content ? documentToHtmlString(openProyect.content.json) : ''"></div>
-              <p class="text-xs text-zinc-400">
-                {{ $t('link_compartir') }}: <a :href="config.HOST+'/proyecto/'+openProyect.slug" class="link link-primary">{{ openProyect.slug }}</a>
-              </p>
-            </div>
-            <div class="">
+              <Share :project="openProyect" />
             </div>
           </div>
-        </div>
         </transition>
       </Teleport>
     </ClientOnly>
@@ -102,12 +95,12 @@ function closeProject() {
       </div>
     </div>
     <!--Proyectos destacados-->
-    <ul v-show="destacadoTodos" class="grid md:grid-cols-3 gap-8 lg:gap-8">
+    <ul v-show="destacadoTodos" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-8">
       <li v-for="(post, i) in pickedPortfolioItems" :key="i">
         <a
           :href="`/proyecto/${post.slug}`"
           @click.prevent="openProyect = post"
-          class="gradient-border h-full card card-compact md:card-normal bg-base-300 shadow-lg"
+          class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
         >
           <figure>
             <img v-if="post.imageFeatured"
