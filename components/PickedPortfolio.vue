@@ -71,7 +71,7 @@ function closeProject() {
               </label>
               <ProjectVideos v-if="openProyect.video" :videos="openProyect.video" />
               <ProjectGallery :gallery="openProyect.imgGalleryCollection" />
-              <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center mt-4">
+              <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center my-4">
                 <h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
                 <ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
               </div>
