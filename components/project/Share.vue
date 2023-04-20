@@ -16,11 +16,11 @@ function closeProject() {
 </script>
 
 <template>
-  <div class="pt-8">
-    <p class="text-sm mb-3">{{ $t('link_compartir') }}:</p>
+  <div class="pt-4 md:pt-0">
+    <p class="text-sm mb-1 ml-3 text-zinc-400 md:text-right">{{ $t('link_compartir') }}:</p>
     <div v-if="isSupported" class="form-control">
       <div class="input-group input-group-sm">
-        <span class="input input-sm text-zinc-400">
+        <span class="input input-sm text-zinc-400 truncate">
           {{ config.HOST+'/proyecto/'+project.slug }}
         </span>
         <div class="tooltip tooltip-primary" :data-tip="copied ? $t('copied') : $t('link_copy')">
