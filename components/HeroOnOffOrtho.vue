@@ -571,7 +571,6 @@ onUnmounted(() => {
 
 <template>
     <div id="container" ref="target" class="overflow-hidden cursor-ew-resize" style="height: 100vh;">
-      <LangSwitcher />
       <!--video for threejs-->
       <video v-if="debug.showPantalla" id="video"
         loop

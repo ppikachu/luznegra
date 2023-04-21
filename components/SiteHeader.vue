@@ -11,7 +11,9 @@
           <img class="w-60" src="/images/logo2022.svg" :alt="config.public.TEAM_NAME" />
         </a>
       </div>
-      <div class="navbar-end"></div>
+      <div class="navbar-end">
+        <LangSwitcher />
+      </div>
     </div>
   </div>
 </template>
