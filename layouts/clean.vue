@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <LangSwitcher />
-    <NuxtPage />
-    <SiteFooter />
-  </div>
+  <LazyLangSwitcher />
+  <NuxtPage />
+  <LazySiteFooter />
 </template>
 <style>
   html {
