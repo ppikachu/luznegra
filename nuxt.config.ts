@@ -2,17 +2,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   telemetry: false,
-  ssr: false,
-  //target: 'static',
+  //ssr: false,
   typescript: {
     //shim: false,
     //typeCheck: true
   },
   nitro: {
-    preset: 'vercel-edge',
+    //WARN: on for deploying to vercel, off to test build in dev:
+    //preset: 'vercel-edge',
   },
   modules: [
-    '@nuxt/devtools',
+    //'@nuxt/devtools',
     'nuxt-graphql-client',
     '@nuxtjs/tailwindcss',
     //'@nuxt/image-edge',
@@ -28,7 +28,7 @@ export default defineNuxtConfig({
       { code: 'en',  iso: 'en',name: 'English', file: 'en.json' },
     ],
     defaultLocale: 'es',
-    lazy: true,
+    //lazy: true,
     langDir: 'lang',
     vueI18n: {
       fallbackLocale: 'es',
