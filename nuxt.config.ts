@@ -2,7 +2,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   telemetry: false,
-  //ssr: false,
+  ssr: false,
   //target: 'static',
   typescript: {
     //shim: false,
@@ -27,6 +27,7 @@ export default defineNuxtConfig({
       { code: 'es',  iso: 'es',name: 'Español', file: 'es.json' },
       { code: 'en',  iso: 'en',name: 'English', file: 'en.json' },
     ],
+    defaultLocale: 'es',
     lazy: true,
     langDir: 'lang',
     vueI18n: {

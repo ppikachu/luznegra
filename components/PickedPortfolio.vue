@@ -199,8 +199,12 @@ function closeProject() {
 .list-move {
   transition: all 0.5s;
 }-->
-<style scoped>
+<style>
 .toggle {
   background-color: white;
+}
+#content li p {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 </style>
