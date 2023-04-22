@@ -22,18 +22,6 @@ export default defineNuxtConfig({
     'nuxt-icon',
     '@nuxtjs/i18n',
   ],
-  i18n: {
-    locales: [
-      { code: 'es',  iso: 'es',name: 'Español', file: 'es.json' },
-      { code: 'en',  iso: 'en',name: 'English', file: 'en.json' },
-    ],
-    defaultLocale: 'es',
-    //lazy: true,
-    langDir: 'lang',
-    vueI18n: {
-      fallbackLocale: 'es',
-    },
-  },
   runtimeConfig: {
     private: {
     },

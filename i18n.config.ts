@@ -4,11 +4,17 @@ export default defineI18nConfig(nuxt => ({
   legacy: false,
   locale: 'es',
   locales: [
-    { code: 'es', iso: 'es', name: 'Español' },
-    { code: 'en', iso: 'en', name: 'English' },
-    //{ code: 'es',  iso: 'es',name: 'Español', file: 'es.json' },
-    //{ code: 'en',  iso: 'en',name: 'English', file: 'en.json' },
+    { code: 'es',  iso: 'es',name: 'Español', file: 'es.json' },
+    { code: 'en',  iso: 'en',name: 'English', file: 'en.json' },
+    //{ code: 'es', iso: 'es', name: 'Español' },
+    //{ code: 'en', iso: 'en', name: 'English' },
   ],
+  defaultLocale: 'es',
+  //lazy: true,
+  langDir: 'lang',
+  fallbackLocale: 'es',
+  vueI18n: {
+  },
   detectBrowserLanguage: {
     fallbackLocale: 'es',
   },
