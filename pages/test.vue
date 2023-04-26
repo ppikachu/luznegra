@@ -1,11 +1,11 @@
 <script setup>
-  definePageMeta({
-    layout: 'clean',
-  })
+	definePageMeta({
+		layout: 'clean',
+	})
 </script>
 
 <template>
-  <main class="block">
-    <HeroOnOffOrtho />
-  </main>
+	<main class="block">
+		<HeroOnOffOrtho />
+	</main>
 </template>
