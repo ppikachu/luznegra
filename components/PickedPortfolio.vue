@@ -64,10 +64,10 @@ function closeProject() {
 					<div
 						v-if="openProyect"
 						id="modal-proyecto"
-						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
+						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center"
 						:class="{ 'modal-open': openProyect }"
 					>
-						<div class="modal-box rounded-none md:rounded-3xl relative w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl h-screen max-h-full md:h-auto pt-0">
+						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl h-screen md:h-auto pt-0 m-y">
 							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle sticky -ml-4 top-2">
 								<Icon name="mdi:close-thick" />
 							</label>
