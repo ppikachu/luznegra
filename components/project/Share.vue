@@ -32,7 +32,7 @@ async function copyLink() {
 </script>
 
 <template>
-	<div class="pt-4 md:pt-0">
+	<div class="pt-4 pb-20 md:pb-0 md:pt-0">
 		<!--si no permite compartir, copia el link 'ctrl/cmd c'-->
 		<div v-if="!canShareData">
 			<div class="tooltip tooltip-primary" :data-tip="copied ? $t('copied') : $t('link_copy')">

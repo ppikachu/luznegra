@@ -34,7 +34,7 @@ function buttonClick(tag) {
 
 <template>
 	<section id="tags" class="pb-8 flex flex-col items-center">
-		<div class="btn-group btn-group-vertical md:btn-group-horizontal">
+		<div class="btn-group btn-group-vertical w-full md:w-auto md:btn-group-horizontal">
 			<button
 				v-for="(tag, i) in uniqueTags"
 				:key="i"

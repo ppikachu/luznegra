@@ -28,7 +28,7 @@ const imgGallery = props.gallery.items
 				/>
 			</div>
 		</aside>
-		<div class="flex justify-center py-2 btn-group">
+		<div class="flex justify-center py-2 btn-group overflow-x-auto">
 			<a v-for="(img, i) in imgGallery" :href="`#img${i}`" class="btn btn-sm text-xs">{{ img.title }}</a>
 		</div>
 	</section>

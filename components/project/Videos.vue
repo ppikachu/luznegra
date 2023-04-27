@@ -36,7 +36,7 @@ if (props.videos) {
 					</VuePlyr>
 				</div>
 			</aside>
-			<div v-if="props.videos.length > 1" class="flex justify-center py-2 btn-group">
+			<div v-if="props.videos.length > 1" class="flex justify-center py-2 btn-group overflow-x-auto">
 				<a v-for="(video, i) in videoId" :href="`#vid${i}`" class="btn btn-sm text-xs">{{ i+1 }}</a>
 			</div>
 		</ClientOnly>

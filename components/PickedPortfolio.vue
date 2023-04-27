@@ -65,7 +65,7 @@ function closeProject() {
 						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center"
 						:class="{ 'modal-open': openProyect }"
 					>
-						<div class="tooltip tooltip-primary absolute bottom-6 md:bottom-12 left-1/2 -ml-6 z-10" :data-tip="$t('close')">
+						<div class="tooltip tooltip-primary absolute bottom-8 md:bottom-12 left-1/2 -ml-6 z-10" :data-tip="$t('close')">
 							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-circle hover:scale-90">
 								<Icon name="mdi:close-thick" />
 							</label>
