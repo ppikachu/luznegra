@@ -1,7 +1,5 @@
 <script setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-const config = useRuntimeConfig()
-const { text, isSupported, copy, copied } = useClipboard()
 
 /* Fetch all projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
@@ -67,22 +65,31 @@ function closeProject() {
 						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center"
 						:class="{ 'modal-open': openProyect }"
 					>
-						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl h-screen md:h-auto pt-0 m-y">
-							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-sm btn-circle sticky -ml-4 top-2">
+						<div class="tooltip tooltip-primary absolute bottom-6 md:bottom-12 left-1/2 -ml-6 z-10" :data-tip="$t('close')">
+							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-circle hover:scale-90">
 								<Icon name="mdi:close-thick" />
 							</label>
-							<div class="-mt-2">
-								<ProjectVideos v-if="openProyect.video" :videos="openProyect.video" />
-								<ProjectGallery :gallery="openProyect.imgGalleryCollection" />
-								<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center my-4">
-									<h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
-									<ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
-								</div>
-								<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
-									<div class="prose" id="content" v-html="openProyect.content ? documentToHtmlString(openProyect.content.json) : ''"></div>
-									<ProjectShare :project="openProyect" />
-								</div>
+						</div>
+						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit">
+
+							<ProjectVideos v-if="openProyect.video" :videos="openProyect.video" />
+
+							<ProjectGallery :gallery="openProyect.imgGalleryCollection" />
+
+							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center my-4">
+								<h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
+								<ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
 							</div>
+
+							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
+								<div
+									v-html="openProyect.content ? documentToHtmlString(openProyect.content.json) : ''"
+									id="content"
+									class="prose prose-a:text-primary"
+								></div>
+								<ProjectShare :project="openProyect" />
+							</div>
+
 						</div>
 					</div>
 				</transition>
