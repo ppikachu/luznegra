@@ -51,7 +51,7 @@ const params = {
 	lightSunIntensity: 0.9,
 	lightSunPosition: new THREE.Vector3( -1.4, 5, 6 ),
 	lightMoonColor: 'rgb(152, 1, 4)',
-	lightMoonIntensity: 0.5,
+	lightMoonIntensity: 0.9,
 	lightMoonPosition: new THREE.Vector3( -5, 5, -1 ),
 	initialSceneRotation: { x: Math.PI*0.15, y: Math.PI/2.6 },
 }
@@ -73,8 +73,10 @@ const telonSize = { x: telonWidth, y: telonWidth / (16/9) }
 const telonPosition = { x: 0, y: 0.06, z: -0.001 }
 const telonGeometry = new THREE.PlaneGeometry( telonSize.x, telonSize.y )
 const sound = useSound('/sounds/Click02.mp3',{ volume: 0.25 })
-
-const heroBgColor = ref('#780000') //HACK: hardcoded hero colors
+//HACK hardcoded hero colors from digital color meter (sRGB): rgb(133,7,13)/#85070d, dia:rgb(132,157,113)/#849d71
+const bgNight = '#85070d'
+const bgDay = '#849d71'
+const heroBgColor = ref(bgNight)
 const isReady = ref(false)
 const dayNight = ref(params.dayOrNight)
 const target = ref(null)
@@ -105,8 +107,6 @@ shadowSize, frustumSize,
 pane, dayFolder, nightFolder, extraFolder, preset = { debug: '' }, presetDebug,
 timer, controls
 
-//swapHeroBgColor() //TODO: was this really needed?
-
 onMounted(() => {
 	//Setup
 	init()
@@ -126,10 +126,7 @@ onMounted(() => {
 
 //#region FUNCTIONS
 function swapHeroBgColor() {
-	heroBgColor.value = params.dayOrNight === 'day'?
-	//HACK: hardcoded hero colors:
-	chroma(params.groundColor).brighten(2).hex() :
-	chroma(params.lightMoonColor).darken(.6).hex()
+	heroBgColor.value = params.dayOrNight === 'day'? bgDay : bgNight
 }
 
 function setFog(cycle) {
@@ -150,10 +147,6 @@ function handleScroll() {
 		}, 100)
 }
 
-function doDayNightCycle () {
-	sound.play()
-	swapDayNight()
-}
 //pantalla:
 function setupModel(modelData) {
 	const model = modelData.scene.children[0].children[0].children[0]
@@ -180,7 +173,6 @@ function setupModelB(modelData) {
 }
 
 function initProjector() {
-	//RectAreaLightUniformsLib.init()
 	const video = document.getElementById( 'video' )
 	telonTexture = new THREE.VideoTexture( video )
 	telonTexture.encoding = THREE.sRGBEncoding
@@ -210,6 +202,7 @@ function initProjector() {
 }
 
 function swapDayNight() {
+	sound.play()
 	const previousSunPosition = params.lightSunPosition
 	const previousMoonPosition = params.lightMoonPosition
 	if (params.dayOrNight === 'night') {
@@ -348,6 +341,7 @@ function init() {
 	
 	//ambient
 	ambientLight.color.set( params.dayOrNight === 'day' ? params.lightSunColor : params.lightMoonColor )
+	ambientLight.intensity = params.dayOrNight === 'day' ? params.lightSunIntensity : params.lightMoonIntensity
 	//lighthelpers
 	lightHelperSun  = new THREE.CameraHelper( lightSun.shadow.camera )
 	lightHelperMoon = new THREE.CameraHelper( lightMoon.shadow.camera )
@@ -360,25 +354,6 @@ function init() {
 	
 	//#region environmentSetup
 	scene.fog = setFog(params.dayOrNight)
-	//? new THREE.FogExp2(
-	//  params.daySkyColor,
-	//  params.fogDensityDay
-	//)
-	//: new THREE.FogExp2(
-	//    params.nightSkyColor,
-	//    params.fogDensityNight
-	//)
-
-	//const pmremGenerator = new THREE.PMREMGenerator( renderer )
-	//scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture
-
-	/*const loadedTexture = new RGBELoader().load(hdrimgUrl, () => {
-		const envMap = loadedTexture
-		scene.environment = envMap
-		scene.environment.mapping = THREE.EquirectangularReflectionMapping
-		scene.environment.needsUpdate = true
-	})*/
-	//#endregion environmentSetup
 }
 
 async function props() {
@@ -439,8 +414,8 @@ function updateScene() {
 
 	if (params.dayOrNight === 'day') {
 		//Actualiza el ambiente
-		ambientLight.color.set( lightSun.color )
-		ambientLight.intensity = lightSun.intensity
+		ambientLight.color.set( params.lightSunColor )
+		ambientLight.intensity = params.lightSunIntensity
 		//luz y sombra
 		lightSun.position.set( params.lightSunPosition.x, params.lightSunPosition.y, params.lightSunPosition.z )
 		lightSun.intensity = params.lightSunIntensity
@@ -449,8 +424,8 @@ function updateScene() {
 		scene.fog = setFog(params.dayOrNight)
 	} else {
 		//Actualiza el ambiente
-		ambientLight.color.set( lightMoon.color )
-		ambientLight.intensity = lightMoon.intensity = params.lightMoonIntensity
+		ambientLight.color.set( params.lightMoonColor )
+		ambientLight.intensity = params.lightMoonIntensity
 		//luz y sombra
 		lightMoon.position.set( params.lightMoonPosition.x, params.lightMoonPosition.y, params.lightMoonPosition.z )
 		lightMoon.intensity = params.lightMoonIntensity
@@ -570,7 +545,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div id="container" ref="target" class="overflow-hidden cursor-ew-resize" style="height: 100vh;">
+	<div
+		id="container"
+		ref="target"
+		class="overflow-hidden cursor-ew-resize h-screen"
+	>
 		<!--video for threejs-->
 		<video v-if="debug.showPantalla" id="video"
 			loop
@@ -583,16 +562,11 @@ onUnmounted(() => {
 			<!--<source src="/images/pantalla_v03.webm">-->
 		</video>
 		<!--bottom linear-gradient-->
-		<div
-			class = "absolute bottom-0 h-1/6 w-full"
-			:style = "`background: linear-gradient(0deg, ${heroBgColor} 0%, ${chroma(heroBgColor).alpha(0)} 100%);`"
-		>
-		</div>
 		<div class="absolute bottom-0 lg:-bottom-8 py-12 px-4 flex flex-col justify-center items-center space-y-10 w-full">
 			<!--SWITCH-->
 			<label class="swap">
 				<!-- this hidden checkbox controls the state -->
-				<input type="checkbox" @click="doDayNightCycle" aria-label="day or night" />
+				<input type="checkbox" @click="swapDayNight" aria-label="day or night" />
 				<!-- volume off icon -->
 				<svg class="swap-on fill-neutral-content w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 					<path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/>
@@ -619,6 +593,11 @@ onUnmounted(() => {
 
 	<PreLoader :loading="isReady" />
 
-	<AboutUs :ciclo="dayNight" :color="heroBgColor" />
+	<div
+		:style = "`background: ${heroBgColor}`"
+		class=" -top-10"
+	>
+		<AboutUs :ciclo="dayNight" :color="heroBgColor" />
+	</div>
 
 </template>

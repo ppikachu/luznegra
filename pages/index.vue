@@ -6,7 +6,11 @@ definePageMeta({
 
 <template>
 	<main>
-		<div class="min-h-screen bg-no-repeat bg-center" style="background-image:url('/images/tubos_loop_ani.png'); background-size: 128px 128px;">
+		<!--WARN hardcoded hero background-color check (HeroOnOffOrtho:~77)-->
+		<div
+			class="min-h-screen bg-no-repeat bg-center"
+			style="background-color: #85070d; background-image:url('/images/tubos_loop_ani.png'); background-size: 128px 128px;"
+		>
 			<ClientOnly>
 				<HeroOnOffOrtho />
 			</ClientOnly>

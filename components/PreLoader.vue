@@ -15,9 +15,8 @@ const amIMobile = ref(isMobile().any)
 			v-show="!props.loading"
 			id="fader"
 			class="absolute z-30 top-0 w-full h-screen flex flex-col justify-center items-center"
-			style="background-color: #780000"
 		>
-			<img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
+			<!--<img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">-->
 			<p v-if="amIMobile===true" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> {{ $t('drag_m_experiment') }}</p>
 			<p v-else-if="amIMobile===false" class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> {{ $t('drag_d_experiment') }}</p>
 		</div>

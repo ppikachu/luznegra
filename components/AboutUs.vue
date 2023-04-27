@@ -46,11 +46,7 @@
 </script>
 
 <template>
-	<section
-		id="about-us"
-		class="py-16 md:py-32 px-4 md:px-8 text-center"
-		:style="`background-color: ${ props.color }`"
-	>
+	<section id="about-us" class="py-16 md:py-32 px-4 md:px-8 text-center">
 		<div class="flex flex-col lg:flex-row place-items-center max-w-6xl mx-auto">
 			<img class="w-2/3 md:w-1/2 lg:w-full mb-8" src="/images/ET.gif" alt="Luz Negra" width="540" height="540" data-aos="zoom-in" loading="lazy" />
 			<div class="lg:text-left prose">
