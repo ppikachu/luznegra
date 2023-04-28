@@ -21,7 +21,7 @@
 							<label class="label">
 								<span class="label-text">{{ $t('mensaje') }}</span>
 							</label>
-							<textarea name="mensaje" required class="textarea textarea-secondary" :placeholder="$t('tu_mensaje')"></textarea>
+							<textarea id="message" name="message" required class="textarea textarea-secondary" :placeholder="$t('tu_mensaje')"></textarea>
 						</div>
 						<div class="form-control mt-6">
 							<button type="submit" class="btn btn-primary">{{ $t('enviar') }}</button>
