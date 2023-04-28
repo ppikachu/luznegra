@@ -14,7 +14,7 @@ Multimedia portfolio for [Luz Negra](https://luz-negra.com), a multimedia design
 - [daisyUI](https://daisyui.com) & [Tailwind CSS v3](https://tailwindcss.com)
 - Responsive (tablet & mobile friendly)
 - [Contentful](https://www.contentful.com) CMS for portfolio projects
-- Contact form using [Formspree](https://formspree.io)
+- Contact form using [Formspark](https://formspark.io/) and [Turnstile](https://www.cloudflare.com/products/turnstile/) for CAPTCHA
 
 ## Local Development
 
