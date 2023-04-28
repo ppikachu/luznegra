@@ -1,57 +1,59 @@
-<script setup>
-	useHead({
-		script: [
-			{
-				src: 'https://www.google.com/recaptcha/api.js',
-				async: true,
-				defer: true,
-			}
-		]
-	})
-	//onMounted(() => {
-		//var clientId = grecaptcha.render('inline-badge', {
-		//    'sitekey': '6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV',
-		//    'badge': 'inline',
-		//    'size': 'invisible'
-		//})
-		//grecaptcha.ready(function() {
-		//    grecaptcha.execute(clientId, { action: 'submit' }).then(function(token) {
-		//      // Verify the token on the server.
-		//      console.info("got token: " + token)
-		//      document.getElementById('g-recaptcha-response').value = token
-		//    })
-		//})
-	//})
+<script>
+const FORMSPARK_ACTION_URL = "https://submit-form.com/Nhhk4492";
+
+export default {
+  data() {
+    return {
+      message: "",
+    }
+  },
+  methods: {
+    async submitForm() {
+      await fetch(FORMSPARK_ACTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          message: this.message,
+        }),
+      });
+      alert("Form submitted");
+    },
+  },
+}
 </script>
 
 <template>
 	<div class="hero bg-gradient-to-br from-secondary to-secondary-focus py-8">
-		<div class="hero-content flex-col">
+		<div class="hero-content flex-col max-w-xl w-full">
 			<div class="text-center lg:text-left">
 				<h1 class="text-5xl font-bold mb-6">{{ $t('escribinos') }}!</h1>
 			</div>
-			<div class="card card-compact lg:card-normal flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+			<div class="card card-compact lg:card-normal flex-shrink-0 w-full shadow-2xl bg-base-100">
 				<div class="card-body">
-					<form action="https://formspree.io/f/mwkzplkb" method="POST">
+					<form @submit.prevent="submitForm">
 						<div class="form-control">
 							<label class="label">
 								<span class="label-text">E-mail</span>
 							</label>
-							<input type="email" name="email" required placeholder="e-mail" class=" textarea-secondary accent-amber-500 input" />
+							<!--<input type="email" name="email" required placeholder="e-mail" class=" textarea-secondary accent-amber-500 input" />-->
 						</div>
 						<div class="form-control">
 							<label class="label">
 								<span class="label-text">{{ $t('mensaje') }}</span>
 							</label>
-							<textarea name="mensaje" class="textarea textarea-secondary" :placeholder="$t('tu_mensaje')"></textarea>
+							<textarea
+								name="mensaje"
+								:placeholder="$t('tu_mensaje')"
+								v-model="message"
+								required
+								class="textarea textarea-secondary"
+							></textarea>
 						</div>
-						<div
-							class="g-recaptcha my-6 w-min"
-							data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"
-							data-theme="dark"
-						></div>
 						<div class="form-control mt-6">
-							<button class="btn btn-primary">{{ $t('enviar') }}</button>
+							<button type="submit" class="btn btn-primary">{{ $t('enviar') }}</button>
 						</div>
 					</form>
 				</div>

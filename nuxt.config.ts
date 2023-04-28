@@ -21,6 +21,7 @@ export default defineNuxtConfig({
 		'@kevinmarrec/nuxt-pwa',
 		'nuxt-icon',
 		'@nuxtjs/i18n',
+		'@nuxtjs/turnstile',
 	],
 	i18n: {
 		locales: [
@@ -32,6 +33,13 @@ export default defineNuxtConfig({
 		vueI18n: {
 			fallbackLocale: 'es',
 		},
+	},
+	turnstile: {
+		//siteKey: '0x4AAAAAAAAnaWdzLNaGsIA-',
+		//siteKey: '1x00000000000000000000AA', //Always passes visible
+		//siteKey: '2x00000000000000000000BB', //Always blocks invisible
+		siteKey: '3x00000000000000000000FF', //Forces an interactive challenge visible
+
 	},
 	runtimeConfig: {
 		private: {
@@ -59,6 +67,10 @@ export default defineNuxtConfig({
 			twitterUrlS: 'https://twitter.com/ppika',
 			behanceI: '#',
 			behanceS: '#'
+		},
+		turnstile: {
+			//secretKey: '0x4AAAAAAAAnabdt0cVu-AfP6gD1UNUDchY',
+			secretKey: '1x0000000000000000000000000000000AA',
 		},
 	},
 	css: [
