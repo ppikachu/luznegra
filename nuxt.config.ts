@@ -1,8 +1,6 @@
-//import { defineNuxtConfig } from 'nuxt'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	telemetry: false,
-	//ssr: false,
 	typescript: {
 		//shim: false,
 		//typeCheck: true
@@ -12,10 +10,8 @@ export default defineNuxtConfig({
 		//preset: 'vercel-edge',
 	},
 	modules: [
-		//'@nuxt/devtools',
 		'nuxt-graphql-client',
 		'@nuxtjs/tailwindcss',
-		//'@nuxt/image-edge',
 		'@nuxtjs/google-fonts',
 		'@vueuse/nuxt',
 		'@kevinmarrec/nuxt-pwa',
@@ -34,8 +30,6 @@ export default defineNuxtConfig({
 		},
 	},
 	runtimeConfig: {
-		private: {
-		},
 		public: {
 			CONTENT_KEY: process.env.CONTENT_KEY,
 			SPACE_ID: process.env.SPACE_ID,
@@ -52,9 +46,6 @@ export default defineNuxtConfig({
 			TEAM_LOGO_IMAGE_ON_FOOTER: '/images/tubos_loop_ani.png',
 			TEAM_LOGO_BLACK: '/images/tubos_loader_a.png',
 			OG_IMAGE: '/OG.png',
-			//GITHUB_ORGANIZATION_URL: 'https://github.com/luznegra',
-			//GA_ID: process.env.GA_ID,
-			//GA_APP_NAME: 'LUZ NEGRA',
 			twitterUrlI: '#',
 			twitterUrlS: 'https://twitter.com/ppika',
 			behanceI: '#',
@@ -71,9 +62,6 @@ export default defineNuxtConfig({
 			//'Open Sans': true,
 		}
 	},
-	//image: {
-		// Options
-	//}
 	pwa: {
 		manifest: {
 			name: 'LUZ NEGRA - Diseño y animación',

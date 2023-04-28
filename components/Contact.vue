@@ -1,27 +1,5 @@
 <script setup>
-	useHead({
-		script: [
-			{
-				src: 'https://www.google.com/recaptcha/api.js',
-				async: true,
-				defer: true,
-			}
-		]
-	})
-	//onMounted(() => {
-		//var clientId = grecaptcha.render('inline-badge', {
-		//    'sitekey': '6LcEqzEiAAAAAOD_YpFJknOXbj8eB5kHaGStn7DV',
-		//    'badge': 'inline',
-		//    'size': 'invisible'
-		//})
-		//grecaptcha.ready(function() {
-		//    grecaptcha.execute(clientId, { action: 'submit' }).then(function(token) {
-		//      // Verify the token on the server.
-		//      console.info("got token: " + token)
-		//      document.getElementById('g-recaptcha-response').value = token
-		//    })
-		//})
-	//})
+
 </script>
 
 <template>
@@ -32,7 +10,7 @@
 			</div>
 			<div class="card card-compact lg:card-normal flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
 				<div class="card-body">
-					<form action="https://formspree.io/f/mwkzplkb" method="POST">
+					<form action="https://submit-form.com/Nhhk4492">
 						<div class="form-control">
 							<label class="label">
 								<span class="label-text">E-mail</span>
@@ -43,15 +21,10 @@
 							<label class="label">
 								<span class="label-text">{{ $t('mensaje') }}</span>
 							</label>
-							<textarea name="mensaje" class="textarea textarea-secondary" :placeholder="$t('tu_mensaje')"></textarea>
+							<textarea id="message" name="message" required class="textarea textarea-secondary" :placeholder="$t('tu_mensaje')"></textarea>
 						</div>
-						<div
-							class="g-recaptcha my-6 w-min"
-							data-sitekey="6LdCmi0iAAAAAM-uaWYQCJTdtBUeXbMDZ7UtGiup"
-							data-theme="dark"
-						></div>
 						<div class="form-control mt-6">
-							<button class="btn btn-primary">{{ $t('enviar') }}</button>
+							<button type="submit" class="btn btn-primary">{{ $t('enviar') }}</button>
 						</div>
 					</form>
 				</div>
