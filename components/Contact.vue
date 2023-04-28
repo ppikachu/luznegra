@@ -8,9 +8,9 @@
 			<div class="text-center lg:text-left">
 				<h1 class="text-5xl font-bold mb-6">{{ $t('escribinos') }}!</h1>
 			</div>
-			<div class="card card-compact md:card-normal flex-shrink-0 w-full max-w-lg shadow-2xl bg-base-100">
+			<div class="card card-compact md:card-normal shadow-2xl bg-base-100">
 				<div class="card-body">
-					<form action="https://submit-form.com/Nhhk4492">
+					<form action="https://submit-form.com/Nhhk4492" method="POST">
 						<div class="form-control">
 							<label class="label">
 								<span class="label-text">E-mail</span>
@@ -23,7 +23,8 @@
 							</label>
 							<textarea id="message" name="message" required class="textarea textarea-secondary" :placeholder="$t('tu_mensaje')"></textarea>
 						</div>
-						<div class="form-control mt-6">
+						<div class="form-control mt-4"><NuxtTurnstile ref="turnstile" /></div>
+						<div class="form-control mt-8">
 							<button type="submit" class="btn btn-primary">{{ $t('enviar') }}</button>
 						</div>
 					</form>

@@ -17,7 +17,11 @@ export default defineNuxtConfig({
 		'@kevinmarrec/nuxt-pwa',
 		'nuxt-icon',
 		'@nuxtjs/i18n',
+		'@nuxtjs/turnstile',
 	],
+	turnstile: {
+		siteKey: '0x4AAAAAAAAnaWdzLNaGsIA-',
+	},
 	i18n: {
 		locales: [
 			{ code: 'es',  iso: 'es',name: 'Español', file: 'es.json' },
@@ -50,6 +54,9 @@ export default defineNuxtConfig({
 			twitterUrlS: 'https://twitter.com/ppika',
 			behanceI: '#',
 			behanceS: '#'
+		},
+		turnstile: {
+			secretKey: process.env.TURNSTILE_SECRET_KEY,
 		},
 	},
 	css: [
