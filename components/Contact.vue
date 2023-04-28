@@ -4,11 +4,11 @@
 
 <template>
 	<div class="hero bg-gradient-to-br from-secondary to-secondary-focus py-8">
-		<div class="hero-content flex-col">
+		<div class="hero-content flex-col w-full md:w-2/3">
 			<div class="text-center lg:text-left">
 				<h1 class="text-5xl font-bold mb-6">{{ $t('escribinos') }}!</h1>
 			</div>
-			<div class="card card-compact lg:card-normal flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+			<div class="card card-compact md:card-normal flex-shrink-0 w-full max-w-lg shadow-2xl bg-base-100">
 				<div class="card-body">
 					<form action="https://submit-form.com/Nhhk4492">
 						<div class="form-control">
