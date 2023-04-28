@@ -51,9 +51,6 @@ devDependencies:
   '@nuxtjs/tailwindcss':
     specifier: ^6.6.7
     version: 6.6.7(webpack@5.81.0)
-  '@nuxtjs/turnstile':
-    specifier: ^0.3.0
-    version: 0.3.0
   '@tailwindcss/typography':
     specifier: ^0.5.9
     version: 0.5.9(tailwindcss@3.3.2)
@@ -2224,17 +2221,6 @@ packages:
       - supports-color
       - ts-node
       - webpack
-    dev: true
-
-  /@nuxtjs/turnstile@0.3.0:
-    resolution: {integrity: sha512-dk86cFKKVAf7tag+5z2Xznit6iiSmAMxViSrAknSuCJqP69fjy+whZPXUxLeYcLVN0+LhwsgPEhQ0nR5YruBnQ==}
-    dependencies:
-      '@nuxt/kit': 3.4.2
-      defu: 6.1.2
-      pathe: 1.1.0
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
     dev: true
 
   /@parcel/watcher@2.1.0:
