@@ -5,12 +5,12 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 const { data } = await useAsyncGql('entradas', { limit: 0 })
 const posts = data.value.entradasCollection.items
 
-const openProyect = ref()
+const openedProyect = ref()
 const destacadoTodos = ref(true)
 
-watch(openProyect, () => {
+watch(openedProyect, () => {
 	//oculta scroll al visualizar proyecto:
-	openProyect.value ? document.body.style.overflow='hidden' : document.body.style.overflow='auto'
+	openedProyect.value ? document.body.style.overflow='hidden' : document.body.style.overflow='auto'
 })
 
 /* Default tags */
@@ -40,9 +40,14 @@ function swapDestacados () {
 	destacadoTodos.value =! destacadoTodos.value
 }
 
+function openProject(which) {
+	sound.play()
+	openedProyect.value = which
+}
+
 function closeProject() {
 	soundClose.play()
-	openProyect.value = false
+	openedProyect.value = false
 }
 </script>
 
@@ -60,10 +65,10 @@ function closeProject() {
 					leave-to-class="opacity-0"
 				>
 					<div
-						v-if="openProyect"
+						v-if="openedProyect"
 						id="modal-proyecto"
 						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center"
-						:class="{ 'modal-open': openProyect }"
+						:class="{ 'modal-open': openedProyect }"
 					>
 						<div class="tooltip tooltip-primary absolute bottom-8 md:bottom-12 left-1/2 -ml-6 z-10" :data-tip="$t('close')">
 							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-circle hover:scale-90">
@@ -72,22 +77,22 @@ function closeProject() {
 						</div>
 						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit">
 
-							<ProjectVideos v-if="openProyect.video" :videos="openProyect.video" />
+							<ProjectVideos v-if="openedProyect.video" :videos="openedProyect.video" />
 
-							<ProjectGallery :gallery="openProyect.imgGalleryCollection" />
+							<ProjectGallery :gallery="openedProyect.imgGalleryCollection" />
 
 							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center my-4">
-								<h1 class="text-4xl text-primary">{{ openProyect.title }}</h1>
-								<ProjectMeta :tags="openProyect.contentfulMetadata.tags" />
+								<h1 class="text-4xl text-primary">{{ openedProyect.title }}</h1>
+								<ProjectMeta :tags="openedProyect.contentfulMetadata.tags" />
 							</div>
 
 							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
 								<div
-									v-html="openProyect.content ? documentToHtmlString(openProyect.content.json) : ''"
+									v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
 									id="content"
 									class="prose prose-a:text-primary"
 								></div>
-								<ProjectShare :project="openProyect" />
+								<ProjectShare :project="openedProyect" />
 							</div>
 
 						</div>
@@ -112,7 +117,7 @@ function closeProject() {
 			<li v-for="(post, i) in pickedPortfolioItems" :key="i">
 				<a
 					:href="`/proyecto/${post.slug}`"
-					@click.prevent="openProyect = post"
+					@click.prevent="openProject(post)"
 					class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 				>
 					<figure>
@@ -153,7 +158,7 @@ function closeProject() {
 				>
 					<a
 						:href="`/proyecto/${post.slug}`"
-						@click.prevent="openProyect = post"
+						@click.prevent="openedProyect = post"
 						class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 					>
 					<figure>

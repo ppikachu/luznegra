@@ -6,12 +6,7 @@ definePageMeta({
 
 <template>
 	<main>
-		<!--WARN hardcoded hero background-color check (HeroOnOffOrtho:~77)-->
-		<div
-			class="min-h-screen"
-		>
-			<HeroOnOffOrtho />
-		</div>
+		<HeroOnOffOrtho />
 		<LazyPickedPortfolio />
 		<LazyContact />
 	</main>
