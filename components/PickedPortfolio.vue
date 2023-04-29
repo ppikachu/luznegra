@@ -101,9 +101,9 @@ function closeProject() {
 		<div class="flex justify-center items-center py-8 mx-auto">
 			<div class="form-control">
 				<label class="label cursor-pointer uppercase">
-					<span :class="{ 'opacity-25' : !destacadoTodos }">{{ $t('destacados') }}</span>
+					<span :class="{ 'opacity-60' : !destacadoTodos }">{{ $t('destacados') }}</span>
 					<input type="checkbox" @click="swapDestacados" class="toggle toggle-md mx-6" />  
-					<span :class="{ 'opacity-25' : destacadoTodos }">Portfolio</span>
+					<span :class="{ 'opacity-60' : destacadoTodos }">Portfolio</span>
 				</label>
 			</div>
 		</div>
