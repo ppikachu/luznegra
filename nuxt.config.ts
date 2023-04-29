@@ -18,6 +18,7 @@ export default defineNuxtConfig({
 		'nuxt-icon',
 		'@nuxtjs/i18n',
 		'@nuxtjs/turnstile',
+		'@nuxtjs/device',
 	],
 	turnstile: {
 		siteKey: '0x4AAAAAAAAnaWdzLNaGsIA-',
