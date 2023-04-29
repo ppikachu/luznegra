@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { url } from 'inspector'
 
 /* Define props */
 const props = defineProps({
@@ -12,6 +11,7 @@ const canShareData = navigator.canShare
 const resultPara = ref(config.HOST + '/proyecto/' + props.project.slug)
 
 async function copyLink() {
+	sound.play()
 	if (!navigator.canShare) {
 		// si no permite compartir, copia el link 'ctrl/cmd c'
 		copy(resultPara.value)
@@ -27,7 +27,6 @@ async function copyLink() {
 			resultPara.value = `Error: ${err}`
 		}
 	}
-	sound.play()
 }
 </script>
 

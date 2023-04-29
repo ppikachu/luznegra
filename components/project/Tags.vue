@@ -21,7 +21,9 @@ const uniqueTags = getUniqueTagsFromItems(props.items)
 const currentTag = ref(props.initTag)
 const emit = defineEmits(['tag'])
 
+const sound = useSound('/sounds/Click03.mp3')
 function buttonClick(tag) {
+	sound.play()
 	if (tag.id===currentTag.value) {
 		currentTag.value = ''
 		emit('tag', '')

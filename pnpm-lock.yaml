@@ -19,9 +19,6 @@ dependencies:
   gsap:
     specifier: ^3.11.5
     version: 3.11.5
-  ismobilejs:
-    specifier: ^1.1.1
-    version: 1.1.1
   nuxt-graphql-client:
     specifier: ^0.2.27
     version: 0.2.27(@babel/core@7.21.4)(@types/node@18.16.2)(graphql-tag@2.12.6)
@@ -42,6 +39,9 @@ devDependencies:
   '@nuxt/devtools':
     specifier: ^0.4.2
     version: 0.4.2(nuxt@3.4.2)(vite@4.3.3)
+  '@nuxtjs/device':
+    specifier: ^3.1.0
+    version: 3.1.0
   '@nuxtjs/google-fonts':
     specifier: ^3.0.0
     version: 3.0.0
@@ -51,6 +51,9 @@ devDependencies:
   '@nuxtjs/tailwindcss':
     specifier: ^6.6.7
     version: 6.6.7(webpack@5.81.0)
+  '@nuxtjs/turnstile':
+    specifier: ^0.3.0
+    version: 0.3.0
   '@tailwindcss/typography':
     specifier: ^0.5.9
     version: 0.5.9(tailwindcss@3.3.2)
@@ -2023,6 +2026,34 @@ packages:
     transitivePeerDependencies:
       - rollup
       - supports-color
+    dev: true
+
+  /@nuxt/kit@3.4.3:
+    resolution: {integrity: sha512-aQyzplYFCL292UsVZzlOZOC51ZKYFL0PBihbcPzxTzXQvAfMF8/DQ539kqzqXzxTCcmnUB9ROhIaNUrAeUkFYA==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+    dependencies:
+      '@nuxt/schema': 3.4.3
+      c12: 1.4.1
+      consola: 3.1.0
+      defu: 6.1.2
+      globby: 13.1.4
+      hash-sum: 2.0.0
+      ignore: 5.2.4
+      jiti: 1.18.2
+      knitwork: 1.0.0
+      lodash.template: 4.5.0
+      mlly: 1.2.0
+      pathe: 1.1.0
+      pkg-types: 1.0.2
+      scule: 1.0.0
+      semver: 7.5.0
+      unctx: 2.3.0
+      unimport: 3.0.6(rollup@3.21.0)
+      untyped: 1.3.2
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: false
 
   /@nuxt/postcss8@1.1.3(webpack@5.81.0):
     resolution: {integrity: sha512-CdHtErhvQwueNZPBOmlAAKrNCK7aIpZDYhtS7TzXlSgPHHox1g3cSlf+Ke9oB/8t4mNNjdB+prclme2ibuCOEA==}
@@ -2055,6 +2086,25 @@ packages:
     transitivePeerDependencies:
       - rollup
       - supports-color
+    dev: true
+
+  /@nuxt/schema@3.4.3:
+    resolution: {integrity: sha512-8bv0/mRDw6THQguSz+cKG5FzDZc2XBkjcc5VZ7yET84r4aWzW9/R274cjlEagFKrw9BDaPEQhnkwpg+kZnpOUA==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+    dependencies:
+      defu: 6.1.2
+      hookable: 5.5.3
+      pathe: 1.1.0
+      pkg-types: 1.0.2
+      postcss-import-resolver: 2.0.0
+      std-env: 3.3.2
+      ufo: 1.1.1
+      unimport: 3.0.6(rollup@3.21.0)
+      untyped: 1.3.2
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: false
 
   /@nuxt/telemetry@2.2.0:
     resolution: {integrity: sha512-Z2UmPkBy5WjxvHKuUcl1X6vKWnIyWSP+9UGde1F+MzzZxYgAQybFud1uL2B3KCowxZdoqT1hd2WklV7EtyCwrQ==}
@@ -2149,6 +2199,16 @@ packages:
       - vue-tsc
     dev: true
 
+  /@nuxtjs/device@3.1.0:
+    resolution: {integrity: sha512-jXWCVuPmzsGpn86GTA9/TOmfWulf9h3r2g6o5LpoZk4P1a9McMlpbDiaMPmyG5erfCj6H+XoZ6HBPCN9DtoCDA==}
+    dependencies:
+      '@nuxt/kit': 3.4.2
+      defu: 6.1.2
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: true
+
   /@nuxtjs/google-fonts@3.0.0:
     resolution: {integrity: sha512-knP2CJFkMHGQ9pepVNwquXvqiIHDma/6yZNXiYk7WWatRbbQUPf2423vXiBYu267Mff2KMuDLoAJ1Dsv2ymhdQ==}
     dependencies:
@@ -2221,6 +2281,17 @@ packages:
       - supports-color
       - ts-node
       - webpack
+    dev: true
+
+  /@nuxtjs/turnstile@0.3.0:
+    resolution: {integrity: sha512-dk86cFKKVAf7tag+5z2Xznit6iiSmAMxViSrAknSuCJqP69fjy+whZPXUxLeYcLVN0+LhwsgPEhQ0nR5YruBnQ==}
+    dependencies:
+      '@nuxt/kit': 3.4.2
+      defu: 6.1.2
+      pathe: 1.1.0
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
     dev: true
 
   /@parcel/watcher@2.1.0:
@@ -5683,10 +5754,6 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
-  /ismobilejs@1.1.1:
-    resolution: {integrity: sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw==}
-    dev: false
-
   /isomorphic-ws@5.0.0(ws@8.13.0):
     resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
     peerDependencies:
@@ -6841,7 +6908,7 @@ packages:
       '@graphql-codegen/typescript': 3.0.4(graphql@16.6.0)
       '@graphql-codegen/typescript-graphql-request': 4.5.9(graphql-request@5.0.0)(graphql-tag@2.12.6)(graphql@16.6.0)
       '@graphql-codegen/typescript-operations': 3.0.4(graphql@16.6.0)
-      '@nuxt/kit': 3.4.2
+      '@nuxt/kit': 3.4.3
       defu: 6.1.2
       graphql: 16.6.0
       graphql-request: 5.0.0(graphql@16.6.0)

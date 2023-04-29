@@ -11,7 +11,13 @@ interface Props {
 	}
 }
 const props = defineProps<Props>()
+const currentImg = ref(0)
+
 const imgGallery = props.gallery.items
+
+function buttonClick(selected:number) {
+	currentImg.value = selected
+}
 </script>
 
 <template>
@@ -25,11 +31,22 @@ const imgGallery = props.gallery.items
 					:width="img.width"
 					:height="img.height"
 					:alt="img.title"
+					class="rounded"
 				/>
 			</div>
 		</aside>
-		<div class="flex justify-center py-2 btn-group overflow-x-auto">
-			<a v-for="(img, i) in imgGallery" :href="`#img${i}`" class="btn btn-sm text-xs">{{ img.title }}</a>
+		<!--chooser-->
+		<div v-if="props.gallery.items.length > 1" class="flex justify-center">
+			<div class="py-4 btn-group overflow-x-auto">
+				<a v-for="(img, i) in imgGallery"
+					:href="`#img${i}`"
+					:class="{ 'btn-active': i == currentImg }"
+					class="btn btn-sm"
+					@click="buttonClick(i)"
+				>
+					{{ img.title }}
+				</a>
+			</div>
 		</div>
 	</section>
 </template>

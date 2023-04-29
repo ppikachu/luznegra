@@ -2,9 +2,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import chroma from 'chroma-js'
 import gsap from 'gsap'
-import isMobile from 'ismobilejs'
 
 const route = useRoute()
 //only on /test:
@@ -80,7 +78,7 @@ const heroBgColor = ref(bgNight)
 const isReady = ref(false)
 const dayNight = ref(params.dayOrNight)
 const target = ref(null)
-const amIMobile = ref()
+const { isMobile } = useDevice()
 
 const
 cameraOrthoPos = { x: 0, y: 0, z: 20 },
@@ -260,22 +258,20 @@ function onWindowResize() {
 	camera.bottom = - frustumSize / 2;
 	camera.updateProjectionMatrix()
 	renderer.setSize( container.clientWidth, container.clientHeight )
-	//if (!amIMobile.value) composer.setSize( container.clientWidth, container.clientHeight )
 }
 //#endregion
 
 function init() {
 	//#region sceneSetup
-	amIMobile.value = isMobile().any
-	frustumSize = amIMobile.value ? frustumMobileSize : frustumDesktopSize
-	shadowSize = amIMobile.value ? 512 : 2048
+	frustumSize = isMobile.valueOf ? frustumMobileSize : frustumDesktopSize
+	shadowSize = isMobile.valueOf ? 512 : 2048
 	container = document.getElementById( 'container' )
 
 	renderer = new THREE.WebGLRenderer({
 		antialias: true
 	})
 	
-	renderer.setPixelRatio( amIMobile.value ? 1 : window.devicePixelRatio )
+	renderer.setPixelRatio( isMobile.valueOf ? 1 : window.devicePixelRatio )
 	renderer.setSize( container.clientWidth, container.clientHeight )
 	renderer.outputEncoding = THREE.sRGBEncoding
 	renderer.shadowMap.enabled = true
@@ -299,7 +295,7 @@ function init() {
 	controls.maxAzimuthAngle = Math.PI/2.5 + params.initialSceneRotation.x
 	controls.screenSpacePanning = false
 	controls.enableZoom = route.path == '/test' ? true : false
-	controls.target.y = amIMobile.value ? 0 : 0.5
+	controls.target.y = isMobile.valueOf ? 0 : 0.5
 	controls.minZoom = 0.2
 	controls.maxZoom = 2
 	

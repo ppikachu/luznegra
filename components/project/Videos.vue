@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /* Define props */
 const props = defineProps<{ videos: [] }>()
+const currentVideo = ref(0)
 
 let videoId:any = []
 let provider:any = []
@@ -10,13 +11,20 @@ if (props.videos) {
 		video.includes('youtu') ? provider.push('youtube') : provider.push('vimeo')
 	})
 }
+
+function buttonClick(tag:number) {
+	currentVideo.value = tag
+}
 </script>
 
 <template>
 	<!--videos component-->
 	<section v-if="videoId.length > 0">
 		<ClientOnly>
-			<aside class="carousel">
+			<aside
+				class="carousel aspect-video bg-neutral"
+				style="background-image: url(/images/tubos_loop_ani.png); background-repeat: no-repeat; background-position: center; background-size: 128px;"
+			>
 				<div v-for="(video, i) in videoId" :key="i" class="carousel-item w-full" :id="'vid'+i">
 					<VuePlyr class="w-full">
 						<iframe v-if="provider[i] == 'youtube'"
@@ -36,8 +44,18 @@ if (props.videos) {
 					</VuePlyr>
 				</div>
 			</aside>
-			<div v-if="props.videos.length > 1" class="flex justify-center py-2 btn-group overflow-x-auto">
-				<a v-for="(video, i) in videoId" :href="`#vid${i}`" class="btn btn-sm text-xs">{{ i+1 }}</a>
+			<!--chooser-->
+			<div v-if="props.videos.length > 1" class="flex justify-center">
+				<div class="py-4 btn-group overflow-x-auto">
+					<a v-for="(video, i) in videoId"
+						:href="`#vid${i}`"
+						:class="{ 'btn-active': i == currentVideo }"
+						class="btn btn-sm"
+						@click="buttonClick(i)"
+					>
+						{{ i+1 }}
+					</a>
+				</div>
 			</div>
 		</ClientOnly>
 	</section>

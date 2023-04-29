@@ -10,13 +10,14 @@
 
 	const openTeam = ref(false)
 	const TeamProfile = ref()
+	const sound = useSound('/sounds/Click03.mp3')
+	const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
 
 	function openPerfil(quien) {
+		sound.play()
 		openTeam.value = true
 		TeamProfile.value = quien
 	}
-
-	const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
 	
 	function closeProject() {
 		soundClose.play()
