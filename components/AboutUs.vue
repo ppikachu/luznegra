@@ -8,22 +8,24 @@
 		color: String
 	})
 
+	// Use refs to store reactive data
 	const openTeam = ref(false)
-	const TeamProfile = ref()
+	const teamProfile = ref() // Use camelCase instead of PascalCase for consistency
 	const sound = useSound('/sounds/Click03.mp3')
 	const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
 
-	function openPerfil(quien) {
+	// Use arrow function syntax for consistency
+	const openPerfil = (quien) => {
 		sound.play()
 		openTeam.value = true
-		TeamProfile.value = quien
+		teamProfile.value = quien
 	}
-	
-	function closeProject() {
+	const closeProject = () => {
 		soundClose.play()
 		openTeam.value = false
 	}
 
+	// Use const instead of let for consistency
 	const colorClass = computed(() => {
 		return props.ciclo === 'day' ? 'text-white' : 'text-primary'
 	})
@@ -43,7 +45,6 @@
 			anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
 		})
 	})
-
 </script>
 
 <template>

@@ -8,10 +8,10 @@ const posts = data.value.entradasCollection.items
 const openedProyect = ref()
 const destacadoTodos = ref(true)
 
-watch(openedProyect, () => {
-	//oculta scroll al visualizar proyecto:
+//oculta scroll al visualizar proyecto:
+/*watch(openedProyect, () => {
 	openedProyect.value ? document.body.style.overflow='hidden' : document.body.style.overflow='auto'
-})
+})*/
 
 /* Default tags */
 const currentTag = ref()
