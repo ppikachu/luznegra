@@ -19,6 +19,7 @@ export default defineNuxtConfig({
 		'@nuxtjs/i18n',
 		'@nuxtjs/turnstile',
 		'@nuxtjs/device',
+		'@nuxt/devtools',
 	],
 	turnstile: {
 		siteKey: '0x4AAAAAAAAnaWdzLNaGsIA-',
@@ -49,12 +50,7 @@ export default defineNuxtConfig({
 			TEAM_WEBSITE_URL: 'https://luz-negra.com',
 			TEAM_STATEMENT: 'Nos especializamos en comunicación creativa, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.',
 			TEAM_LOGO_IMAGE_ON_FOOTER: '/images/tubos_loop_ani.png',
-			TEAM_LOGO_BLACK: '/images/tubos_loader_a.png',
 			OG_IMAGE: '/OG.png',
-			twitterUrlI: '#',
-			twitterUrlS: 'https://twitter.com/ppika',
-			behanceI: '#',
-			behanceS: '#'
 		},
 		turnstile: {
 			secretKey: process.env.TURNSTILE_SECRET_KEY,
