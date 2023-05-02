@@ -123,7 +123,7 @@ function closeProject() {
 					<figure>
 						<img v-if="post?.imageFeatured"
 							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt?="post.imageFeatured.title"
+							:alt="post.imageFeatured.title"
 							class="w-full"
 							loading="lazy"
 							width="600"
@@ -164,7 +164,7 @@ function closeProject() {
 					<figure>
 						<img v-if="post?.imageFeatured"
 							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt?="post.imageFeatured.title"
+							:alt="post.imageFeatured.title"
 							loading="lazy"
 							class="w-full"
 							width="600"
