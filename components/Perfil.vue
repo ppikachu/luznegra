@@ -21,7 +21,7 @@ const teamAvatar = computed(() => {
 	<div class="modal-box bg-base-300 rounded-3xl p-0 relative max-w-2xl mx-3 md:mx-8">
 		<div class="gradient-bold p-1">
 			<label for="modal-proyecto" @click="$emit('closeMe')" class="btn btn-primary btn-sm btn-circle absolute z-10 left-4 top-4">
-				<Icon name="mdi:close-thick" />
+				<Icon name="mdi:close-thick" size="18" />
 			</label>
 			<div class="z-10 h-full flex flex-col md:flex-row md:space-x-4">
 				<div class="flex-shrink-0 bg-base-100 p-8 md:p-12 flex flex-col items-center space-y-4">

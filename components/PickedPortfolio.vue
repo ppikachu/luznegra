@@ -9,9 +9,11 @@ const openedProyect = ref()
 const destacadoTodos = ref(true)
 
 //oculta scroll al visualizar proyecto:
-/*watch(openedProyect, () => {
-	openedProyect.value ? document.body.style.overflow='hidden' : document.body.style.overflow='auto'
-})*/
+const el = ref<HTMLElement | null>(null)
+const canScroll = useScrollLock(el)
+onMounted(() => {
+	el.value = document.body
+})
 
 /* Default tags */
 const currentTag = ref('')
@@ -42,11 +44,13 @@ function swapDestacados () {
 
 function openProject(which:object) {
 	sound.play()
+	canScroll.value = true
 	openedProyect.value = which
 }
 
 function closeProject() {
 	soundClose.play()
+	canScroll.value = false
 	openedProyect.value = null
 }
 </script>
@@ -67,15 +71,15 @@ function closeProject() {
 					<div
 						v-if="openedProyect"
 						id="modal-proyecto"
-						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center"
+						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center overscroll-none"
 						:class="{ 'modal-open': openedProyect }"
 					>
-						<div class="tooltip tooltip-primary absolute bottom-8 md:bottom-12 left-1/2 -ml-6 z-10" :data-tip="$t('close')">
+						<div class="tooltip tooltip-primary absolute bottom-8 md:bottom-12 left-1/2 -ml-6 z-10 uppercase text-xs" :data-tip="$t('close')">
 							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-circle hover:scale-90">
 								<Icon name="mdi:close-thick" size="28" />
 							</label>
 						</div>
-						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit">
+						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit overscroll-contain">
 
 							<ProjectVideos v-if="openedProyect.video" :videos="openedProyect.video" />
 
@@ -103,7 +107,7 @@ function closeProject() {
 		
 		<h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
 		<!--SWITCH-->
-		<div class="flex justify-center items-center py-8 mx-auto">
+		<div class="flex justify-center items-center py-4 md:py-8 mx-auto">
 			<div class="form-control">
 				<label class="label cursor-pointer uppercase">
 					<span :class="{ 'opacity-60' : !destacadoTodos }">{{ $t('destacados') }}</span>
@@ -186,7 +190,7 @@ function closeProject() {
 	</section>
 </template>
 
-<style>
+<style scoped>
 .toggle {
 	background-color: white;
 }
