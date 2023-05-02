@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
 	<div class="hero bg-gradient-to-br from-secondary to-secondary-focus py-8">
 		<div class="hero-content flex-col w-full md:w-2/3">

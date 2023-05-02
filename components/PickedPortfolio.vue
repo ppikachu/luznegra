@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 
 /* Fetch all projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
-const posts = data.value.entradasCollection.items
+const posts = data.value?.entradasCollection?.items || []
 
 const openedProyect = ref()
 const destacadoTodos = ref(true)
@@ -14,21 +14,21 @@ const destacadoTodos = ref(true)
 })*/
 
 /* Default tags */
-const currentTag = ref()
+const currentTag = ref('')
 
-function onTag(tag) {
-	currentTag.value = tag != '' ? tag.id : null
+function onTag(tag:any) {
+	currentTag.value = tag.id || null
 }
 
 //Filter picked projects
 const pickedPortfolioItems = computed(() => {
-	return posts.filter(itemPortfolio => itemPortfolio.destacado==true)
+	return posts.filter(itemPortfolio => itemPortfolio?.destacado===true)
 })
 
 //Filter standard projects
 const filtered = computed(() => {
  return currentTag.value ?
- posts.filter((r) => r.contentfulMetadata.tags.some((i) => i.id === currentTag.value))
+ posts.filter((r) => r?.contentfulMetadata?.tags?.some((i) => i?.id === currentTag.value))
 	: posts
 })
 
@@ -40,14 +40,14 @@ function swapDestacados () {
 	destacadoTodos.value =! destacadoTodos.value
 }
 
-function openProject(which) {
+function openProject(which:object) {
 	sound.play()
 	openedProyect.value = which
 }
 
 function closeProject() {
 	soundClose.play()
-	openedProyect.value = false
+	openedProyect.value = null
 }
 </script>
 
@@ -72,7 +72,7 @@ function closeProject() {
 					>
 						<div class="tooltip tooltip-primary absolute bottom-8 md:bottom-12 left-1/2 -ml-6 z-10" :data-tip="$t('close')">
 							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-circle hover:scale-90">
-								<Icon name="mdi:close-thick" />
+								<Icon name="mdi:close-thick" size="28" />
 							</label>
 						</div>
 						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit">
@@ -116,14 +116,14 @@ function closeProject() {
 		<ul v-show="destacadoTodos" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-8">
 			<li v-for="(post, i) in pickedPortfolioItems" :key="i">
 				<a
-					:href="`/proyecto/${post.slug}`"
+					:href="`/proyecto/${post?.slug}`"
 					@click.prevent="openProject(post)"
 					class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 				>
 					<figure>
-						<img v-if="post.imageFeatured"
+						<img v-if="post?.imageFeatured"
 							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="post.imageFeatured.title"
+							:alt?="post.imageFeatured.title"
 							class="w-full"
 							loading="lazy"
 							width="600"
@@ -132,9 +132,9 @@ function closeProject() {
 						<img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
 					</figure>
 					<div class="card-body">
-						<h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post.title }}</h2>
-						<p v-if="post.excerpt">{{ post.excerpt }}</p>
-						<div class="card-actions" v-if="post.contentfulMetadata.tags[0]">
+						<h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post?.title }}</h2>
+						<p v-if="post?.excerpt">{{ post.excerpt }}</p>
+						<div class="card-actions" v-if="post?.contentfulMetadata.tags[0]">
 							<ProjectMeta :tags="post.contentfulMetadata.tags" />
 						</div>
 					</div>
@@ -157,14 +157,14 @@ function closeProject() {
 					class="col-span-1"
 				>
 					<a
-						:href="`/proyecto/${post.slug}`"
+						:href="`/proyecto/${post?.slug}`"
 						@click.prevent="openedProyect = post"
 						class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 					>
 					<figure>
-						<img v-if="post.imageFeatured"
+						<img v-if="post?.imageFeatured"
 							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="post.imageFeatured.title"
+							:alt?="post.imageFeatured.title"
 							loading="lazy"
 							class="w-full"
 							width="600"
@@ -173,10 +173,10 @@ function closeProject() {
 						<img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
 					</figure>
 					<div class="card-body">
-						<h2 class="card-title text-primary text-2xl leading-tight">{{ post.title }}</h2>
-						<p v-if="post.excerpt" class="text-sm">{{ post.excerpt }}</p>
+						<h2 class="card-title text-primary text-2xl leading-tight">{{ post?.title }}</h2>
+						<p v-if="post?.excerpt" class="text-sm">{{ post.excerpt }}</p>
 						<div class="card-actions">
-							<ProjectMeta v-if="post.contentfulMetadata.tags[0]" :tags="post.contentfulMetadata.tags" />
+							<ProjectMeta v-if="post?.contentfulMetadata.tags[0]" :tags="post.contentfulMetadata.tags" />
 						</div>
 					</div>
 					</a>
@@ -185,36 +185,7 @@ function closeProject() {
 		</div>
 	</section>
 </template>
-<!--.list-enter-from {
-	opacity: 0;
-	transform: scale(0.6);
-}
-.list-enter-to {
-	opacity: 1;
-	transform: scale(1);
-}
-.list-enter-active {
-	transition: all 0.5s ease;
-}
-.list-leave-from {
-	opacity: 1;
-	transform: scale(1);
-}
-.list-leave-to {
-	opacity: 0;
-	transform: scale(0.6)
-}
-.list-leave-active {
-	transition: opacity;
-	position: absolute;
-	/*transition: all 0.5s ease;*/
-}
-.list-complete-active {
-	position: absolute;
-}
-.list-move {
-	transition: all 0.5s;
-}-->
+
 <style>
 .toggle {
 	background-color: white;

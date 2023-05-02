@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 	import AOS from 'aos'
 	import 'aos/dist/aos.css'
 
@@ -10,12 +10,11 @@
 
 	// Use refs to store reactive data
 	const openTeam = ref(false)
-	const teamProfile = ref() // Use camelCase instead of PascalCase for consistency
+	const teamProfile = ref('')
 	const sound = useSound('/sounds/Click03.mp3')
 	const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
 
-	// Use arrow function syntax for consistency
-	const openPerfil = (quien) => {
+	const openPerfil = (quien:string) => {
 		sound.play()
 		openTeam.value = true
 		teamProfile.value = quien
@@ -101,7 +100,7 @@
 					class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
 					:class="{ 'modal-open': openTeam }"
 				>
-					<Perfil @close-me="closeProject" :name="TeamProfile" />
+					<Perfil @close-me="closeProject" :name="teamProfile" />
 				</div>
 			</transition>
 		</Teleport>

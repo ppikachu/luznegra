@@ -1,17 +1,12 @@
 <script setup lang="ts">
 /* Define props */
-interface Props{ name: String }
+interface Props { name: string }
 const props = defineProps<Props>()
 
 const nuxtApp = useNuxtApp()
-const runtimeConfig = useRuntimeConfig()
 
 const teamName = computed(() => {
 	return props.name ==='ines' ? 'Inés Trigub' : 'Santiago Toyos'
-})
-
-const networkUrl = computed(() => {
-	return props.name ==='ines' ? runtimeConfig.public.twitterUrlI : runtimeConfig.public.twitterUrlS
 })
 
 const teamProfile = computed(() => {
@@ -36,12 +31,6 @@ const teamAvatar = computed(() => {
 						</div>
 					</div>
 					<h1 class="text-primary text-2xl">{{ teamName }}</h1>
-					<!--<div id="redes-sociales" class="flex space-x-4 text-2xl">
-						<a :href="networkUrl">
-							<Icon name="mdi:twitter" />
-						</a>
-						<Icon name="carbon:logo-instagram" />
-					</div>-->
 				</div>
 				<div class="prose p-4 md:p-8 -mt-4">
 					<p v-html="teamProfile"></p>
