@@ -37,18 +37,16 @@ function buttonClick(tag:any) {
 </script>
 
 <template>
-	<section id="tags" class="pb-8 flex flex-col items-center">
-		<div class="btn-group btn-group-vertical w-full md:w-auto md:btn-group-horizontal">
-			<button
-				v-for="(tag, i) in uniqueTags"
-				:key="i"
-				@click="buttonClick(tag)"
-				class="btn btn-sm lg:btn-md"
-				:class="{ 'btn-active': tag.id == currentTag }"
-			>
-				<!-- como contentful no permite idiomas en tags uso i18n: -->
-				{{ $t(tag.id) }}
-			</button>
-		</div>
+	<section id="tags" class="pb-4 md:pb-8 flex flex-wrap justify-center space-x-2 w-full md:w-auto">
+		<button
+			v-for="(tag, i) in uniqueTags"
+			:key="i"
+			@click="buttonClick(tag)"
+			class="badge btn-sm mb-2"
+			:class="{ 'badge-primary': tag.id == currentTag }"
+		>
+			<!-- como contentful no permite idiomas en tags uso i18n: -->
+			{{ $t(tag.id) }}
+		</button>
 	</section>
 </template>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-
 /* Define props */
 const props = defineProps({
-	loading: { type: Boolean, default: false },
+	loading: {
+		type: Boolean,
+		default: false
+	},
 })
-
 const { isMobile } = useDevice()
 </script>
 
@@ -27,7 +28,6 @@ const { isMobile } = useDevice()
 .v-leave-active {
 	transition: opacity 0.5s ease;
 }
-
 .v-enter-from,
 .v-leave-to {
 	opacity: 0;

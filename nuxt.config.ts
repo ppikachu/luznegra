@@ -40,17 +40,9 @@ export default defineNuxtConfig({
 			CONTENT_KEY: process.env.CONTENT_KEY,
 			SPACE_ID: process.env.SPACE_ID,
 			ACCESS_TOKEN: process.env.ACCESS_TOKEN,
-			DEFAULT_LANGUAGE: 'es-AR',
 			HOST: process.env.NODE_ENV === 'production' ? 'https://luz-negra.com' : 'https://localhost:3000',
-			APP_NAME: 'LUZ NEGRA',
-			APP_URL: 'https://luz-negra.com',
-			SITE_TITLE: 'LUZ NEGRA - Diseño y animación',
-			SITE_TOP_DESCRIPTION: 'Diseño y animación',
 			TEAM_NAME: 'LUZ NEGRA',
-			TEAM_WEBSITE_URL: 'https://luz-negra.com',
-			TEAM_STATEMENT: 'Nos especializamos en comunicación creativa, dando vida a tus ideas y produciendo la mejor imagen para tus proyectos.',
 			TEAM_LOGO_IMAGE_ON_FOOTER: '/images/tubos_loop_ani.png',
-			OG_IMAGE: '/OG.png',
 		},
 		turnstile: {
 			secretKey: process.env.TURNSTILE_SECRET_KEY,
@@ -59,6 +51,8 @@ export default defineNuxtConfig({
 	css: [
 		// https://github.com/sampotts/plyr#options
 		'vue-plyr/dist/vue-plyr.css',
+		// Global CSS
+    '@/assets/global.css',
 	],
 	googleFonts: {
 		families: {
