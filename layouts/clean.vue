@@ -1,10 +1,10 @@
 <template>
-  <LazyLangSwitcher />
-  <NuxtPage />
-  <LazySiteFooter />
+	<LazyLangSwitcher />
+	<NuxtPage />
+	<LazySiteFooter />
 </template>
 <style>
-  html {
-    scroll-behavior: smooth;
-  }
+	html {
+		scroll-behavior: smooth;
+	}
 </style>

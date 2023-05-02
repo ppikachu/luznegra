@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 	import AOS from 'aos'
 	import 'aos/dist/aos.css'
 
@@ -8,22 +8,23 @@
 		color: String
 	})
 
+	// Use refs to store reactive data
 	const openTeam = ref(false)
-	const TeamProfile = ref()
+	const teamProfile = ref('')
 	const sound = useSound('/sounds/Click03.mp3')
 	const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
 
-	function openPerfil(quien) {
+	const openPerfil = (quien:string) => {
 		sound.play()
 		openTeam.value = true
-		TeamProfile.value = quien
+		teamProfile.value = quien
 	}
-	
-	function closeProject() {
+	const closeProject = () => {
 		soundClose.play()
 		openTeam.value = false
 	}
 
+	// Use const instead of let for consistency
 	const colorClass = computed(() => {
 		return props.ciclo === 'day' ? 'text-white' : 'text-primary'
 	})
@@ -43,7 +44,6 @@
 			anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
 		})
 	})
-
 </script>
 
 <template>
@@ -100,7 +100,7 @@
 					class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
 					:class="{ 'modal-open': openTeam }"
 				>
-					<Perfil @close-me="closeProject" :name="TeamProfile" />
+					<Perfil @close-me="closeProject" :name="teamProfile" />
 				</div>
 			</transition>
 		</Teleport>

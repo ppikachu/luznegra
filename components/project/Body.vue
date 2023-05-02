@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 /* Define props */
-interface Props { articleSlug:string }
+interface Props { articleSlug:any }
 const props = defineProps<Props>()
 
 /* Get contentful data */

@@ -1,16 +1,18 @@
-<script setup>
+<script setup lang="ts">
 /* Define props */
 const props = defineProps({
 	initTag: { type: String, default: '' },
-	items: { type: Array, default: '' }
+	items: { type: Array, default: () => [] }
 })
 
-const getUniqueTagsFromItems = (items) => {
-	const uniqueTags = {}
-	items.forEach((item) => {
-		item.contentfulMetadata.tags.forEach(tag => {
-			uniqueTags[tag.id] = tag
-		})
+const getUniqueTagsFromItems = (items:any) => {
+	const uniqueTags: Record<string, any> = {}
+	items.forEach((item:any) => {
+		if (item.contentfulMetadata && item.contentfulMetadata.tags) {
+			item.contentfulMetadata.tags.forEach((tag:any) => {
+				uniqueTags[tag.id] = tag
+			})
+		}
 	})
 	return Object.values(uniqueTags)
 }
@@ -22,7 +24,7 @@ const currentTag = ref(props.initTag)
 const emit = defineEmits(['tag'])
 
 const sound = useSound('/sounds/Click03.mp3')
-function buttonClick(tag) {
+function buttonClick(tag:any) {
 	sound.play()
 	if (tag.id===currentTag.value) {
 		currentTag.value = ''

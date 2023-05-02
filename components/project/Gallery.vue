@@ -11,12 +11,19 @@ interface Props {
 	}
 }
 const props = defineProps<Props>()
+
+const carousel = ref()
 const currentImg = ref(0)
 
 const imgGallery = props.gallery.items
 
-function buttonClick(selected:number) {
-	currentImg.value = selected
+const goTo = (tag:number) => {
+	//marca active el button group:
+	currentImg.value = tag
+	//scroll to:
+	const target = carousel.value.children[tag]
+	const left = target.offsetLeft
+	carousel.value.scrollTo({left: left})
 }
 </script>
 
@@ -24,7 +31,7 @@ function buttonClick(selected:number) {
 	<!--gallery component-->
 	<section v-if="imgGallery.length>0">
 		<!--gallery ON-->
-		<aside class="carousel items-center">
+		<aside ref="carousel" class="carousel items-center">
 			<div v-for="(img, i) in imgGallery" :key="i" :id="'img'+i" class="carousel-item w-full h-fit justify-center">
 				<img
 					:src="img.url"
@@ -38,14 +45,13 @@ function buttonClick(selected:number) {
 		<!--chooser-->
 		<div v-if="props.gallery.items.length > 1" class="flex justify-center">
 			<div class="py-4 btn-group overflow-x-auto">
-				<a v-for="(img, i) in imgGallery"
-					:href="`#img${i}`"
+				<span v-for="(img, i) in imgGallery"
 					:class="{ 'btn-active': i == currentImg }"
 					class="btn btn-sm"
-					@click="buttonClick(i)"
+					@click="goTo(i)"
 				>
 					{{ img.title }}
-				</a>
+				</span>
 			</div>
 		</div>
 	</section>

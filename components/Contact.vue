@@ -1,14 +1,10 @@
-<script setup>
-
-</script>
-
 <template>
 	<div class="hero bg-gradient-to-br from-secondary to-secondary-focus py-8">
 		<div class="hero-content flex-col w-full md:w-2/3">
 			<div class="text-center lg:text-left">
-				<h1 class="text-5xl font-bold mb-6">{{ $t('escribinos') }}!</h1>
+				<h1 class="text-5xl font-bold mb-6" data-aos="fade-up">{{ $t('escribinos') }}!</h1>
 			</div>
-			<div class="card card-compact md:card-normal shadow-2xl bg-base-100">
+			<div class="card card-compact md:card-normal shadow-2xl bg-base-100" data-aos="fade-up" data-aos-delay="200">
 				<div class="card-body">
 					<form action="https://submit-form.com/Nhhk4492" method="POST">
 						<div class="form-control">
