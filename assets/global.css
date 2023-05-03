@@ -68,6 +68,22 @@
 /* Foreground */
 ::-webkit-scrollbar-thumb { 
 	background: var(--scrollbar-foreground);
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	border-radius: 10px;
+}
+
+/* vue transition */
+.nested-enter-active,
+.nested-leave-active,
+.nested-enter-active .inner,
+.nested-leave-active .inner {
+	transition: all 0.3s;
+}
+.nested-enter-from, .nested-leave-to {
+	opacity: 0;
+}
+
+.nested-enter-active .inner, .nested-leave-active .inner {
+	transform: translateY(100%);
+	opacity: 0;
 }

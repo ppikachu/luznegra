@@ -5,7 +5,7 @@ interface Tag {
   name: string
 }
 const props = defineProps({
-	tags: { type: Array as PropType<Tag[]>, required: true }
+	tags: { type: Array as PropType<Tag[]>, required: false }
 })
 </script>
 

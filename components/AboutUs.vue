@@ -14,14 +14,25 @@
 	const sound = useSound('/sounds/Click03.mp3')
 	const soundClose = useSound('/sounds/close.mp3', { volume: 0.5 })
 
+	//oculta scroll al visualizar proyecto:
+	const el = ref<HTMLElement | null>(null)
+	const preventScroll = useScrollLock(el)
+	onMounted(() => {
+		el.value = document.body
+	})
+
 	const openPerfil = (quien:string) => {
 		sound.play()
+		preventScroll.value = true
 		openTeam.value = true
+		el.value?.classList.add('pr-4')
 		teamProfile.value = quien
 	}
-	const closeProject = () => {
+	const closePerfil = () => {
 		soundClose.play()
+		preventScroll.value = false
 		openTeam.value = false
+		el.value?.classList.remove('pr-4')
 	}
 
 	// Use const instead of let for consistency
@@ -87,12 +98,7 @@
 	<ClientOnly>
 		<Teleport to="body">
 			<transition
-				enter-active-class="transition ease-out duration-200 transform"
-				enter-from-class="opacity-0"
-				enter-to-class="opacity-100"
-				leave-active-class="transition ease-in duration-200 transform"
-				leave-from-class="opacity-100"
-				leave-to-class="opacity-0"
+				name="nested"
 			>
 				<div
 					v-if="openTeam"
@@ -100,7 +106,7 @@
 					class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%]"
 					:class="{ 'modal-open': openTeam }"
 				>
-					<Perfil @close-me="closeProject" :name="teamProfile" />
+					<modalPerfil @close-me="closePerfil" :name="teamProfile" />
 				</div>
 			</transition>
 		</Teleport>

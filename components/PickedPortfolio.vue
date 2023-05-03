@@ -10,7 +10,7 @@ const destacadoTodos = ref(true)
 
 //oculta scroll al visualizar proyecto:
 const el = ref<HTMLElement | null>(null)
-const canScroll = useScrollLock(el)
+const preventScroll = useScrollLock(el)
 onMounted(() => {
 	el.value = document.body
 })
@@ -44,13 +44,15 @@ function swapDestacados () {
 
 function openProject(which:object) {
 	sound.play()
-	canScroll.value = true
+	preventScroll.value = true
+	el.value?.classList.add('pr-4')
 	openedProyect.value = which
 }
 
 function closeProject() {
 	soundClose.play()
-	canScroll.value = false
+	preventScroll.value = false
+	el.value?.classList.remove('pr-4')
 	openedProyect.value = null
 }
 </script>
@@ -61,12 +63,8 @@ function closeProject() {
 		<ClientOnly>
 			<Teleport to="html">
 				<transition
-					enter-active-class="transition ease-out duration-200 transform"
-					enter-from-class="opacity-0"
-					enter-to-class="opacity-100"
-					leave-active-class="transition ease-in duration-200 transform"
-					leave-from-class="opacity-100"
-					leave-to-class="opacity-0"
+					name="nested"
+					:duration="250"
 				>
 					<div
 						v-if="openedProyect"
@@ -74,15 +72,10 @@ function closeProject() {
 						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center overscroll-none"
 						:class="{ 'modal-open': openedProyect }"
 					>
-						<div class="tooltip tooltip-primary absolute bottom-8 md:bottom-12 left-1/2 -ml-6 z-10 uppercase text-xs" :data-tip="$t('close')">
-							<label for="modal-proyecto" @click="closeProject" class="btn btn-primary btn-circle hover:scale-90">
-								<Icon name="mdi:close-thick" size="28" />
-							</label>
-						</div>
-						<div class="modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit overscroll-contain">
+						<CloseButton @close-me="closeProject" />
+						<div class="inner modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit overscroll-contain">
 
 							<ProjectVideos v-if="openedProyect.video" :videos="openedProyect.video" />
-
 							<ProjectGallery :gallery="openedProyect.imgGalleryCollection" />
 
 							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center my-4">
@@ -110,9 +103,9 @@ function closeProject() {
 		<div class="flex justify-center items-center py-4 md:py-8 mx-auto">
 			<div class="form-control">
 				<label class="label cursor-pointer uppercase">
-					<span :class="{ 'opacity-60' : !destacadoTodos }">{{ $t('destacados') }}</span>
-					<input type="checkbox" @click="swapDestacados" class="toggle toggle-md mx-6" />  
-					<span :class="{ 'opacity-60' : destacadoTodos }">Portfolio</span>
+					<span :class="{ 'text-primary' : destacadoTodos }">{{ $t('destacados') }}</span>
+					<input type="checkbox" @click="swapDestacados" class="toggle mx-6" />  
+					<span :class="{ 'text-primary' : !destacadoTodos }">Portfolio</span>
 				</label>
 			</div>
 		</div>
@@ -162,7 +155,7 @@ function closeProject() {
 				>
 					<a
 						:href="`/proyecto/${post?.slug}`"
-						@click.prevent="openedProyect = post"
+						@click.prevent="openProject(post)"
 						class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 					>
 					<figure>

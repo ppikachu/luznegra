@@ -32,7 +32,6 @@ const goTo = (tag:number) => {
 		class="carousel aspect-video bg-neutral"
 		style="background-image: url(/images/tubos_loop_ani.png); background-repeat: no-repeat; background-position: center; background-size: 128px;"
 		>
-		<ClientOnly>
 			<div v-for="(video, i) in videoId" :key="i" class="carousel-item w-full" :id="'vid'+i">
 				<VuePlyr class="w-full">
 					<!--YouTube:-->
@@ -53,7 +52,6 @@ const goTo = (tag:number) => {
 					></iframe>
 				</VuePlyr>
 			</div>
-		</ClientOnly>
 		</aside>
 		<!--video chooser:-->
 		<div v-if="props.videos.length > 1" class="flex justify-center">
