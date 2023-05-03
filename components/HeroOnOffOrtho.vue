@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from 'gsap'
 
 const route = useRoute()
-//only on /test:
+//TODO only on /test:
 //if (route.path == '/test') {
 	const tweakpane = await import('tweakpane')
 	const lightHelper = await import('three/examples/jsm/helpers/RectAreaLightHelper.js')
@@ -63,7 +63,6 @@ const debug = {
 	showLights: true,
 	animate: true
 }
-
 const modelScale = 15
 const frustumDesktopSize = 5, frustumMobileSize = 7
 const telonWidth = .145
@@ -78,6 +77,8 @@ const heroBgColor = ref(bgNight)
 const isReady = ref(false)
 const dayNight = ref(params.dayOrNight)
 const target = ref(null)
+const animate = ref(true)
+const discloseTip = ref(true)
 const { isMobile } = useDevice()
 
 const
@@ -136,14 +137,18 @@ function setFog(cycle) {
 }
 
 function handleScroll() {
+		//con timeout para mejor perfo
 		if(timer) window.clearTimeout(timer)
-
 		timer = window.setTimeout(() => {
 			const lastKnownScrollPosition = window.scrollY
-			//disable animation in scene past scrolling
-			debug.animate = lastKnownScrollPosition > container.clientHeight ? false : true
+			//disable animation in scene past scrolling (half of the height!)
+			animate.value = lastKnownScrollPosition > container.clientHeight/2 ? false : true
 		}, 100)
 }
+
+const showTip = computed(() => {
+	return discloseTip.value && animate.value
+})
 
 //pantalla:
 function setupModel(modelData) {
@@ -448,7 +453,7 @@ function updateScene() {
 
 function animateMobile() {
 	requestAnimationFrame(animateMobile)
-	if (!debug.animate) return
+	if (!animate.value) return
 	const clock = Math.round(performance.now()*0.021)
 	const flick = clock % 2 == 0 ? 0.6 : 1
 	const flickB = clock % 4 == 0 ? 0.7 : 1
@@ -546,6 +551,16 @@ onUnmounted(() => {
 		ref="target"
 		class="overflow-hidden cursor-ew-resize h-screen"
 	>
+		<!--aviso de como operar el autocine-->
+		<Transition name="nested">
+			<div v-show="showTip" class="toast toast-top mt-10 toast-center toast-start0 min-w-max z-20">
+				<div class="bg-base-100 flex space-x-2 items-center rounded-xl p-2 text-xs">
+					<span v-if="isMobile===true" class="flex items-center space-x-1"><Icon name="icon-park-outline:hand-drag" size="24" class="wave" /><span>{{ $t('drag_m_experiment') }}</span></span>
+					<span v-else-if="isMobile===false" class="flex items-center space-x-1"><Icon name="material-symbols:mouse" size="24" class="wave" /><span>{{ $t('drag_d_experiment') }}</span></span>
+					<button @click="discloseTip = false" class="btn btn-xs btn-circle btn-primary"><Icon name="mdi:close-thick" /></button>
+				</div>
+			</div>
+		</Transition>
 		<!--video for threejs-->
 		<video v-if="debug.showPantalla" id="video"
 			loop
@@ -597,3 +612,20 @@ onUnmounted(() => {
 	</div>
 
 </template>
+
+<style scoped>
+/* Define the animation */
+@keyframes moveLeftToRight {
+  0% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  100% { transform: translateX(-3px); }
+}
+
+/* Apply the animation to an element */
+.wave {
+  animation-name: moveLeftToRight;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+</style>

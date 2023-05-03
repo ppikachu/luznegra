@@ -6,7 +6,6 @@ const props = defineProps({
 		default: false
 	},
 })
-const { isMobile } = useDevice()
 </script>
 
 <template>
@@ -18,8 +17,6 @@ const { isMobile } = useDevice()
 			style="background-color: #85070d;"
 		>
 			<img src="/images/tubos_loop_ani.png" alt="loading..." class="w-32" width="256" height="256">
-			<p v-if="isMobile===true" class="text-sm"><Icon name="icon-park-outline:hand-drag" class="text-2xl wave" /> {{ $t('drag_m_experiment') }}</p>
-			<p v-else-if="isMobile===false" class="text-sm"><Icon name="material-symbols:mouse" class="text-4xl wave" /> {{ $t('drag_d_experiment') }}</p>
 		</div>
 	</Transition>
 </template>
