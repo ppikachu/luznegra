@@ -4,7 +4,6 @@ interface Props { name: string }
 const props = defineProps<Props>()
 //oculta scroll al visualizar proyecto:
 const el = ref<HTMLElement | null>(null)
-const preventScroll = useScrollLock(el)
 onMounted(() => { el.value = document.body })
 //Traducciones:
 const nuxtApp = useNuxtApp()

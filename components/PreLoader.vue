@@ -6,7 +6,6 @@ const props = defineProps({
 		default: false
 	},
 })
-const { isMobile } = useDevice()
 </script>
 
 <template>

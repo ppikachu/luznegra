@@ -43,17 +43,21 @@ function swapDestacados () {
 }
 
 function openProject(which:object) {
-	sound.play()
-	preventScroll.value = true
-	el.value?.classList.add('pr-4')
 	openedProyect.value = which
+	//evita el scroll del fondo
+	preventScroll.value = true
+	//agrega margen para compensar el preventScroll:
+	el.value?.classList.add('md:pr-4')
+	sound.play()
 }
 
 function closeProject() {
-	soundClose.play()
+	//permite el scroll del fondo
 	preventScroll.value = false
-	el.value?.classList.remove('pr-4')
+	//saca margen para compensar el preventScroll:
+	el.value?.classList.remove('md:pr-4')
 	openedProyect.value = null
+	soundClose.play()
 }
 </script>
 
