@@ -70,6 +70,7 @@ export default defineNuxtConfig({
 			theme_color: '#212121',
 		},
 		meta: {
+			mobileApp: false,
 			name: 'LUZ NEGRA - Diseño y animación',
 			author: 'LUZ NEGRA',
 			description: 'Diseño y animación',
