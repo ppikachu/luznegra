@@ -37,6 +37,10 @@
     "cambiar_idioma": "cambiar a",
     "vamos": "let's go!",
     "close": "close",
-    "drag_m_experiment": "drag over the cinema!",
-    "drag_d_experiment": "drag mouse over the cinema!"
+    "day_switch1": "Click the",
+    "day_switch2": "to switch between day and night!",
+    "sol": "sun",
+    "luna": "moon",
+    "drag_m_experiment": "Drag over the cinema!",
+    "drag_d_experiment": "Drag mouse over the cinema!"
 }

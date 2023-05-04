@@ -38,6 +38,10 @@
     "cambiar_idioma": "switch to",
     "vamos": "vamos!",
     "close": "cerrar",
-    "drag_m_experiment": "arrastra el dedo sobre el autocine!",
-    "drag_d_experiment": "arrastra el ratón sobre el autocine!"
+    "day_switch1": "Click en",
+    "day_switch2": "para alternar dia y noche!",
+    "sol": "el sol",
+    "luna": "la luna",
+    "drag_m_experiment": "Arrastra el dedo sobre el autocine!",
+    "drag_d_experiment": "Arrastra el ratón sobre el autocine!"
 }

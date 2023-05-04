@@ -8,7 +8,8 @@
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
-		"@contentful/rich-text-html-renderer": "^16.0.3",
+		"@contentful/rich-text-html-renderer": "^16.0.4",
+		"@rive-app/canvas": "^1.1.5",
 		"@tweakpane/plugin-essentials": "^0.1.8",
 		"@vueuse/sound": "^2.0.1",
 		"aos": "^2.3.4",

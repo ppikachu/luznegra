@@ -554,10 +554,24 @@ onUnmounted(() => {
 		<!--aviso de como operar el autocine-->
 		<Transition name="nested">
 			<div v-show="showTip" class="toast toast-top mt-10 toast-center toast-start0 min-w-max z-20">
-				<div class="bg-base-100 flex space-x-2 items-center rounded-xl p-2 text-xs">
-					<span v-if="isMobile===true" class="flex items-center space-x-1"><Icon name="icon-park-outline:hand-drag" size="24" class="wave" /><span>{{ $t('drag_m_experiment') }}</span></span>
-					<span v-else-if="isMobile===false" class="flex items-center space-x-1"><Icon name="material-symbols:mouse" size="24" class="wave" /><span>{{ $t('drag_d_experiment') }}</span></span>
+				<div class="bg-base-100 flex space-x-4 rounded-xl p-2 text-xs">
+
+					<div class="space-y-1 md:space-y-0 md:flex md:space-x-2">
+						<!--texto mobile o desktop-->
+						<div v-if="isMobile===true" class="flex items-center space-x-1">
+							<Icon name="icon-park-outline:hand-drag" size="24" class="wave" /><span>{{ $t('drag_m_experiment') }}</span>
+						</div>
+						<div v-else-if="isMobile===false" class="flex items-center space-x-1">
+							<Icon name="material-symbols:mouse" size="24" class="wave" /><span>{{ $t('drag_d_experiment') }}</span>
+						</div>
+						<!--texto mobile o desktop-->
+						<div class="space-x-1 ml-7">
+							<span>{{ $t('day_switch1') }}</span><span v-show="dayNight==='night'">{{ $t('sol') }}</span><span v-show="dayNight==='day'">{{ $t('luna') }}</span><span>{{ $t('day_switch2') }}</span>
+						</div>
+					</div>
+
 					<button @click="discloseTip = false" class="btn btn-xs btn-circle btn-primary"><Icon name="mdi:close-thick" /></button>
+
 				</div>
 			</div>
 		</Transition>
