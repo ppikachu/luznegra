@@ -554,7 +554,7 @@ onUnmounted(() => {
 		<!--aviso de como operar el autocine-->
 		<Transition name="nested">
 			<div v-show="showTip" class="toast toast-top mt-10 toast-center toast-start0 min-w-max z-20">
-				<div class="bg-base-100 flex space-x-4 rounded-xl p-2 text-xs">
+				<div class="bg-base-100 bg-opacity-60 flex space-x-4 rounded-xl p-2 text-xs">
 
 					<div class="md:flex md:space-x-2">
 						<!--texto mobile o desktop-->
