@@ -2,9 +2,6 @@
 /* Define props */
 interface Props { name: string }
 const props = defineProps<Props>()
-//oculta scroll al visualizar proyecto:
-const el = ref<HTMLElement | null>(null)
-onMounted(() => { el.value = document.body })
 //Traducciones:
 const nuxtApp = useNuxtApp()
 const teamAvatar = computed(() => { return props.name === 'ines' ? '/images/ine.jpg' : '/images/santi.jpg' })
@@ -12,7 +9,8 @@ const teamName = computed(() => { return props.name === 'ines' ? 'Inés Trigub' 
 const teamProfile = computed(() => { return props.name === 'ines' ? nuxtApp.$i18n.t('info_ine') : nuxtApp.$i18n.t('info_santi')})
 </script>
 <template>
-	<CloseButton @close-me="$emit('closeMe')" />
+	<div>
+		<CloseButton @close-me="$emit('closeMe')" />
 		<div class="inner modal-box bg-base-300 rounded-3xl p-0 relative max-w-2xl mx-3 md:mx-8">
 			<div class="gradient-bold p-1">
 				<div class="z-10 h-full flex flex-col md:flex-row md:space-x-4">
@@ -30,4 +28,5 @@ const teamProfile = computed(() => { return props.name === 'ines' ? nuxtApp.$i18
 				</div>
 			</div>
 		</div>
+	</div>
 </template>
