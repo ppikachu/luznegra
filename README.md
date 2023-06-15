@@ -1,19 +1,18 @@
 # Luz Negra portfolio
 
-Multimedia portfolio for [Luz Negra](https://luz-negra.com), a multimedia design studio.
+Portfolio for [Luz Negra](https://luz-negra.com), a multimedia design studio.
 
 ![luz-negra.com screenshot](public/images/readme_autocine.png)
 
 ## Features
 
-- Three.js hero with night/day mode
+- Three.js scene with night/day mode
 - Custom 3D models as gltf
 - Video texture
-- Simple and responsive design
 - [Nuxt 3](https://nuxtjs.org) (Vue.js v3)
-- [daisyUI](https://daisyui.com) & [Tailwind CSS v3](https://tailwindcss.com)
+- [daisyUI](https://daisyui.com) & [Tailwind CSS](https://tailwindcss.com)
 - Responsive (tablet & mobile friendly)
-- [Contentful](https://www.contentful.com) CMS for portfolio projects
+- [Contentful](https://www.contentful.com) CMS for media storage
 - Contact form using [Formspark](https://formspark.io/) and [Turnstile](https://www.cloudflare.com/products/turnstile/) for CAPTCHA
 
 ## Local Development

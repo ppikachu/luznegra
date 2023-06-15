@@ -26,7 +26,6 @@ module.exports = {
 					error: '#DC2828',
 				},
 			},
-		],
-		darkTheme: 'luznegra',
+		]
 	},
 }

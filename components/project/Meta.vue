@@ -1,9 +1,5 @@
 <script setup lang="ts">
 /* Define props */
-interface Tag {
-  id: string
-  name: string
-}
 const props = defineProps({
 	tags: { type: Array as PropType<Tag[]>, required: false }
 })

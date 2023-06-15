@@ -3,7 +3,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 
 /* Fetch all projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
-const posts = data.value?.entradasCollection?.items || []
+const posts = data.value.entradasCollection?.items || []
 
 const openedProyect = ref()
 const destacadoTodos = ref(true)
@@ -43,11 +43,11 @@ function swapDestacados () {
 }
 
 function openProject(which:object) {
-	openedProyect.value = which
 	//evita el scroll del fondo
 	preventScroll.value = true
 	//agrega margen para compensar el preventScroll:
 	el.value?.classList.add('md:pr-4')
+	openedProyect.value = which
 	sound.play()
 }
 
@@ -118,13 +118,13 @@ function closeProject() {
 			<li v-for="(post, i) in pickedPortfolioItems" :key="i">
 				<a
 					:href="`/proyecto/${post?.slug}`"
-					@click.prevent="openProject(post)"
+					@click.prevent="openProject(post as object)"
 					class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 				>
 					<figure>
 						<img v-if="post?.imageFeatured"
 							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="post.imageFeatured.title"
+							:alt="post.imageFeatured.title || ''"
 							class="w-full"
 							loading="lazy"
 							width="600"
@@ -136,7 +136,7 @@ function closeProject() {
 						<h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post?.title }}</h2>
 						<p v-if="post?.excerpt">{{ post.excerpt }}</p>
 						<div class="card-actions" v-if="post?.contentfulMetadata.tags[0]">
-							<ProjectMeta :tags="post.contentfulMetadata.tags" />
+							<ProjectMeta :tags="(post.contentfulMetadata.tags as Tag[])" />
 						</div>
 					</div>
 				</a>
@@ -159,13 +159,13 @@ function closeProject() {
 				>
 					<a
 						:href="`/proyecto/${post?.slug}`"
-						@click.prevent="openProject(post)"
+						@click.prevent="openProject(post as object)"
 						class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 					>
 					<figure>
 						<img v-if="post?.imageFeatured"
 							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="post.imageFeatured.title"
+							:alt="(post.imageFeatured.title as string)"
 							loading="lazy"
 							class="w-full"
 							width="600"
@@ -177,7 +177,7 @@ function closeProject() {
 						<h2 class="card-title text-primary text-2xl leading-none">{{ post?.title }}</h2>
 						<p v-if="post?.excerpt" class="text-sm">{{ post.excerpt }}</p>
 						<div class="card-actions">
-							<ProjectMeta v-if="post?.contentfulMetadata.tags[0]" :tags="post.contentfulMetadata.tags" />
+							<ProjectMeta v-if="post?.contentfulMetadata.tags[0]" :tags="(post.contentfulMetadata.tags as Tag[])" />
 						</div>
 					</div>
 					</a>

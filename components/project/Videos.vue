@@ -29,7 +29,7 @@ const goTo = (tag:number) => {
 	<section v-if="videoId.length > 0">
 		<aside
 		ref="carousel"
-		class="carousel aspect-video bg-neutral"
+		class="carousel aspect-video bg-neutral w-full"
 		style="background-image: url(/images/tubos_loop_ani.png); background-repeat: no-repeat; background-position: center; background-size: 128px;"
 		>
 			<div v-for="(video, i) in videoId" :key="i" class="carousel-item w-full" :id="'vid'+i">
