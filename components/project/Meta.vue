@@ -7,7 +7,7 @@ const props = defineProps({
 
 <template>
 	<ul class="flex flex-wrap flex-row gap-2 whitespace-nowrap">
-		<li v-for="tag in props.tags" class="tag badge bg-secondary drop-shadow cursor-default">
+		<li v-for="tag in props.tags" class="badge badge-neutral cursor-default">
 			{{ $t(tag.id) }}
 		</li>
 	</ul>

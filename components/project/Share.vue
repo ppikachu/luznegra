@@ -31,12 +31,12 @@ async function copyLink() {
 </script>
 
 <template>
-	<div class="pt-4 pb-20 md:pb-0 md:pt-0">
+	<div class="pb-16 md:pb-0">
 		<!--si no permite compartir, copia el link 'ctrl/cmd c'-->
 		<div v-if="!canShareData">
 			<div class="tooltip tooltip-primary" :data-tip="copied ? $t('copied') : $t('link_copy')">
-				<button @click="copyLink" class="btn btn-xs btn-secondary space-x-1 flex-nowrap whitespace-nowrap">
-					<IconCSS name="mdi:clipboard-outline" /><span class="lowercase overflow-visible">{{ $t('link_compartir') }}</span>
+				<button @click="copyLink" class="btn btn-xs btn-secondary flex-nowrap whitespace-nowrap">
+					<IconCSS name="mdi:share-variant" size="14" /><span class="lowercase overflow-visible">{{ $t('link_compartir') }}</span>
 				</button>
 			</div>
 		</div>
