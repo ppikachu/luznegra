@@ -69,6 +69,7 @@ export default defineNuxtConfig({
 			"Varela Round": true,
 			//'Open Sans': true,
 		},
+		preload: true
 	},
 
 	pwa: {
