@@ -37,6 +37,8 @@
     "cambiar_idioma": "cambiar a",
     "vamos": "let's go!",
     "close": "close",
+    "to_night_change_tooltip": "swap day > night",
+    "to_day_change_tooltip": "swap night > day",
     "drag_m_experiment": "drag over the cinema!",
     "drag_d_experiment": "drag mouse over the cinema!"
 }
