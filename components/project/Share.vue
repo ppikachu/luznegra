@@ -8,7 +8,7 @@ const config = useRuntimeConfig()
 const { copy, copied } = useClipboard()
 const sound = useSound('/sounds/Click03.mp3')
 const canShareData = navigator.canShare
-const resultPara = ref(config.HOST + '/proyecto/' + props.project.slug)
+const resultPara = ref(config.public.HOST + '/proyecto/' + props.project.slug)
 
 async function copyLink() {
 	sound.play()
