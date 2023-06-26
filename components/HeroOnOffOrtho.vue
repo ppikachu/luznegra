@@ -576,7 +576,7 @@ onUnmounted(() => {
 		<!--bottom linear-gradient-->
 		<div class="absolute bottom-0 lg:-bottom-8 py-12 px-4 flex flex-col justify-center items-center space-y-10 w-full">
 			<!--SWITCH-->
-			<div class="tooltip" :data-tip="dayNight === 'night'? $t('to_day_change_tooltip') : $t('to_night_change_tooltip')">
+			<div class="md:tooltip" :data-tip="dayNight === 'night'? $t('to_day_change_tooltip') : $t('to_night_change_tooltip')">
 				<label class="swap">
 					<!-- this hidden checkbox controls the state -->
 					<input type="checkbox" @click="swapDayNight" aria-label="day or night" />
