@@ -6,7 +6,7 @@ settings:
 
 dependencies:
   '@contentful/rich-text-html-renderer':
-    specifier: ^16.0.3
+    specifier: ^16.1.0
     version: 16.1.0
   '@tweakpane/plugin-essentials':
     specifier: ^0.1.8
@@ -21,13 +21,13 @@ dependencies:
     specifier: ^2.4.2
     version: 2.4.2
   gsap:
-    specifier: ^3.11.5
+    specifier: ^3.12.1
     version: 3.12.1
   nuxt-graphql-client:
     specifier: ^0.2.27
     version: 0.2.27(@babel/core@7.22.5)(@types/node@18.16.18)(graphql-tag@2.12.6)
   tweakpane:
-    specifier: ^3.1.9
+    specifier: ^3.1.10
     version: 3.1.10
   vue-plyr:
     specifier: ^7.0.0
@@ -41,13 +41,13 @@ devDependencies:
     specifier: ^3.1.0
     version: 3.1.0
   '@nuxtjs/google-fonts':
-    specifier: ^3.0.0
+    specifier: ^3.0.1
     version: 3.0.1
   '@nuxtjs/i18n':
     specifier: 8.0.0-beta.12
     version: 8.0.0-beta.12(vue@3.3.4)
   '@nuxtjs/tailwindcss':
-    specifier: ^6.6.7
+    specifier: ^6.8.0
     version: 6.8.0(webpack@5.88.0)
   '@nuxtjs/turnstile':
     specifier: ^0.4.0
@@ -62,25 +62,25 @@ devDependencies:
     specifier: ^2.4.0
     version: 2.4.0
   '@types/node':
-    specifier: ^18.16.3
+    specifier: ^18.16.18
     version: 18.16.18
   '@types/three':
     specifier: ^0.152.1
     version: 0.152.1
   '@vueuse/core':
-    specifier: ^10.1.2
+    specifier: ^10.2.0
     version: 10.2.0(vue@3.3.4)
   '@vueuse/nuxt':
-    specifier: ^10.1.2
+    specifier: ^10.2.0
     version: 10.2.0(nuxt@3.6.0)(vue@3.3.4)
   daisyui:
-    specifier: ^3.1.0
+    specifier: ^3.1.6
     version: 3.1.6(postcss@8.4.24)
   nuxt:
     specifier: ^3.6.0
     version: 3.6.0(@types/node@18.16.18)(typescript@5.1.3)
   nuxt-icon:
-    specifier: ^0.4.0
+    specifier: ^0.4.1
     version: 0.4.1(vue@3.3.4)
   three:
     specifier: ^0.151.3
@@ -1608,7 +1608,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.5.3
+      tslib: 2.4.1
     dev: false
 
   /@graphql-tools/prisma-loader@7.2.72(@types/node@18.16.18)(graphql@16.7.1):
@@ -1651,7 +1651,7 @@ packages:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 9.2.1(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.5.3
+      tslib: 2.4.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -4968,7 +4968,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.5.3
+      tslib: 2.4.1
     dev: false
 
   /graphql-ws@5.12.1(graphql@16.7.1):
