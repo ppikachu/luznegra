@@ -12,7 +12,7 @@ const availableLocales = computed(() => {
 		v-for="locale in availableLocales"
 		:key="locale.code"
 		@click.stop.prevent="setLocale(locale.code)"
-		class="text-xs absolute right-0 p-4"
+		class="text-xs py-4"
 	>
 		{{ $t('cambiar_idioma') }} {{ locale.name }}
 	</a>
