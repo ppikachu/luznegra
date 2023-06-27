@@ -8,11 +8,11 @@ const props = defineProps<Props>()
 const { data } = await useAsyncGql('proyecto', { slug: props.articleSlug })
 
 /* Define article data */
-const project             = data.value?.entradasCollection?.items[0]
-const projectMedia        = { 'videos': project?.video, 'gallery': project?.imgGalleryCollection?.items}
-const articleTitle        = project?.title
-const articleTags:any     = project?.contentfulMetadata.tags
-const articleBody:string  = project?.content ? documentToHtmlString(project.content.json) : ''
+const proyecto            = data.value?.entradasCollection?.items[0]
+const projectMedia        = { 'videos': proyecto?.video, 'gallery': proyecto?.imgGalleryCollection?.items}
+const articleTitle        = proyecto?.title
+const articleTags:any     = proyecto?.contentfulMetadata.tags
+const articleBody:string  = proyecto?.content ? documentToHtmlString(proyecto.content.json) : ''
 </script>
 
 <template>
@@ -25,5 +25,6 @@ const articleBody:string  = project?.content ? documentToHtmlString(project.cont
 		<div class="prose prose-a:text-primary my-4 max-w-4xl mx-auto">
 			<div class="mb-4" id="content" v-html="articleBody"></div>
 		</div>
+		<ProjectShare :project="proyecto" />
 	</div>
 </template>

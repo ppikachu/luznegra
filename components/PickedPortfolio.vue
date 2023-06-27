@@ -101,7 +101,7 @@ function closeProject() {
 			</Teleport>
 		</ClientOnly>
 		
-		<h1 class="text-5xl text-primary text-center font-bold">Portfolio</h1>
+		<h1 class="text-5xl text-primary text-center">Portfolio</h1>
 		<!--SWITCH-->
 		<div class="flex justify-center items-center py-4 md:py-8 mx-auto">
 			<div class="form-control">
@@ -173,7 +173,7 @@ function closeProject() {
 						<img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
 					</figure>
 					<div class="card-body">
-						<h2 class="card-title text-primary text-xl md:text-2xl leading-none">{{ post?.title }}</h2>
+						<h2 class="text-primary text-xl md:text-2xl leading-none">{{ post?.title }}</h2>
 						<p v-if="post?.excerpt" class="text-sm">{{ post.excerpt }}</p>
 						<div class="card-actions">
 							<ProjectMeta v-if="post?.contentfulMetadata.tags[0]" :tags="(post.contentfulMetadata.tags as Tag[])" />
