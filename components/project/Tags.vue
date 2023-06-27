@@ -42,7 +42,7 @@ function buttonClick(tag:any) {
 			v-for="(tag, i) in uniqueTags"
 			:key="i"
 			@click="buttonClick(tag)"
-			class="md:btn badge badge-neutral badge-lg join-item"
+			class="uppercase md:btn md:font-normal badge badge-neutral badge-lg join-item"
 			:class="{ 'badge-primary md:btn-primary': tag.id == currentTag }"
 		>
 			<!-- como contentful no permite idiomas en tags uso i18n: -->
