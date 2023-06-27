@@ -97,7 +97,7 @@ const goTo = (tag:number) => {
 			<div class="py-4 btn-group overflow-x-auto">
 				<span v-for="(item, i) in chooser"
 					:class="{ 'btn-active': i === selectedMedia }"
-					class="btn btn-sm"
+					class="btn btn-sm font-normal"
 					@click="goTo(i)"
 				>
 					{{ item }}

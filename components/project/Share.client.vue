@@ -34,15 +34,15 @@ async function copyLink() {
 	<div class="pb-16 md:pb-0">
 		<!--si no permite compartir, copia el link 'ctrl/cmd c'-->
 		<div v-if="!canShareData" class="tooltip tooltip-primary" :data-tip="copied ? $t('copied') : $t('link_copy')">
-			<button @click="copyLink" class="btn btn-xs btn-secondary flex whitespace-nowrap">
+			<button @click="copyLink" class="btn btn-xs btn-secondary flex">
 				<IconCSS name="mdi:clipboard-outline" class="flex-shrink" size="14" />
-				<span class="font-normal text-xs whitespace-nowrap">{{ $t('link_compartir') }}</span>
+				<span class="font-normal">{{ $t('link_compartir') }}</span>
 			</button>
 		</div>
 		<!--si el navegador permite 'compartir'-->
-		<button v-else @click="copyLink" class="btn btn-xs btn-secondary flex whitespace-nowrap">
+		<button v-else @click="copyLink" class="btn btn-xs btn-secondary flex">
 			<IconCSS name="mdi:share-variant" size="14" />
-			<span class="overflow-visible">{{ $t('link_compartir') }}</span>
+			<span class="font-normal">{{ $t('link_compartir') }}</span>
 		</button>
 	</div>
 </template>
