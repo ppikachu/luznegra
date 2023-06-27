@@ -24,7 +24,7 @@ const articleBody:string  = proyecto?.content ? documentToHtmlString(proyecto.co
 		</div>
 		<div class="prose prose-a:text-primary my-4 max-w-4xl mx-auto">
 			<div class="mb-4" id="content" v-html="articleBody"></div>
+			<ProjectShare :project="proyecto" />
 		</div>
-		<ProjectShare :project="proyecto" />
 	</div>
 </template>
