@@ -9,8 +9,7 @@ const { data } = await useAsyncGql('proyecto', { slug: props.articleSlug })
 
 /* Define article data */
 const project             = data.value?.entradasCollection?.items[0]
-const imgGallery:any      = project?.imgGalleryCollection
-const articleVideos:any   = project?.video
+const projectMedia        = { 'videos': project?.video, 'gallery': project?.imgGalleryCollection?.items}
 const articleTitle        = project?.title
 const articleTags:any     = project?.contentfulMetadata.tags
 const articleBody:string  = project?.content ? documentToHtmlString(project.content.json) : ''
@@ -18,8 +17,7 @@ const articleBody:string  = project?.content ? documentToHtmlString(project.cont
 
 <template>
 	<div class="container mx-auto px-4 md:px-8 pb-16">
-		<ProjectVideos :videos="articleVideos" />
-		<ProjectGallery :gallery="imgGallery" />
+		<ProjectMedia :project="projectMedia" />
 		<div class="flex md:flex-row space-x-4 lg:justify-between items-center my-8 max-w-4xl mx-auto">
 			<h1 class="text-4xl text-primary">{{ articleTitle }}</h1>
 			<ProjectMeta :tags="articleTags" />

@@ -1,22 +1,48 @@
 <script setup lang="ts">
 /* Define props */
-const props = defineProps<{ videos: [] }>()
+interface Media {
+	project: {
+		gallery: Array<{
+			title: string,
+			url: string,
+			width: number,
+			height: number
+		}>,
+		videos: string[]
+	}
+}
+const props = defineProps<Media>()
 
 const carousel = ref()
-const currentVideo = ref(0)
+const selectedMedia = ref(0)
 
 let videoId:any = []
 let provider:any = []
-if (props.videos) {
-	props.videos.forEach((video: any) => {
+if (props.project.videos) {
+	props.project.videos.forEach((video: any) => {
 		videoId.push(video.split('/').pop())
 		video.includes('youtu') ? provider.push('youtube') : provider.push('vimeo')
 	})
 }
 
+const chooser = computed(() => {
+	let item:any = []
+	if (props.project.gallery) {
+		props.project.gallery.forEach((pic: any) => {
+			item.push(pic.title)
+		})
+	}
+	if (props.project.videos) {
+		props.project.videos.forEach((video: any,i) => {
+			item.push(i+1)
+		})
+	}	
+	return item
+})
+
 const goTo = (tag:number) => {
 	//marca active el button group:
-	currentVideo.value = tag
+	selectedMedia.value = tag
 	//scroll to:
 	const target = carousel.value.children[tag]
 	const left = target.offsetLeft
@@ -26,14 +52,25 @@ const goTo = (tag:number) => {
 
 <template>
 	<!--videos component-->
-	<section v-if="videoId.length > 0">
+	<section v-if="chooser.length > 0">
 		<aside class="-mx-6 -mt-6 md:mx-0 md:mt-0">
 			<div
 			ref="carousel"
-			class="carousel aspect-video min-w-full"
+			class="carousel min-w-full"
 			style="background-image: url(/images/tubos_loop_ani.png); background-repeat: no-repeat; background-position: center; background-size: 128px;"
 			>
-				<div v-for="(video, i) in videoId" :key="i" class="carousel-item w-full" :id="'vid'+i">
+				<!--pics-->
+				<div v-for="(img, i) in props.project.gallery" :key="i" :id="'img'+i" class="carousel-item w-full h-fit justify-center">
+					<img
+						:src="img.url"
+						:width="img.width"
+						:height="img.height"
+						:alt="img.title"
+						class="rounded"
+					/>
+				</div>
+				<!--vids-->
+				<div v-for="(video, i) in videoId" :key="i" :id="'vid'+i" class="carousel-item w-full">
 					<VuePlyr class="w-full">
 						<!--YouTube:-->
 						<iframe v-if="provider[i] == 'youtube'"
@@ -55,15 +92,15 @@ const goTo = (tag:number) => {
 				</div>
 			</div>
 		</aside>
-		<!--video chooser:-->
-		<div v-if="props.videos.length > 1" class="flex justify-center">
+		<!--media chooser:-->
+		<div v-if="chooser.length > 1" class="flex justify-center">
 			<div class="py-4 btn-group overflow-x-auto">
-				<span v-for="(video, i) in videoId"
-					:class="{ 'btn-active': i === currentVideo }"
+				<span v-for="(item, i) in chooser"
+					:class="{ 'btn-active': i === selectedMedia }"
 					class="btn btn-sm"
 					@click="goTo(i)"
 				>
-					{{ i+1 }}
+					{{ item }}
 				</span>
 			</div>
 		</div>

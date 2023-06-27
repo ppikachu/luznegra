@@ -79,8 +79,7 @@ function closeProject() {
 						<CloseButton @close-me="closeProject" />
 						<div class="inner modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit overscroll-contain">
 
-							<ProjectVideos v-if="openedProyect.video" :videos="openedProyect.video" />
-							<ProjectGallery :gallery="openedProyect.imgGalleryCollection" />
+							<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
 
 							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center my-4">
 								<h1 class="text-4xl text-primary">{{ openedProyect.title }}</h1>
