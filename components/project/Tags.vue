@@ -37,7 +37,7 @@ function buttonClick(tag:any) {
 </script>
 
 <template>
-	<section id="tags" class="md:join md:join-horizontal pb-8 md:pb-12 flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-0">
+	<section id="tags" class="md:join md:join-horizontal pb-8 md:pb-12 w-full flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-0">
 		<button
 			v-for="(tag, i) in uniqueTags"
 			:key="i"
