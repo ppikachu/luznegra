@@ -17,7 +17,6 @@ export default defineNuxtConfig({
 		"@nuxtjs/tailwindcss",
 		"@nuxtjs/google-fonts",
 		"@vueuse/nuxt",
-		"@kevinmarrec/nuxt-pwa",
 		"nuxt-icon",
 		"@nuxtjs/i18n",
 		"@nuxtjs/turnstile",
@@ -51,6 +50,13 @@ export default defineNuxtConfig({
 					: "https://localhost:3000",
 			TEAM_NAME: "LUZ NEGRA",
 			TEAM_LOGO_IMAGE_ON_FOOTER: "/images/tubos_loop_ani.png",
+
+			titleSeparator: '·',
+			siteUrl: 'https://luz-negra.com/',
+			siteName: 'LUZ NEGRA',
+			siteDescription: 'Diseño y animación',
+			language: 'es',
+			OG: '/OG.png',
 		},
 		turnstile: {
 			secretKey: process.env.TURNSTILE_SECRET_KEY,
@@ -72,6 +78,7 @@ export default defineNuxtConfig({
 		preload: true,
 	},
 
+	/*
 	pwa: {
 		manifest: {
 			name: "LUZ NEGRA - Diseño y animación",
@@ -94,6 +101,7 @@ export default defineNuxtConfig({
 			twitterCard: "summary_large_image",
 		},
 	},
+	*/
 
 	"graphql-client": {
 		clients: {
@@ -109,4 +117,5 @@ export default defineNuxtConfig({
 	devtools: {
 		enabled: true,
 	},
+	extends: ["nuxt-seo-kit"],
 })

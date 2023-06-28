@@ -20,7 +20,6 @@
 		"vue-plyr": "^7.0.0"
 	},
 	"devDependencies": {
-		"@kevinmarrec/nuxt-pwa": "^0.17.0",
 		"@nuxt/devtools": "^0.6.4",
 		"@nuxtjs/device": "^3.1.0",
 		"@nuxtjs/google-fonts": "^3.0.1",
@@ -37,6 +36,7 @@
 		"daisyui": "^3.1.6",
 		"nuxt": "^3.6.1",
 		"nuxt-icon": "^0.4.1",
+		"nuxt-seo-kit": "^1.3.9",
 		"three": "^0.151.3"
 	}
 }
