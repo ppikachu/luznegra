@@ -148,7 +148,7 @@ function handleScroll() {
 }
 
 const showTip = computed(() => {
-	return discloseTip.value && animate.value
+	return discloseTip.value && animate.value && route.path != '/test'
 })
 
 //pantalla:
@@ -475,42 +475,43 @@ function makeTweak() {
 	pane.registerPlugin(EssentialsPlugin)
 	pane.on('change', () => {
 		updateScene()
-		presetDebug.hidden = true
+		//presetDebug.hidden = true
 	})
 	//DAY
 	dayFolder = pane.addFolder({ title: 'DIA', expanded: false, hidden: params.dayOrNight === 'day' ? false : true })
-	dayFolder.addInput(params, 'distanceFogDay', { min: 0, max: 50, step: 0.1, label: 'distancia niebla' })
-	dayFolder.addInput(params, 'daySkyColor', { label: 'cielo dia' })
-	dayFolder.addInput(params, 'lightSunColor', { label: 'color sol' })
-	dayFolder.addInput(params, 'lightSunIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power sol' })
-	dayFolder.addInput(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 0.5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
+	dayFolder.addBinding(params, 'distanceFogDay', { min: 0, max: 50, step: 0.1, label: 'distancia niebla' })
+	dayFolder.addBinding(params, 'daySkyColor', { label: 'cielo dia' })
+	dayFolder.addBinding(params, 'lightSunColor', { label: 'color sol' })
+	dayFolder.addBinding(params, 'lightSunIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power sol' })
+	dayFolder.addBinding(params, 'lightSunPosition', { label: 'posicion sol', x: { min: -10, max: 10, step: 0.1 }, y: { min: 0.5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
 	//NIGHT
 	nightFolder = pane.addFolder({ title: 'NOCHE', expanded: false, hidden: params.dayOrNight === 'night' ? false : true })
-	nightFolder.addInput(params, 'distanceFogNight', { min: 0, max: 50, step: 0.1, label: 'distancia niebla' })
-	nightFolder.addInput(params, 'nightSkyColor', { label: 'cielo noche' })
-	nightFolder.addInput(params, 'lightMoonColor', {  label: 'color luna' })
-	nightFolder.addInput(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power luna' })
-	nightFolder.addInput(params, 'lightMoonPosition', { label: 'posición luna', x: { min: -10, max: 10, step: 0.1 }, y: { min: 0.5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
+	nightFolder.addBinding(params, 'distanceFogNight', { min: 0, max: 50, step: 0.1, label: 'distancia niebla' })
+	nightFolder.addBinding(params, 'nightSkyColor', { label: 'cielo noche' })
+	nightFolder.addBinding(params, 'lightMoonColor', {  label: 'color luna' })
+	nightFolder.addBinding(params, 'lightMoonIntensity', { type: 'number', min: 0, max: 3, step: 0.01, label: 'power luna' })
+	nightFolder.addBinding(params, 'lightMoonPosition', { label: 'posición luna', x: { min: -10, max: 10, step: 0.1 }, y: { min: 0.5, max: 10, step: 0.1 }, z: { min: -10, max: 10, step: 0.1 } })
 	//PARAMETROS
 	extraFolder = pane.addFolder({ title: 'EXTRA', expanded: false })
-	extraFolder.addInput(params, 'initialSceneRotation', { x: { min: -3.1416, max: 3.1416, step: 0.01, inverted: true }, y: { min: 0, max: 3.1416/2, step: 0.01, inverted: true }, label: 'giro inicial' })
-	extraFolder.addInput(params, 'groundColor', { view:'color', label: 'color piso' })
-	extraFolder.addInput(params, 'screenLightColor', { view:'color', label: 'color pantalla' })
-	extraFolder.addInput(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
+	extraFolder.addBinding(params, 'initialSceneRotation', { x: { min: -3.1416, max: 3.1416, step: 0.01, inverted: true }, y: { min: 0, max: 3.1416/2, step: 0.01, inverted: true }, label: 'giro inicial' })
+	extraFolder.addBinding(params, 'groundColor', { view:'color', label: 'color piso' })
+	extraFolder.addBinding(params, 'screenLightColor', { view:'color', label: 'color pantalla' })
+	extraFolder.addBinding(params, 'screenIntensity', { label: 'proyección', min: 0.1, max: 5, step: 0.1 })
 	//DEBUG
 	const debugFolder = pane.addFolder({ title: 'DEBUG', expanded: false })
-	debugFolder.addInput(params, 'showLightsHelpers', { label: 'ayuda luz' })
-	debugFolder.addInput(params, 'shadowPlaneSize', { label: '*shadowPlaneSize*', min: 0.1, max: 10, step: 0.01 })
+	debugFolder.addBinding(params, 'showLightsHelpers', { label: 'ayuda luz' })
+	debugFolder.addBinding(params, 'shadowPlaneSize', { label: '*shadowPlaneSize*', min: 0.1, max: 10, step: 0.01 })
 	debugFolder.addButton({ title: 'export' }).on('click', () => { exportPreset() })
-	presetDebug = debugFolder.addMonitor(preset, 'debug', {
+	presetDebug = debugFolder.addBinding(preset, 'debug', {
+		readonly: true,
 		label: 'preset',
 		multiline: true,
 		lineCount: 10,
-		hidden: true,
+		//hidden: true,
 	})
 
 	function exportPreset() {
-		preset.debug = JSON.stringify(pane.exportPreset(), null, 1)
+		preset.debug = JSON.stringify(pane.exportState(), null, 1)
 		presetDebug.hidden = false
 	}
 
