@@ -558,7 +558,7 @@ onUnmounted(() => {
 			<div v-show="showTip" class="toast toast-top mt-10 toast-center toast-start0 min-w-max z-20">
 				<div class="bg-base-100 bg-opacity-60 flex space-x-4 outline outline-1 outline-gray-900/50 items-center rounded-xl p-2 text-xs">
 					<span v-if="isMobile===true" class="flex items-center space-x-1"><Icon name="icon-park-outline:hand-drag" size="24" class="wave" /><span>{{ $t('drag_m_experiment') }}</span></span>
-					<span v-else-if="isMobile===false" class="flex items-center space-x-1"><Icon name="material-symbols:mouse" size="24" class="wave" /><span>{{ $t('drag_d_experiment') }}</span></span>
+					<span v-else class="flex items-center space-x-1"><Icon name="material-symbols:mouse" size="24" class="wave" /><span>{{ $t('drag_d_experiment') }}</span></span>
 					<button @click="discloseTip = false" class="btn btn-xs btn-circle btn-primary"><Icon name="mdi:close-thick" /></button>
 				</div>
 			</div>
