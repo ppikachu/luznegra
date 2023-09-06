@@ -12,7 +12,8 @@
 	})
 	useHead({
 	htmlAttrs: {
-		lang: 'es'
+		lang: 'es',
+		class: 'scroll-smooth'
 	},
 	link: [
 		{

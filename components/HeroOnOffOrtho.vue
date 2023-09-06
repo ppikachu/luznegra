@@ -620,16 +620,16 @@ onUnmounted(() => {
 <style scoped>
 /* Define the animation */
 @keyframes moveLeftToRight {
-  0% { transform: translateX(-3px); }
-  50% { transform: translateX(3px); }
-  100% { transform: translateX(-3px); }
+	0% { transform: translateX(-3px); }
+	50% { transform: translateX(3px); }
+	100% { transform: translateX(-3px); }
 }
 
 /* Apply the animation to an element */
 .wave {
-  animation-name: moveLeftToRight;
-  animation-duration: 2s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
+	animation-name: moveLeftToRight;
+	animation-duration: 2s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
 }
 </style>
