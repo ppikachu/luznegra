@@ -186,7 +186,6 @@ function initProjector() {
 	telon = new THREE.Mesh( telonGeometry, telonMaterial )
 	telon.position.set(telonPosition.x, telonPosition.y, telonPosition.z)
 	pantallaGroup.add( telon )
-	// @ts-ignore
 	video.play()
 
 	//proyector light to front
