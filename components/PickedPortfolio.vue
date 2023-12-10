@@ -120,17 +120,15 @@ function closeProject() {
 					@click.prevent="openProject(post as object)"
 					class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
 				>
-					<figure>
-						<img v-if="post?.imageFeatured"
-							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="post.imageFeatured.title || ''"
-							class="w-full"
-							loading="lazy"
-							width="600"
-							height="400"
-						/>
-						<img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
-					</figure>
+					<NuxtImg
+						:src="post?.imageFeatured ?`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400` : '/images/no-image.png'"
+						:alt="post?.imageFeatured?.title || ''"
+						class="w-full p-[1px] rounded-t-2xl"
+						loading="lazy"
+						width="600"
+						height="400"
+						placeholder
+					/>
 					<div class="card-body">
 						<h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post?.title }}</h2>
 						<p v-if="post?.excerpt">{{ post.excerpt }}</p>
@@ -151,27 +149,24 @@ function closeProject() {
 				name="list"
 				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8 content-start relative"
 			>
-				<div v-for="(post, i) in filtered"
+
+				<a
+					v-for="(post, i) in filtered"
 					:key="i"
 					:data-index="i"
-					class="col-span-1"
+					:href="`/proyecto/${post?.slug}`"
+					@click.prevent="openProject(post as object)"
+					class="gradient-border col-span-1 card card-compact bg-base-300 shadow-lg cursor-pointer"
 				>
-					<a
-						:href="`/proyecto/${post?.slug}`"
-						@click.prevent="openProject(post as object)"
-						class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
-					>
-					<figure>
-						<img v-if="post?.imageFeatured"
-							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="(post.imageFeatured.title as string)"
-							loading="lazy"
-							class="w-full"
-							width="600"
-							height="400"
-						/>
-						<img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
-					</figure>
+					<NuxtImg
+						:src="post?.imageFeatured ?`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400` : '/images/no-image.png'"
+						:alt="post?.imageFeatured?.title || ''"
+						class="w-full p-[1px] rounded-t-2xl"
+						loading="lazy"
+						width="600"
+						height="400"
+						placeholder
+					/>
 					<div class="card-body">
 						<h2 class="text-primary text-xl md:text-2xl leading-none">{{ post?.title }}</h2>
 						<p v-if="post?.excerpt" class="text-sm">{{ post.excerpt }}</p>
@@ -180,7 +175,7 @@ function closeProject() {
 						</div>
 					</div>
 					</a>
-				</div>
+
 			</TransitionGroup>
 		</div>
 	</section>

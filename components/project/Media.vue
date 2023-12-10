@@ -61,7 +61,7 @@ const goTo = (tag:number) => {
 			>
 				<!--pics-->
 				<div v-for="(img, i) in props.project.gallery" :key="i" :id="'img'+i" class="carousel-item w-full h-fit justify-center">
-					<img
+					<NuxtImg
 						:src="img.url"
 						:width="img.width"
 						:height="img.height"
@@ -94,10 +94,11 @@ const goTo = (tag:number) => {
 		</aside>
 		<!--media chooser:-->
 		<div v-if="chooser.length > 1" class="flex justify-center">
-			<div class="py-4 btn-group overflow-x-auto">
+			<div class="py-4 join overflow-x-auto">
 				<span v-for="(item, i) in chooser"
-					:class="{ 'btn-active': i === selectedMedia }"
-					class="btn btn-sm font-normal"
+					:key="i"
+					:class="{ 'btn-primary': i === selectedMedia }"
+					class="btn btn-sm join-item uppercase"
 					@click="goTo(i)"
 				>
 					{{ item }}

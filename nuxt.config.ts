@@ -13,15 +13,16 @@ export default defineNuxtConfig({
 	},
 
 	modules: [
-		"nuxt-graphql-client",
-		"@nuxtjs/tailwindcss",
-		"@nuxtjs/google-fonts",
-		"@vueuse/nuxt",
-		"nuxt-icon",
-		"@nuxtjs/i18n",
-		"@nuxtjs/turnstile",
-		"@nuxtjs/device",
-	],
+        "nuxt-graphql-client",
+        "@nuxtjs/tailwindcss",
+        "@nuxtjs/google-fonts",
+        "@vueuse/nuxt",
+        "nuxt-icon",
+        "@nuxtjs/i18n",
+        "@nuxtjs/turnstile",
+        "@nuxtjs/device",
+        "@nuxt/image"
+    ],
 
 	turnstile: {
 		siteKey: "0x4AAAAAAAAnaWdzLNaGsIA-",

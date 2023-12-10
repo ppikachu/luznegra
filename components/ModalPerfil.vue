@@ -19,7 +19,7 @@ const teamProfile = computed(() => { return props.name === 'ines' ? nuxtApp.$i18
 					<div class="flex-shrink-0 bg-base-100 p-8 md:p-12 flex flex-col items-center space-y-4">
 						<div class="avatar">
 							<div class="w-28 h-28 md:w-32 md:h-32 rounded-full ring-4 ring-base-100">
-								<img :src="teamAvatar" :alt="teamName" width="128" height="128" />
+								<NuxtImg :src="teamAvatar" :alt="teamName" width="128" height="128" />
 							</div>
 						</div>
 						<h1 class="text-primary text-2xl">{{ teamName }}</h1>

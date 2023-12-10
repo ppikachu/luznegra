@@ -1,5 +1,5 @@
 <template>
-	<div class="hero bg-gradient-to-br from-secondary to-secondary-focus py-8">
+	<div class="hero bg-gradient-to-br from-secondary to-[color-mix(in_oklab,oklch(var(--s)),black_40%)] py-8">
 		<div class="hero-content flex-col w-full md:w-2/3">
 			<div class="text-center lg:text-left">
 				<h1 class="text-5xl font-bold mb-6" data-aos="fade-up">{{ $t('escribinos') }}!</h1>

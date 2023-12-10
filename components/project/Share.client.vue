@@ -31,18 +31,19 @@ async function copyLink() {
 </script>
 
 <template>
-	<div class="pb-16 md:pb-0">
-		<!--si no permite compartir, copia el link 'ctrl/cmd c'-->
-		<div v-if="!canShareData" class="tooltip tooltip-primary" :data-tip="copied ? $t('copied') : $t('link_copy')">
-			<button @click="copyLink" class="btn btn-xs btn-secondary flex">
-				<IconCSS name="mdi:clipboard-outline" class="flex-shrink" size="14" />
-				<span class="font-normal">{{ $t('link_compartir') }}</span>
-			</button>
-		</div>
-		<!--si el navegador permite 'compartir'-->
-		<button v-else @click="copyLink" class="btn btn-xs btn-secondary flex">
-			<IconCSS name="mdi:share-variant" size="14" />
-			<span class="font-normal">{{ $t('link_compartir') }}</span>
+
+	<!--si no permite compartir, copia el link 'ctrl/cmd c'-->
+	<div v-if="!canShareData" class="tooltip tooltip-primary flex-shrink-0 w-fit" :data-tip="copied ? $t('copied') : $t('link_copy')">
+		<button @click="copyLink" class="btn btn-xs btn-secondary uppercase">
+			<IconCSS name="mdi:clipboard-outline" size="14" />
+			{{ $t('link_compartir') }}
 		</button>
 	</div>
+
+	<!--si el navegador permite 'compartir'-->
+	<button v-else @click="copyLink" class="btn btn-xs btn-secondary uppercase flex-shrink-0">
+		<IconCSS name="mdi:share-variant" size="14" />
+		{{ $t('link_compartir') }}
+	</button>
+
 </template>
