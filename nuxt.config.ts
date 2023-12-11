@@ -13,19 +13,20 @@ export default defineNuxtConfig({
 	},
 
 	modules: [
-        "nuxt-graphql-client",
-        "@nuxtjs/tailwindcss",
-        "@nuxtjs/google-fonts",
-        "@vueuse/nuxt",
-        "nuxt-icon",
-        "@nuxtjs/i18n",
-        "@nuxtjs/turnstile",
-        "@nuxtjs/device",
-        "@nuxt/image"
-    ],
+		"nuxt-graphql-client",
+		"@nuxtjs/tailwindcss",
+		"@nuxtjs/google-fonts",
+		"@vueuse/nuxt",
+		"nuxt-icon",
+		"@nuxtjs/i18n",
+		"@nuxtjs/turnstile",
+		"@nuxtjs/device",
+		"@nuxt/image",
+	],
 
 	turnstile: {
 		siteKey: "0x4AAAAAAAAnaWdzLNaGsIA-",
+		secretKey: process.env.TURNSTILE_SECRET_KEY,
 	},
 
 	i18n: {
@@ -52,15 +53,12 @@ export default defineNuxtConfig({
 			TEAM_NAME: "LUZ NEGRA",
 			TEAM_LOGO_IMAGE_ON_FOOTER: "/images/tubos_loop_ani.png",
 
-			titleSeparator: '·',
-			siteUrl: 'https://luz-negra.com/',
-			siteName: 'LUZ NEGRA',
-			siteDescription: 'Diseño y animación',
-			language: 'es',
-			OG: '/OG.png',
-		},
-		turnstile: {
-			secretKey: process.env.TURNSTILE_SECRET_KEY,
+			titleSeparator: "·",
+			siteUrl: "https://luz-negra.com/",
+			siteName: "LUZ NEGRA",
+			siteDescription: "Diseño y animación",
+			language: "es",
+			OG: "/OG.png",
 		},
 	},
 
@@ -79,31 +77,6 @@ export default defineNuxtConfig({
 		preload: true,
 	},
 
-	/*
-	pwa: {
-		manifest: {
-			name: "LUZ NEGRA - Diseño y animación",
-			short_name: "LUZ NEGRA",
-			lang: "es",
-			description: "Diseño y animación",
-			background_color: "#212121",
-			theme_color: "#212121",
-		},
-		meta: {
-			mobileApp: false,
-			name: "LUZ NEGRA - Diseño y animación",
-			author: "LUZ NEGRA",
-			description: "Diseño y animación",
-			ogHost:
-				process.env.NODE_ENV === "production"
-					? "https://luz-negra.com"
-					: "http://localhost:3000",
-			ogImage: "/OG.png",
-			twitterCard: "summary_large_image",
-		},
-	},
-	*/
-
 	"graphql-client": {
 		clients: {
 			default: {
@@ -118,5 +91,4 @@ export default defineNuxtConfig({
 	devtools: {
 		enabled: true,
 	},
-	extends: ["nuxt-seo-kit"],
-})
+});

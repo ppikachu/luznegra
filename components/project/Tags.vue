@@ -37,13 +37,13 @@ function buttonClick(tag:any) {
 </script>
 
 <template>
-	<section id="tags" class="md:join md:join-horizontal pb-8 md:pb-12 w-full flex flex-wrap md:flex-nowrap justify-center gap-4 md:gap-0">
+	<section id="tags" class="md:join py-6 md:pb-12 w-full flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-0">
 		<button
 			v-for="(tag, i) in uniqueTags"
 			:key="i"
 			@click="buttonClick(tag)"
-			class="uppercase md:btn md:font-normal badge badge-neutral badge-lg join-item"
-			:class="{ 'badge-primary md:btn-primary': tag.id == currentTag }"
+			class="uppercase btn btn-sm join-item"
+			:class="{ 'btn-primary': tag.id == currentTag }"
 		>
 			<!-- como contentful no permite idiomas en tags uso i18n: -->
 			{{ $t(tag.id) }}

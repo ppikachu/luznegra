@@ -1,9 +1,9 @@
-.gradient-bold {
+.gradient-team {
 	position: relative;
 	border-radius: 1.5rem;
 	width: 100%;
 }
-.gradient-bold::before {
+.gradient-team::before {
 	content: "";
 	position: absolute;
 	top: 0;
