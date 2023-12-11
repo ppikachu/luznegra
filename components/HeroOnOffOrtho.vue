@@ -7,13 +7,14 @@ import gsap from 'gsap'
 
 const route = useRoute()
 //TODO only on /test:
-//if (route.path == '/test') {
+/*if (route.path == '/test') {
 	const tweakpane = await import('tweakpane')
 	const lightHelper = await import('three/examples/jsm/helpers/RectAreaLightHelper.js')
 	const Pane = tweakpane.Pane
 	const RectAreaLightHelper = lightHelper.RectAreaLightHelper
 	const EssentialsPlugin = await import('@tweakpane/plugin-essentials')
-//}
+}*/
+
 const params = {
 	mouseFollow: true,
 	dayOrNight: "night",
@@ -138,13 +139,13 @@ function setFog(cycle) {
 }
 
 function handleScroll() {
-		//con timeout para mejor perfo
-		if(timer) window.clearTimeout(timer)
-		timer = window.setTimeout(() => {
-			const lastKnownScrollPosition = window.scrollY
-			//disable animation in scene past scrolling (half of the height!)
-			animate.value = lastKnownScrollPosition > container.clientHeight/2 ? false : true
-		}, 100)
+	//con timeout para mejor perfo
+	if(timer) window.clearTimeout(timer)
+	timer = window.setTimeout(() => {
+		const lastKnownScrollPosition = window.scrollY
+		//disable animation in scene past scrolling (half of the height!)
+		animate.value = lastKnownScrollPosition > container.clientHeight/2 ? false : true
+	}, 100)
 }
 
 const showTip = computed(() => {
@@ -196,12 +197,12 @@ function initProjector() {
 	proyectorSelf.lookAt( telonPosition.x, telonPosition.y, telonPosition.z-1 )
 
 	pantallaGroup.add( proyectorFuera, proyectorSelf )
-
-	rectLightHelper = new RectAreaLightHelper( proyectorFuera )
+	//TODO: tweakpane helpers
+	/*rectLightHelper = new RectAreaLightHelper( proyectorFuera )
 	rectLightHelperB = new RectAreaLightHelper( proyectorSelf )
 	rectLightHelper.layers.set( 1 )
 	rectLightHelperB.layers.set( 1 )
-	scene.add( rectLightHelper, rectLightHelperB )
+	scene.add( rectLightHelper, rectLightHelperB )*/
 }
 
 function swapDayNight() {

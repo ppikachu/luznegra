@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 	const config = useRuntimeConfig()
 	useSeoMeta({
-		//title: 'Home',
+		title: config.public.siteName,
+		ogTitle: config.public.siteName,
+		ogDescription: config.public.siteDescription,
 		description: config.public.siteDescription,
 		ogImage: config.public.OG,
 		ogUrl: config.public.siteUrl,

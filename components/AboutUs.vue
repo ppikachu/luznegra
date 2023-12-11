@@ -23,15 +23,11 @@ const openPerfil = (quien: string) => {
 	openTeam.value = true
 	//evita el scroll del fondo
 	preventScroll.value = true
-	//HACK agrega margen para compensar el preventScroll:
-	el.value?.classList.add('md:pr-4')
 	sound.play()
 }
 const closePerfil = () => {
 	//permite el scroll del fondo
 	preventScroll.value = false
-	//HACK saca margen para compensar el preventScroll:
-	el.value?.classList.remove('md:pr-4')
 	openTeam.value = false
 	soundClose.play()
 }
