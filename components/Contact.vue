@@ -21,7 +21,7 @@
 						</div>
 						<div class="form-control mt-4"><NuxtTurnstile ref="turnstile" /></div>
 						<div class="form-control mt-8">
-							<button type="submit" class="btn btn-primary">{{ $t('enviar') }}</button>
+							<button type="submit" class="btn btn-primary uppercase">{{ $t('enviar') }}</button>
 						</div>
 					</form>
 				</div>
