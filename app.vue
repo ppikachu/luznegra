@@ -27,9 +27,11 @@
 
 <template>
 	<NuxtLayout>
-		<SeoKit />
+		<!-- <SeoKit /> -->
 		<!--<SchemaOrgWebSite name="LUZ NEGRA - Diseño y animación" />
 		<OgImageStatic />-->
-		<NuxtPage />
+		 <Uapp>
+			<NuxtPage />
+		</Uapp>
 	</NuxtLayout>
 </template>

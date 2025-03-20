@@ -14,10 +14,9 @@ export default defineNuxtConfig({
 
 	modules: [
 		"nuxt-graphql-client",
-		"@nuxtjs/tailwindcss",
+		"@nuxt/ui",
 		"@nuxtjs/google-fonts",
 		"@vueuse/nuxt",
-		"nuxt-icon",
 		"@nuxtjs/i18n",
 		"@nuxtjs/turnstile",
 		"@nuxtjs/device",
@@ -33,10 +32,11 @@ export default defineNuxtConfig({
 			{ code: "en", iso: "en", name: "English", file: "en.json" },
 		],
 		defaultLocale: "es",
-		langDir: "lang",
-		precompile: {
-			strictMessage: false,
-		},
+		// langDir: "lang",
+		// precompile: {
+			// strictMessage: false,
+		// },
+		// vueI18n: './i18n.config.ts'
 	},
 
 	runtimeConfig: {
@@ -51,12 +51,12 @@ export default defineNuxtConfig({
 			TEAM_NAME: "LUZ NEGRA",
 			TEAM_LOGO_IMAGE_ON_FOOTER: "/images/tubos_loop_ani.png",
 
-			titleSeparator: '·',
-			siteUrl: 'https://luz-negra.com/',
-			siteName: 'LUZ NEGRA',
-			siteDescription: 'Diseño y animación',
-			language: 'es',
-			OG: '/OG.png',
+			titleSeparator: "·",
+			siteUrl: "https://luz-negra.com/",
+			siteName: "LUZ NEGRA",
+			siteDescription: "Diseño y animación",
+			language: "es",
+			OG: "/OG.png",
 		},
 		turnstile: {
 			secretKey: process.env.TURNSTILE_SECRET_KEY,
@@ -80,26 +80,26 @@ export default defineNuxtConfig({
 
 	/*
 	pwa: {
-		manifest: {
-			name: "LUZ NEGRA - Diseño y animación",
-			short_name: "LUZ NEGRA",
-			lang: "es",
-			description: "Diseño y animación",
-			background_color: "#212121",
-			theme_color: "#212121",
-		},
-		meta: {
-			mobileApp: false,
-			name: "LUZ NEGRA - Diseño y animación",
-			author: "LUZ NEGRA",
-			description: "Diseño y animación",
-			ogHost:
-				process.env.NODE_ENV === "production"
-					? "https://luz-negra.com"
-					: "http://localhost:3000",
-			ogImage: "/OG.png",
-			twitterCard: "summary_large_image",
-		},
+					manifest: {
+									name: "LUZ NEGRA - Diseño y animación",
+									short_name: "LUZ NEGRA",
+									lang: "es",
+									description: "Diseño y animación",
+									background_color: "#212121",
+									theme_color: "#212121",
+					},
+					meta: {
+									mobileApp: false,
+									name: "LUZ NEGRA - Diseño y animación",
+									author: "LUZ NEGRA",
+									description: "Diseño y animación",
+									ogHost:
+													process.env.NODE_ENV === "production"
+																	? "https://luz-negra.com"
+																	: "http://localhost:3000",
+									ogImage: "/OG.png",
+									twitterCard: "summary_large_image",
+					},
 	},
 	*/
 
@@ -114,8 +114,10 @@ export default defineNuxtConfig({
 		},
 	},
 
+	// extends: ["nuxt-seo-kit"],
 	devtools: {
 		enabled: true,
 	},
-	extends: ["nuxt-seo-kit"],
-})
+
+	compatibilityDate: "2025-03-19",
+});
