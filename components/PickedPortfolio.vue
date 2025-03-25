@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+// import type { Tag } from '@contentful/rich-text-types'
 
 /* Fetch all projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
@@ -7,6 +8,11 @@ const posts = data.value.entradasCollection?.items || []
 
 const openedProyect = ref()
 const destacadoTodos = ref(true)
+
+// Display correct state of destacados/portfolio switch (inverted)
+const notDestacadoTodos = computed(() => {
+	return !destacadoTodos.value
+})
 
 //oculta scroll al visualizar proyecto:
 const el = ref<HTMLElement | null>(null)
@@ -42,6 +48,16 @@ function swapDestacados () {
 	destacadoTodos.value =! destacadoTodos.value
 }
 
+function showDestacados() {
+	sound.play()
+	destacadoTodos.value = true
+}
+
+function showPortfolio() {
+	sound.play()
+	destacadoTodos.value = false
+}
+
 function openProject(which:object) {
 	//evita el scroll del fondo
 	preventScroll.value = true
@@ -66,23 +82,23 @@ function closeProject() {
 		<!--Modal-->
 		<ClientOnly>
 			<Teleport to="html">
-				<transition
-					name="nested"
-					:duration="250"
-				>
+				<transition name="nested" :duration="250">
 					<div
 						v-if="openedProyect"
 						id="modal-proyecto"
-						class="modal bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center overscroll-none"
+						class="flex justify-center fixed top-0 bottom-0 left-0 right-0 z-10 bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center overflow-y-auto"
 						:class="{ 'modal-open': openedProyect }"
 					>
-						<CloseButton @close-me="closeProject" />
-						<div class="inner modal-box rounded-none md:rounded-3xl w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-full md:min-h-fit overscroll-contain">
-
-							<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
-
-							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between lg:items-center my-4">
-								<h1 class="text-4xl text-primary">{{ openedProyect.title }}</h1>
+						<UCard
+							variant="solid"
+							class="flex flex-col overflow-hidden bg-zinc-800 rounded-none w-full md:rounded-lg max-w-4xl"
+							:ui="{ header: 'p-0 sm:p-0' }"
+						>
+							<template #header>
+								<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
+							</template>
+							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between md:items-center mb-4">
+								<h1 class="text-3xl text-(--ui-primary)">{{ openedProyect.title }}</h1>
 								<ProjectMeta :tags="openedProyect.contentfulMetadata.tags" />
 							</div>
 
@@ -90,57 +106,52 @@ function closeProject() {
 								<div
 									v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
 									id="content"
-									class="prose prose-a:text-primary"
+									class="prose prose-invert"
 								></div>
 								<ProjectShare :project="openedProyect" />
 							</div>
 
-						</div>
+							<CloseButton @close-me="closeProject" />
+
+						</UCard>
 					</div>
 				</transition>
 			</Teleport>
 		</ClientOnly>
 		
-		<h1 class="text-5xl text-primary text-center">Portfolio</h1>
+		<h1 class="text-5xl text-(--ui-primary) text-center">Portfolio</h1>
+
 		<!--SWITCH-->
-		<div class="flex justify-center items-center py-4 md:py-8 mx-auto">
-			<div class="form-control">
-				<label class="label cursor-pointer uppercase">
-					<span :class="{ 'text-primary' : destacadoTodos }">{{ $t('destacados') }}</span>
-					<input type="checkbox" @click="swapDestacados" class="toggle mx-6" />  
-					<span :class="{ 'text-primary' : !destacadoTodos }">Portfolio</span>
-				</label>
-			</div>
+		<div class="flex gap-6 justify-center items-center py-4 md:py-8 mx-auto uppercase">
+			<span
+				@click="showDestacados"
+				class="cursor-pointer"
+				:class="{ 'text-(--ui-primary)' : destacadoTodos }"
+			>{{ $t('destacados') }}</span>
+			<USwitch
+				:model-value="notDestacadoTodos"
+				@update:model-value="swapDestacados" 
+				size="xl"
+				class="cursor-pointer"
+				:ui="{ base: 'data-[state=unchecked]:bg-(--ui-primary)', thumb: 'bg-zinc-800', wrapper: 'bg-zinc-800' }"
+			/>
+			<span
+				@click="showPortfolio"
+				class="cursor-pointer"
+				:class="{ 'text-(--ui-primary)' : !destacadoTodos }"
+			>Portfolio</span>
 		</div>
+
 		<!--Proyectos destacados-->
-		<ul v-show="destacadoTodos" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-8">
-			<li v-for="(post, i) in pickedPortfolioItems" :key="i">
-				<a
-					:href="`/proyecto/${post?.slug}`"
-					@click.prevent="openProject(post as object)"
-					class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
-				>
-					<figure>
-						<img v-if="post?.imageFeatured"
-							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="post.imageFeatured.title || ''"
-							class="w-full"
-							loading="lazy"
-							width="600"
-							height="400"
-						/>
-						<img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
-					</figure>
-					<div class="card-body">
-						<h2 class="text-3xl lg:text-3xl text-primary leading-none">{{ post?.title }}</h2>
-						<p v-if="post?.excerpt">{{ post.excerpt }}</p>
-						<div class="card-actions" v-if="post?.contentfulMetadata.tags[0]">
-							<ProjectMeta :tags="(post.contentfulMetadata.tags as Tag[])" />
-						</div>
-					</div>
-				</a>
-			</li>
-		</ul>
+		<div v-show="destacadoTodos" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-8">
+			<TheBox v-for="(post, i) in pickedPortfolioItems"
+				:key="i"
+				:href="`/proyecto/${post?.slug}`"
+				@click.prevent="openProject(post as object)"
+				:project="post || {}"
+				class="flex"
+			/>
+		</div>
 		<!--Portfolio-->
 		<div v-show="!destacadoTodos">
 
@@ -151,47 +162,19 @@ function closeProject() {
 				name="list"
 				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8 content-start relative"
 			>
-				<div v-for="(post, i) in filtered"
+				<TheBox v-for="(post, i) in filtered"
 					:key="i"
-					:data-index="i"
-					class="col-span-1"
-				>
-					<a
-						:href="`/proyecto/${post?.slug}`"
-						@click.prevent="openProject(post as object)"
-						class="gradient-border h-full card card-compact bg-base-300 shadow-lg"
-					>
-					<figure>
-						<img v-if="post?.imageFeatured"
-							:src="`${post.imageFeatured.url}?fm=webp&fit=fill&w=600&h=400`"
-							:alt="(post.imageFeatured.title as string)"
-							loading="lazy"
-							class="w-full"
-							width="600"
-							height="400"
-						/>
-						<img v-else src="/images/no-image.png" alt="no hay imagen" class="w-full" width="600" height="400" />
-					</figure>
-					<div class="card-body">
-						<h2 class="text-primary text-xl md:text-2xl leading-none">{{ post?.title }}</h2>
-						<p v-if="post?.excerpt" class="text-sm">{{ post.excerpt }}</p>
-						<div class="card-actions">
-							<ProjectMeta v-if="post?.contentfulMetadata.tags[0]" :tags="(post.contentfulMetadata.tags as Tag[])" />
-						</div>
-					</div>
-					</a>
-				</div>
+					@click="openProject(post as object)"
+					:project="post || {}"
+				/>
+
 			</TransitionGroup>
 		</div>
 	</section>
 </template>
 
 <style scoped>
-.toggle {
-	background-color: white;
-}
-#content li p {
-	margin-top: 0px;
-	margin-bottom: 0px;
+#modal-proyecto .prose-invert a {
+	color: var(--ui-primary);
 }
 </style>

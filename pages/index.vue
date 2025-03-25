@@ -8,6 +8,6 @@ definePageMeta({
 	<main>
 		<HeroOnOffOrtho />
 		<LazyPickedPortfolio />
-		<LazyContact />
+		<!-- <LazyContact /> -->
 	</main>
 </template>

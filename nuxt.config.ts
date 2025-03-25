@@ -15,7 +15,6 @@ export default defineNuxtConfig({
 	modules: [
 		"nuxt-graphql-client",
 		"@nuxt/ui",
-		"@nuxtjs/google-fonts",
 		"@vueuse/nuxt",
 		"@nuxtjs/i18n",
 		"@nuxtjs/turnstile",
@@ -33,9 +32,9 @@ export default defineNuxtConfig({
 		],
 		defaultLocale: "es",
 		// langDir: "lang",
-		// precompile: {
-			// strictMessage: false,
-		// },
+		compilation: {
+			strictMessage: false,
+		},
 		// vueI18n: './i18n.config.ts'
 	},
 
@@ -64,19 +63,23 @@ export default defineNuxtConfig({
 	},
 
 	css: [
+		// Global CSS
+		"~/assets/global.css",
 		// https://github.com/sampotts/plyr#options
 		"vue-plyr/dist/vue-plyr.css",
-		// Global CSS
-		"@/assets/global.css",
 	],
 
-	googleFonts: {
-		families: {
-			"Varela Round": true,
-			//'Open Sans': true,
-		},
-		preload: true,
-	},
+	ui: {
+    colorMode: false,
+  },
+
+	// googleFonts: {
+	// 	families: {
+	// 		"Varela Round": true,
+	// 		//'Open Sans': true,
+	// 	},
+	// 	preload: true,
+	// },
 
 	/*
 	pwa: {

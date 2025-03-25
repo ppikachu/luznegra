@@ -6,9 +6,15 @@ const props = defineProps({
 </script>
 
 <template>
-	<ul class="flex flex-wrap flex-row gap-2 whitespace-nowrap">
-		<li v-for="tag in props.tags" class="badge badge-neutral cursor-default">
-			{{ $t(tag.id) }}
-		</li>
-	</ul>
+	<div class="flex flex-wrap flex-row gap-2 whitespace-nowrap h-fit">
+		<UButtonGroup>
+			<UBadge v-for="tag in props.tags"
+				color="info"
+				variant="outline"
+				class="uppercase"
+			>
+				{{ $t(tag.id) }}
+			</UBadge>
+		</UButtonGroup>
+	</div>
 </template>

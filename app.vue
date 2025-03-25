@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+	// const colorMode = useColorMode()
+	// colorMode.value = 'dark'
+
 	const config = useRuntimeConfig()
 	useSeoMeta({
 		//title: 'Home',
@@ -13,7 +16,7 @@
 	useHead({
 	htmlAttrs: {
 		lang: 'es',
-		class: 'scroll-smooth'
+		class: 'scroll-smooth dark'
 	},
 	link: [
 		{
@@ -27,11 +30,11 @@
 
 <template>
 	<NuxtLayout>
-		<!-- <SeoKit /> -->
-		<!--<SchemaOrgWebSite name="LUZ NEGRA - Diseño y animación" />
-		<OgImageStatic />-->
-		 <Uapp>
+		<UApp>
+			<!-- <SeoKit /> -->
+			<!--<SchemaOrgWebSite name="LUZ NEGRA - Diseño y animación" />
+			<OgImageStatic />-->
 			<NuxtPage />
-		</Uapp>
+		</UApp>
 	</NuxtLayout>
 </template>
