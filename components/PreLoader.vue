@@ -6,6 +6,19 @@ const props = defineProps({
 		default: false
 	},
 })
+
+onMounted(() => {
+	const body = document.querySelector('body')
+	const isLocked = useScrollLock(body)
+	isLocked.value = true
+	if (props.loading) {
+		isLocked.value = true
+	} else {
+		setTimeout(() => {
+			isLocked.value = false
+		}, 500)
+	}
+})
 </script>
 
 <template>
