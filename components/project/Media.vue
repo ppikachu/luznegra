@@ -56,25 +56,32 @@ function videoProvider(index: number) {
 				:width="item.width"
 				:height="item.height"
 				:alt="item.title"
-				class="max-h-96x object-contain w-full"
+				class="h-fit object-contain mx-auto"
 			>
 		</UCarousel>
 		<!--vids-->
-		<UCarousel v-if="props.project.videos"
-			:items="props.project.videos"
-			v-slot="video"
-			:dots = "props.project.videos.length > 1 ? true : false"
-		>
-			<!-- <VuePlyr class="w-full"> -->
-				<!--Vimeo:-->
-				<iframe 
-				:src="videoProvider(video.index)"
-				allowfullscreen
-				allowtransparency
-				allow="autoplay"
-				class="aspect-video w-full"
+		<div v-if="props.project.videos.length > 1">
+			<UCarousel
+				:items="props.project.videos"
+				v-slot="video"
+				:dots = "props.project.videos.length > 1 ? true : false"
+			>
+				<iframe
+					:src="videoProvider(video.index)"
+					allowfullscreen
+					allowtransparency
+					allow="autoplay"
+					class="aspect-video w-full"
 				></iframe>
-			<!-- </VuePlyr> -->
-		</UCarousel>
+			</UCarousel>
+		</div>
+		<!--single vid-->
+		<iframe v-else
+			:src="videoProvider(0)"
+			allowfullscreen
+			allowtransparency
+			allow="autoplay"
+			class="aspect-video w-full"
+		></iframe>
 	</aside>
 </template>

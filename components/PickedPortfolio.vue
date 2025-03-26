@@ -86,13 +86,12 @@ function closeProject() {
 					<div
 						v-if="openedProyect"
 						id="modal-proyecto"
-						class="flex justify-center fixed top-0 bottom-0 left-0 right-0 z-10 bg-black/80 backdrop-blur backdrop-grayscale-[50%] items-start md:items-center overflow-y-auto"
-						:class="{ 'modal-open': openedProyect }"
+						class="flex justify-center fixed top-0 bottom-0 left-0 right-0 z-10 bg-black/80 backdrop-blur backdrop-grayscale-[50%] overflow-auto"
 					>
 						<UCard
 							variant="solid"
-							class="flex flex-col overflow-hidden bg-zinc-800 rounded-none w-full md:rounded-lg max-w-4xl h-full md:h-fit"
-							:ui="{ header: 'p-0 sm:p-0' }"
+							class="flex flex-col h-full md:h-fit bg-zinc-800 rounded-none md:rounded-lg max-w-4xl overflow-auto md:my-auto"
+							:ui="{ header: 'p-0 sm:p-0', body: 'flex-grow', footer: '' }"
 						>
 							<template #header>
 								<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
@@ -102,15 +101,17 @@ function closeProject() {
 							
 							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
 								<div
-								v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
-								id="content"
-								class="prose prose-invert"
+									v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
+									id="content"
+									class="prose prose-invert"
 								></div>
 								<ProjectMeta :tags="openedProyect.contentfulMetadata.tags" />
 								<ProjectShare :project="openedProyect" />
 							</div>
 
-							<CloseButton @close-me="closeProject" />
+							<template #footer>
+								<CloseButton @close-me="closeProject" class="align-self-end" />
+							</template>
 
 						</UCard>
 					</div>
@@ -131,8 +132,7 @@ function closeProject() {
 				:model-value="notDestacadoTodos"
 				@update:model-value="swapDestacados" 
 				size="xl"
-				class="cursor-pointer"
-				:ui="{ base: 'data-[state=unchecked]:bg-(--ui-primary)', thumb: 'bg-zinc-800', wrapper: 'bg-zinc-800' }"
+				:ui="{ base: 'data-[state=unchecked]:bg-(--ui-primary) cursor-pointer', thumb: 'bg-zinc-800', wrapper: 'bg-zinc-800' }"
 			/>
 			<span
 				@click="showPortfolio"
@@ -159,7 +159,7 @@ function closeProject() {
 			<TransitionGroup
 				tag="div"
 				name="list"
-				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8 content-start relative"
+				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-8 content-start relative"
 			>
 				<TheBox v-for="(post, i) in filtered"
 					:key="i"

@@ -11,14 +11,14 @@ const cssVars = computed(() => ({
 </script>
 
 <template>
-  <div ref="target" :style="cssVars" class="p-1 shine rounded-lg cursor-pointer">
+  <div ref="target" :style="cssVars" class="p-[2px] shine rounded-lg cursor-pointer">
     <UCard
       variant="solid"
-      class="bg-neutral-950/80 h-full flex flex-col overflow-hidden rounded-md"
+      class="bg-(--ui-bg)/80 h-full flex flex-col overflow-hidden rounded-md"
       :ui="{
         header: 'p-0 sm:p-0',
-        body:'p-3 sm:p-3 flex-grow',
-        footer: 'p-3 sm:p-3'
+        body:'p-2 sm:p-2 flex-grow',
+        footer: 'p-2 sm:p-2'
       }"
     >
       <template #header>
@@ -49,7 +49,7 @@ const cssVars = computed(() => ({
 .shine {
   background-image: radial-gradient(
     300px circle at var(--x) var(--y),
-    oklch(0.541 0.281 293.009) 0,
+    oklch(0.491 0.27 292.581) 0,
     transparent 100%
   );
 }

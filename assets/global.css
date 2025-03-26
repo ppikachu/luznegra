@@ -6,6 +6,10 @@
   --font-sans: 'Varela Round', sans-serif;
 }
 
+body {
+  background-color: var(--color-neutral-950);
+}
+
 /*scrollbar-color:*/
 :root {
 	--scrollbar-foreground: #4E3A9C;

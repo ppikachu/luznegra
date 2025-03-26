@@ -29,12 +29,12 @@
 </script>
 
 <template>
- <UApp>
-	<NuxtLayout>
+	<UApp>
+		<NuxtLayout>
 			<!-- <SeoKit /> -->
 			<!--<SchemaOrgWebSite name="LUZ NEGRA - Diseño y animación" />
 			<OgImageStatic />-->
 			<NuxtPage />
-	</NuxtLayout>
+		</NuxtLayout>
 	</UApp>
 </template>

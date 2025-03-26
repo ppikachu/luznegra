@@ -1,7 +1,11 @@
 <script setup lang="ts">
+interface Tag { id: string }
 /* Define props */
 const props = defineProps({
-	tags: { type: Array as PropType<Tag[]>, required: false }
+	tags: {
+		type: Array as PropType<Tag[]>,
+		required: false
+	}
 })
 </script>
 
@@ -11,7 +15,6 @@ const props = defineProps({
 			<UBadge v-for="tag in props.tags"
 				color="info"
 				variant="outline"
-				class="uppercase"
 			>
 				{{ $t(tag.id) }}
 			</UBadge>
