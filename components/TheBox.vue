@@ -11,7 +11,7 @@ const cssVars = computed(() => ({
 </script>
 
 <template>
-  <div ref="target" :style="cssVars" class="p-1 shine rounded-lg">
+  <div ref="target" :style="cssVars" class="p-1 shine rounded-lg cursor-pointer">
     <UCard
       variant="solid"
       class="bg-neutral-950/80 h-full flex flex-col overflow-hidden rounded-md"

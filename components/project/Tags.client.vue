@@ -48,6 +48,7 @@ const orientation = computed(() => breakpoints.smallerOrEqual('md').value ? 'ver
 			v-for="(tag, i) in uniqueTags"
 			:key="i"
 			@click="buttonClick(tag)"
+			color="secondary"
 			class="uppercase font-bold cursor-pointer"
 			:variant="tag.id == currentTag ? 'solid' : 'soft'"
 		>

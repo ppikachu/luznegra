@@ -81,6 +81,9 @@ const target = ref(null)
 const animate = ref(true)
 const discloseTip = ref(true)
 const { isMobile } = useDevice()
+const showTip = computed(() => {
+	return discloseTip.value && animate.value && route.path != '/test'
+})
 
 const
 cameraOrthoPos = { x: 0, y: 0, z: 20 },
@@ -124,6 +127,35 @@ onMounted(() => {
 	if(route.path == '/test') makeTweak()
 })
 
+onUnmounted(() => {
+	renderer.dispose()
+	camera.removeFromParent()
+	groundGeometry.dispose()
+	ground.removeFromParent()
+	modelPanchera.removeFromParent()
+	pantallaGroup.removeFromParent()
+	telonMaterial.dispose()
+	telonTexture.dispose()
+
+	if (debug.showLights) {
+		lightSun.dispose()
+		lightMoon.dispose()
+	}
+	if (debug.showLightHelpers) {
+		lightHelperSun.dispose()
+		lightHelperMoon.dispose()
+		rectLightHelper.dispose()
+		rectLightHelperB.dispose()
+	}
+	//get rid of makeTweak
+	if (pane) pane.dispose()
+	//get rid of listeners
+	window.removeEventListener('resize', onWindowResize)
+	document.removeEventListener('scroll', handleScroll)
+	//window.removeEventListener('deviceorientation', handleOrientation)
+
+})
+
 //#region FUNCTIONS
 function swapHeroBgColor() {
 	heroBgColor.value = params.dayOrNight === 'day'? bgDay : bgNight
@@ -146,10 +178,6 @@ function handleScroll() {
 			animate.value = lastKnownScrollPosition > container.clientHeight/2 ? false : true
 		}, 100)
 }
-
-const showTip = computed(() => {
-	return discloseTip.value && animate.value && route.path != '/test'
-})
 
 //pantalla:
 function setupModel(modelData) {
@@ -264,7 +292,6 @@ function onWindowResize() {
 	camera.updateProjectionMatrix()
 	renderer.setSize( container.clientWidth, container.clientHeight )
 }
-//#endregion
 
 function init() {
 	//#region sceneSetup
@@ -516,34 +543,7 @@ function makeTweak() {
 
 }
 
-onUnmounted(() => {
-	renderer.dispose()
-	camera.removeFromParent()
-	groundGeometry.dispose()
-	ground.removeFromParent()
-	modelPanchera.removeFromParent()
-	pantallaGroup.removeFromParent()
-	telonMaterial.dispose()
-	telonTexture.dispose()
-
-	if (debug.showLights) {
-		lightSun.dispose()
-		lightMoon.dispose()
-	}
-	if (debug.showLightHelpers) {
-		lightHelperSun.dispose()
-		lightHelperMoon.dispose()
-		rectLightHelper.dispose()
-		rectLightHelperB.dispose()
-	}
-	//get rid of makeTweak
-	if (pane) pane.dispose()
-	//get rid of listeners
-	window.removeEventListener('resize', onWindowResize)
-	document.removeEventListener('scroll', handleScroll)
-	//window.removeEventListener('deviceorientation', handleOrientation)
-
-})
+//#endregion FUNCTIONS
 </script>
 
 <template>
@@ -554,12 +554,13 @@ onUnmounted(() => {
 	>
 		<!--aviso de como operar el autocine-->
 		<Transition name="nested">
-			<div v-show="showTip" class="toast toast-top mt-10 toast-center toast-start0 min-w-max z-20">
-				<div class="bg-base-100 bg-opacity-60 flex space-x-4 outline outline-1 outline-gray-900/50 items-center rounded-xl p-2 text-xs">
+			<!-- #TODO : vale la pena ocultar el tip scrolleando? -->
+			<div v-show="showTip" class="absolute w-full mt-24 z-20 flex justify-center">
+				<UBadge class="flex space-x-4 p-2 rounded-full bg-(--ui-bg)/60" color="neutral" variant="soft">
 					<span v-if="isMobile===true" class="flex items-center space-x-1"><Icon name="icon-park-outline:hand-drag" size="24" class="wave" /><span>{{ $t('drag_m_experiment') }}</span></span>
 					<span v-else class="flex items-center space-x-1"><Icon name="material-symbols:mouse" size="24" class="wave" /><span>{{ $t('drag_d_experiment') }}</span></span>
-					<button @click="discloseTip = false" class="btn btn-xs btn-circle btn-primary"><Icon name="mdi:close-thick" /></button>
-				</div>
+					<UButton @click="discloseTip = false" class="rounded-full cursor-pointer" square><UIcon name="mdi:close-thick" /></UButton>
+				</UBadge>
 			</div>
 		</Transition>
 		<!--video for threejs-->
@@ -576,24 +577,27 @@ onUnmounted(() => {
 		<!--bottom linear-gradient-->
 		<div class="absolute bottom-0 lg:-bottom-8 py-12 px-4 flex flex-col justify-center items-center space-y-10 w-full">
 			<!--SWITCH-->
-			<div class="flex items-center gap-4">
-				<UIcon name="mdi:white-balance-sunny" size="32" />
-				<!-- <div class="md:tooltip" :data-tip="dayNight === 'night'? $t('to_day_change_tooltip') : $t('to_night_change_tooltip')"> -->
-				<USwitch
-					:model-value="dayNight === 'day' ? true : false"
-					@update:model-value="swapDayNight"
-					size="xl"
+			<UTooltip
+				:content="{
+					align: 'center',
+					side: 'top',
+					sideOffset: 8
+				}"
+				:text="dayNight === 'night' ? $t('to_day_change_tooltip') : $t('to_night_change_tooltip')"
+				:delay-duration=100
+			>
+				<UIcon
+					:name="dayNight === 'night' ? 'line-md:sunny-outline-to-moon-alt-loop-transition' : 'line-md:moon-to-sunny-outline-loop-transition'"
 					class="cursor-pointer"
-					:ui="{ base: 'data-[state=unchecked]:bg-white' }"
+					size="48"
+					@click="swapDayNight"
 				/>
-				<UIcon name="mdi:weather-night" size="32" />
-			</div>
-			<!-- </div> -->
-
+			</UTooltip>
+		
 			<!--SCROLL-->
 			<div class="flex flex-col items-center space-y-4">
 				<a href="#about-us" class="animate-bounce" aria-label="more...">
-					<Icon name="ic:sharp-keyboard-double-arrow-down" class="w-12 h-12" />
+					<UIcon name="mdi:chevron-double-down" size="48" />
 				</a>
 			</div>
 

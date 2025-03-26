@@ -39,6 +39,7 @@
     "cambiar_idioma": "switch to",
     "vamos": "vamos!",
     "close": "cerrar",
+    "daytime_change_tooltip": "alterna entre noche/dia",
     "to_night_change_tooltip": "cambiar dia > noche",
     "to_day_change_tooltip": "cambiar noche > dia",
     "drag_m_experiment": "arrastra el dedo sobre el autocine!",

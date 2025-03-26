@@ -91,23 +91,22 @@ function closeProject() {
 					>
 						<UCard
 							variant="solid"
-							class="flex flex-col overflow-hidden bg-zinc-800 rounded-none w-full md:rounded-lg max-w-4xl"
+							class="flex flex-col overflow-hidden bg-zinc-800 rounded-none w-full md:rounded-lg max-w-4xl h-full md:h-fit"
 							:ui="{ header: 'p-0 sm:p-0' }"
 						>
 							<template #header>
 								<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
 							</template>
-							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 lg:space-x-4 md:justify-between md:items-center mb-4">
-								<h1 class="text-3xl text-(--ui-primary)">{{ openedProyect.title }}</h1>
-								<ProjectMeta :tags="openedProyect.contentfulMetadata.tags" />
-							</div>
-
+							
+							<h1 class="text-3xl text-(--ui-primary) mb-4">{{ openedProyect.title }}</h1>
+							
 							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
 								<div
-									v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
-									id="content"
-									class="prose prose-invert"
+								v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
+								id="content"
+								class="prose prose-invert"
 								></div>
+								<ProjectMeta :tags="openedProyect.contentfulMetadata.tags" />
 								<ProjectShare :project="openedProyect" />
 							</div>
 

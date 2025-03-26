@@ -4,7 +4,7 @@ import 'aos/dist/aos.css'
 
 /* Define props */
 const props = defineProps({
-	ciclo: { type: String, default: 'noche' },
+	ciclo: { type: String, default: 'night' },
 	color: String
 })
 
@@ -39,13 +39,12 @@ const closePerfil = () => {
 	soundClose.play()
 }
 
-// Use const instead of let for consistency
 const colorClass = computed(() => {
-	return props.ciclo === 'day' ? 'text-white' : 'text-primary'
+	return props.ciclo === 'day' ? 'text-white' : 'text-(--ui-primary)'
 })
 
 const colorP = computed(() => {
-	return props.ciclo === 'day' ? 'text-neutral' : 'text-neutral-content'
+	return props.ciclo === 'day' ? 'prose text-(--ui-primary)' : 'text-white'
 })
 
 onMounted(() => {
