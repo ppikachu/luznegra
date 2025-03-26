@@ -15,6 +15,7 @@ const props = defineProps<Media>()
 
 let videoId:any = []
 let provider:any = []
+
 if (props.project.videos) {
 	props.project.videos.forEach((video: any) => {
 		videoId.push(video.split('/').pop())
@@ -23,11 +24,15 @@ if (props.project.videos) {
 }
 
 function videoProvider(index: number) {
-	const url = props.project.videos[index]
-	const provider = url.includes('youtu') ? 'youtube' : 'vimeo'
+	if (!props.project.videos || !props.project.videos[index]) {
+		return '';
+	}
+	const url = props.project.videos[index];
+	const provider = url.includes('youtu') ? 'youtube' : 'vimeo';
 	return provider === "vimeo"
-	?`https://player.vimeo.com/video/${url.split('/').pop()}?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media`
-	:`https://www.youtube.com/embed/${url.split('/').pop()}?iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
+		? `https://player.vimeo.com/video/${url.split('/').pop()}?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media`
+		// #BUG: youtube error in console
+		: `https://www.youtube.com/embed/${url.split('/').pop()}?iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
 }
 
 </script>
@@ -45,28 +50,42 @@ function videoProvider(index: number) {
 		"
 	>
 		<!--pics-->
-		<UCarousel v-if="props.project.gallery"
-			:items="props.project.gallery"
-			v-slot="{ item }"
-			auto-height
-			:dots = "props.project.gallery.length > 1 ? true : false"
-		>
-			<img
-				:src="item.url"
-				:width="item.width"
-				:height="item.height"
-				:alt="item.title"
-				class="h-fit object-contain mx-auto"
+		<div v-if="props.project.gallery?.length > 1">
+			<UCarousel
+				v-if="props.project.gallery?.length"
+				:items="props.project.gallery"
+				v-slot="{ item }"
+				auto-height
+				:dots="props.project.gallery.length > 1"
 			>
-		</UCarousel>
+				<img
+					v-if="item"
+					:src="item.url"
+					:width="item.width"
+					:height="item.height"
+					:alt="item.title"
+					class="h-fit object-contain mx-auto"
+				>
+			</UCarousel>
+		</div>
+		<!--single pic-->
+		<img v-else-if="props.project.gallery?.length === 1"
+			:src="props.project.gallery[0].url"
+			:width="props.project.gallery[0].width"
+			:height="props.project.gallery[0].height"
+			:alt="props.project.gallery[0].title"
+			class="h-fit object-contain mx-auto"
+		>
+
 		<!--vids-->
-		<div v-if="props.project.videos.length > 1">
+		<div v-if="props.project.videos?.length > 1">
 			<UCarousel
 				:items="props.project.videos"
 				v-slot="video"
 				:dots = "props.project.videos.length > 1 ? true : false"
 			>
 				<iframe
+					v-if="videoProvider(video.index)"
 					:src="videoProvider(video.index)"
 					allowfullscreen
 					allowtransparency
@@ -76,7 +95,8 @@ function videoProvider(index: number) {
 			</UCarousel>
 		</div>
 		<!--single vid-->
-		<iframe v-else
+		<iframe 
+			v-else-if="props.project.videos?.length === 1"
 			:src="videoProvider(0)"
 			allowfullscreen
 			allowtransparency
