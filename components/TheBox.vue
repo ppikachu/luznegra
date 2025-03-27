@@ -49,7 +49,7 @@ const cssVars = computed(() => ({
 .shine {
   background-image: radial-gradient(
     300px circle at var(--x) var(--y),
-    oklch(0.491 0.27 292.581) 0,
+    oklch(0.541 0.281 293.009) 0,
     transparent 100%
   );
 }
