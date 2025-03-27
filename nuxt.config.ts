@@ -65,8 +65,6 @@ export default defineNuxtConfig({
 	css: [
 		// Global CSS
 		"~/assets/global.css",
-		// https://github.com/sampotts/plyr#options
-		"vue-plyr/dist/vue-plyr.css",
 	],
 
 	ui: {
@@ -120,7 +118,11 @@ export default defineNuxtConfig({
 	// extends: ["nuxt-seo-kit"],
 	devtools: {
 		enabled: true,
+		timeline: {
+			enabled: true,
+		}
 	},
 
 	compatibilityDate: "2025-03-19",
+	debug: true,
 });

@@ -3,21 +3,21 @@
 const props = defineProps({
 	loading: {
 		type: Boolean,
-		default: false
+		default: true
 	},
 })
+let body = ref<HTMLElement | null>(null)
+const isLocked = useScrollLock(body)
+
+watch(
+	() => props.loading,
+	() => {
+		isLocked.value = !props.loading
+	}
+)
 
 onMounted(() => {
-	const body = document.querySelector('body')
-	const isLocked = useScrollLock(body)
-	isLocked.value = true
-	if (props.loading) {
-		isLocked.value = true
-	} else {
-		setTimeout(() => {
-			isLocked.value = false
-		}, 500)
-	}
+	body.value = document.body as HTMLElement
 })
 </script>
 

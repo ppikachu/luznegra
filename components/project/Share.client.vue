@@ -29,7 +29,7 @@ function copyLink() {
 		toast.add({
 			title: 'Copiado!',
 			description: 'El enlace ha sido copiado al portapapeles',
-			icon: 'mdi-check'
+			icon: 'line-md:confirm'
 		})
 	} else {
 		//si el navegador permite 'compartir'
@@ -54,7 +54,7 @@ function copyLink() {
 		<UButton v-else
 			:label="$t('link_compartir')"
 			variant="soft"
-			icon="mdi-clipboard-outline"
+			icon="line-md:clipboard"
 			size="xs"
 			class="w-fit"
 			@click="copyLink"

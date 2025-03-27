@@ -294,6 +294,7 @@ function onWindowResize() {
 }
 
 function init() {
+	isReady.value = false
 	//#region sceneSetup
 	frustumSize = isMobile.valueOf ? frustumMobileSize : frustumDesktopSize
 	shadowSize = isMobile.valueOf ? 512 : 2048
@@ -559,7 +560,7 @@ function makeTweak() {
 				<UBadge class="flex space-x-4 p-2 rounded-full bg-(--ui-bg)/60" color="neutral" variant="soft">
 					<span v-if="isMobile===true" class="flex items-center space-x-1"><Icon name="icon-park-outline:hand-drag" size="24" class="wave" /><span>{{ $t('drag_m_experiment') }}</span></span>
 					<span v-else class="flex items-center space-x-1"><Icon name="material-symbols:mouse" size="24" class="wave" /><span>{{ $t('drag_d_experiment') }}</span></span>
-					<UButton @click="discloseTip = false" class="rounded-full cursor-pointer" square><UIcon name="mdi:close-thick" /></UButton>
+					<UButton @click="discloseTip = false" class="rounded-full cursor-pointer" square><UIcon name="line-md:close" /></UButton>
 				</UBadge>
 			</div>
 		</Transition>
@@ -597,7 +598,7 @@ function makeTweak() {
 			<!--SCROLL-->
 			<div class="flex flex-col items-center space-y-4">
 				<a href="#about-us" class="animate-bounce" aria-label="more...">
-					<UIcon name="mdi:chevron-double-down" size="48" />
+					<UIcon name="line-md:chevron-double-down" size="48" />
 				</a>
 			</div>
 
@@ -610,10 +611,7 @@ function makeTweak() {
 
 	<PreLoader :loading="isReady" />
 
-	<div
-		:style = "`background: ${heroBgColor}`"
-		class=" -top-10"
-	>
+	<div :style = "`background: ${heroBgColor}`" class=" -top-10">
 		<AboutUs :ciclo="dayNight" :color="heroBgColor" />
 	</div>
 
