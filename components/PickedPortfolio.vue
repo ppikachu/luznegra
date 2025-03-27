@@ -103,7 +103,7 @@ function closeProject() {
 								<div
 									v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
 									id="content"
-									class="prose prose-invert"
+									class="prose prose-invert prose-a:text-(--ui-primary) flex-grow"
 								></div>
 								<ProjectMeta :tags="openedProyect.contentfulMetadata.tags" />
 								<ProjectShare :project="openedProyect" />
@@ -171,9 +171,3 @@ function closeProject() {
 		</div>
 	</section>
 </template>
-
-<style scoped>
-#modal-proyecto .prose-invert a {
-	color: var(--ui-primary);
-}
-</style>

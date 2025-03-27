@@ -54,12 +54,15 @@ const articleBody:string  = proyecto?.content ? documentToHtmlString(proyecto.co
 <template>
 	<div class="container max-w-4xl mx-auto px-4 pb-16">
 		<ProjectMedia :project="projectMedia" />
-		<div class="flex md:flex-row space-x-4 lg:justify-between items-center my-8 max-w-4xl mx-auto">
-			<h1 class="text-4xl text-(--ui-primary)">{{ articleTitle }}</h1>
+		<h1 class="text-3xl text-(--ui-primary) mb-4 mt-8">{{ articleTitle }}</h1>
+							
+		<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
+			<div
+				v-html="articleBody"
+				id="content"
+				class="prose prose-invert prose-a:text-(--ui-primary) flex-grow"
+			></div>
 			<ProjectMeta :tags="articleTags" />
-		</div>
-		<div class="prose prose-a:text-primary prose-invert my-4 max-w-4xl mx-auto">
-			<div class="mb-4" id="content" v-html="articleBody"></div>
 			<ProjectShare :project="proyecto" />
 		</div>
 	</div>

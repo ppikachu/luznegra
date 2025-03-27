@@ -46,7 +46,7 @@ function copyLink() {
 				variant="soft"
 				icon="mdi-share-variant"
 				size="xs"
-				class="w-fit"
+				class="w-fit cursor-pointer"
 				@click="copyLink"
 			/>
 	<!-- </div> -->
@@ -56,7 +56,7 @@ function copyLink() {
 			variant="soft"
 			icon="line-md:clipboard"
 			size="xs"
-			class="w-fit"
+			class="w-fit cursor-pointer"
 			@click="copyLink"
 		/>
 </template>
