@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-// import type { Tag } from '@contentful/rich-text-types'
-
 /* Fetch all projects */
 const { data } = await useAsyncGql('entradas', { limit: 0 })
 const posts = data.value.entradasCollection?.items || []
@@ -90,24 +87,14 @@ function closeProject() {
 					>
 						<UCard
 							variant="solid"
-							class="flex flex-col h-full md:h-fit bg-zinc-800 rounded-none md:rounded-lg max-w-4xl overflow-auto md:my-auto"
+							class="flex flex-col h-full md:h-fit md:m-8 md:top-[1%] relative bg-gradient-to-b from-(--ui-bg-muted) to-(--ui-bg) from-70% rounded-none md:rounded-lg w-full max-w-4xl"
 							:ui="{ header: 'p-0 sm:p-0', body: 'flex-grow', footer: '' }"
 						>
 							<template #header>
 								<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
 							</template>
-							
-							<h1 class="text-3xl text-(--ui-primary) mb-4">{{ openedProyect.title }}</h1>
-							
-							<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
-								<div
-									v-html="openedProyect.content ? documentToHtmlString(openedProyect.content.json) : ''"
-									id="content"
-									class="prose prose-invert prose-a:text-(--ui-primary) flex-grow"
-								></div>
-								<ProjectMeta :tags="openedProyect.contentfulMetadata.tags" />
-								<ProjectShare :project="openedProyect" />
-							</div>
+
+							<ProjectBody :project="openedProyect"/>
 
 							<template #footer>
 								<CloseButton @close-me="closeProject" class="align-self-end" />
