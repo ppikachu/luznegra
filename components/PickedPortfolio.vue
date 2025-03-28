@@ -77,34 +77,32 @@ function closeProject() {
 <template>
 	<section id="portfolio" class="mx-auto max-w-6xl px-4 md:px-8 my-16 relative">
 		<!--Modal-->
-		<ClientOnly>
-			<Teleport to="html">
-				<transition name="nested" :duration="250">
-					<div
-						v-if="openedProyect"
-						id="modal-proyecto"
-						class="flex justify-center fixed top-0 bottom-0 left-0 right-0 z-10 bg-black/80 backdrop-blur backdrop-grayscale-[50%] overflow-auto"
+		<Teleport to="html">
+			<Transition name="nested" :duration="250">
+				<div
+					v-if="openedProyect"
+					id="modal-proyecto"
+					class="flex justify-center fixed top-0 bottom-0 left-0 right-0 z-10 bg-black/80 backdrop-blur backdrop-grayscale-[50%] overflow-auto"
+				>
+					<UCard
+						variant="solid"
+						class="flex flex-col h-full md:h-fit md:m-8 md:top-[1%] relative bg-gradient-to-b from-(--ui-bg-muted) to-(--ui-bg) from-70% rounded-none md:rounded-lg w-full max-w-4xl"
+						:ui="{ header: 'p-0 sm:p-0', body: 'flex-grow' }"
 					>
-						<UCard
-							variant="solid"
-							class="flex flex-col h-full md:h-fit md:m-8 md:top-[1%] relative bg-gradient-to-b from-(--ui-bg-muted) to-(--ui-bg) from-70% rounded-none md:rounded-lg w-full max-w-4xl"
-							:ui="{ header: 'p-0 sm:p-0', body: 'flex-grow', footer: '' }"
-						>
-							<template #header>
-								<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
-							</template>
+						<template #header>
+							<ProjectMedia :project="{ 'videos': openedProyect.video, 'gallery': openedProyect.imgGalleryCollection?.items}" />
+						</template>
 
-							<ProjectBody :project="openedProyect"/>
+						<ProjectBody :project="openedProyect"/>
 
-							<template #footer>
-								<CloseButton @close-me="closeProject" class="align-self-end" />
-							</template>
+						<template #footer>
+							<CloseButton @close-me="closeProject" class="align-self-end" />
+						</template>
 
-						</UCard>
-					</div>
-				</transition>
-			</Teleport>
-		</ClientOnly>
+					</UCard>
+				</div>
+			</Transition>
+		</Teleport>
 		
 		<h1 class="text-5xl text-(--ui-primary) text-center">Portfolio</h1>
 

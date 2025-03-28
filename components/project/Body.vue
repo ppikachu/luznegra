@@ -8,9 +8,11 @@ const articleBody:string  = props.project?.content ? documentToHtmlString(props.
 
 <template>
 	<h1 class="text-3xl text-(--ui-primary) mb-4">{{ articleTitle }}</h1>
-	<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 md:justify-between md:items-end">
-		<div id="content" v-html="articleBody" class="prose prose-invert prose-a:text-(--ui-primary) flex-grow"></div>
-		<ProjectMeta :tags="articleTags" />
-		<ProjectShare :project="project" />
+	<div class="flex flex-col md:flex-row space-y-8 md:space-x-4 md:justify-between md:items-end">
+		<div id="content" v-html="articleBody" class="prose prose-invert prose-a:text-(--ui-primary) flex-grow md:mb-0"></div>
+		<div class="flex md:flex-col gap-4">
+			<ProjectMeta :tags="articleTags" />
+			<ProjectShare :project="project" />
+		</div>
 	</div>
 </template>

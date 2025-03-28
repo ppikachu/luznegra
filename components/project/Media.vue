@@ -52,14 +52,12 @@ function videoProvider(index: number) {
 		<!--pics-->
 		<div v-if="props.project.gallery?.length > 1">
 			<UCarousel
-				v-if="props.project.gallery?.length"
 				:items="props.project.gallery"
 				v-slot="{ item }"
 				auto-height
 				:dots="props.project.gallery.length > 1"
 			>
 				<img
-					v-if="item"
 					:src="item.url"
 					:width="item.width"
 					:height="item.height"
@@ -76,32 +74,15 @@ function videoProvider(index: number) {
 			:alt="props.project.gallery[0].title"
 			class="h-fit object-contain mx-auto"
 		>
-
 		<!--vids-->
-		<div v-if="props.project.videos?.length > 1">
-			<UCarousel
-				:items="props.project.videos"
-				v-slot="video"
-				:dots = "props.project.videos.length > 1 ? true : false"
-			>
-				<iframe
-					v-if="videoProvider(video.index)"
-					:src="videoProvider(video.index)"
-					allowfullscreen
-					allowtransparency
-					allow="autoplay"
-					class="aspect-video w-full"
-				></iframe>
-			</UCarousel>
-		</div>
+		<UCarousel v-if="props.project.videos?.length > 1"
+			:items="props.project.videos"
+			v-slot="video"
+			:dots = "props.project.videos.length > 1 ? true : false"
+		>
+			<ProjectIframe :url="videoProvider(video.index)" />
+		</UCarousel>
 		<!--single vid-->
-		<iframe 
-			v-else-if="props.project.videos?.length === 1"
-			:src="videoProvider(0)"
-			allowfullscreen
-			allowtransparency
-			allow="autoplay"
-			class="aspect-video w-full"
-		></iframe>
+		<ProjectIframe v-else-if="props.project.videos?.length === 1" :url="videoProvider(0)" />
 	</aside>
 </template>
