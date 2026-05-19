@@ -23,6 +23,7 @@ export default defineNuxtConfig({
 		"@nuxtjs/device",
 	],
 
+
 	turnstile: {
 		siteKey: "0x4AAAAAAAAnaWdzLNaGsIA-",
 	},
@@ -50,12 +51,6 @@ export default defineNuxtConfig({
 					: "https://localhost:3000",
 			TEAM_NAME: "LUZ NEGRA",
 			TEAM_LOGO_IMAGE_ON_FOOTER: "/images/tubos_loop_ani.png",
-
-			titleSeparator: '·',
-			siteUrl: 'https://luz-negra.com/',
-			siteName: 'LUZ NEGRA',
-			siteDescription: 'Diseño y animación',
-			language: 'es',
 			OG: '/OG.png',
 		},
 		turnstile: {
@@ -117,5 +112,4 @@ export default defineNuxtConfig({
 	devtools: {
 		enabled: true,
 	},
-	extends: ["nuxt-seo-kit"],
 })

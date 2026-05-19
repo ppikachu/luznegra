@@ -2,11 +2,11 @@
 	const config = useRuntimeConfig()
 	useSeoMeta({
 		//title: 'Home',
-		description: config.public.siteDescription,
+		description: 'Diseño y animación',
 		ogImage: config.public.OG,
-		ogUrl: config.public.siteUrl,
-		twitterTitle: config.public.siteName,
-		twitterDescription: config.public.siteDescription,
+		ogUrl: config.public.HOST,
+		twitterTitle: config.public.TEAM_NAME,
+		twitterDescription: 'Diseño y animación',
 		twitterImage: config.public.OG, //summary_large_image
 		twitterCard: 'summary_large_image'
 	})
@@ -27,7 +27,6 @@
 
 <template>
 	<NuxtLayout>
-		<SeoKit />
 		<!--<SchemaOrgWebSite name="LUZ NEGRA - Diseño y animación" />
 		<OgImageStatic />-->
 		<NuxtPage />

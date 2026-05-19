@@ -1,4 +1,6 @@
 {
+	"name": "luznegra",
+	"version": "0.1.0",
 	"type": "module",
 	"private": true,
 	"scripts": {
@@ -36,7 +38,6 @@
 		"daisyui": "^3.6.4",
 		"nuxt": "^3.8.1",
 		"nuxt-icon": "^0.6.5",
-		"nuxt-seo-kit": "^1.3.11",
 		"three": "^0.151.3"
 	}
 }
